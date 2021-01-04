@@ -19,11 +19,19 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
 - [ ] Improve the map
   - [ ] No more blue markers
   - [ ] GEBCO 1000 m contour
+  - [ ] Add Caravela location
+  - [ ] Add ships location (Rob)
 
 - [ ] Improve the dive plots
   - [ ] Add/remove lines on main dive plot (Gareth)
+  - [ ] Zoom in on plots, spcifically apogee zero crossing (Rob)
   - [ ] Add more mission long plots for e.g. suggested pitch center
   - [ ] Better pcolor plots, using cmocean
+
+- [ ] Security
+  - [ ] Make sure you can't delete stuff from the website
+  - [ ] sql injection vulns
+  - [ ] XSS vulns
 
 - [ ] Documentation
 
