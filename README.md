@@ -31,6 +31,7 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
   - [ ] Add more mission long plots for e.g. suggested pitch center
   - [ ] Better pcolor plots, using cmocean
   - [ ] Overview of the critical issues - batteries, and when the next call is due (Karen)
+  - [ ] Gebco bathymetric depth at the location of the last surfacing (Rob)
 
 - [ ] Security
   - [ ] secure with SSL
