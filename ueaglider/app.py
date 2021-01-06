@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_ECHO'] = True
 
 def main():
-    #register_blueprints()
+    register_blueprints()
     global_init('seaglider')
     app.run(debug=True)
 
@@ -17,15 +17,11 @@ def get_glider_count() -> int:
     session = create_session()
     return session.query(Gliders).count()
 
-@app.route('/')
-@response(template_file='home/index.html')
-def index():
-    """Index main page of the site
 
-    :return: dictionary containing title for the main content h1
-    """
-    return {'title': get_glider_count()}
+def register_blueprints():
+    from ueaglider.views import home_views
 
+    app.register_blueprint(home_views.blueprint)
 
 if __name__ == '__main__':
     main()
