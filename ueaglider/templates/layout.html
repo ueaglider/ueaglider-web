@@ -6,6 +6,8 @@
 
     <!-- Set title for all pages -->
     <title>UEA Glider Overview</title>
+
+    {% block additional_css %}{% endblock %}
 </head>
 <body>
 
@@ -18,5 +20,8 @@
 <div class="main_content">
     {% block main_content %}{% endblock %}
 </div>
+
+{% block additional_js %}{% endblock %}
+
 </body>
 </html>
