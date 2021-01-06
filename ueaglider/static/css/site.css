@@ -1,0 +1,14 @@
+body {
+    background-color:white;
+    color: #4682B4;
+}
+
+body h1 {
+    text-align: center;
+}
+
+footer {
+    margin-top: 30px;
+    text-align: center;
+
+}
