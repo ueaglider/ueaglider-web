@@ -15,7 +15,7 @@
     <h1>UEA glider main page</h1>
     <div class="totals">
     Uea glider group has carried out {{ "{:,}".format(mission_count) }} missions with {{ "{:,}".format(glider_count) }}
-        gliders, completing a total of {{ "{:,}".format(dive_count) }} dives.
+        gliders, completing a total of {{ "{:,}".format(dive_count) }} dives .
     </div>
      <!-- Create a map div -->
     <div id="map" style="height: 600px;"></div>
@@ -56,6 +56,15 @@
     // Length scale with mad width in pixels
     L.control.scale({maxWidth: 200}).addTo(map)
     </script>
+
+
+                {% for m in mission_list %}
+                    <div class="project">
+                        <div class="title">
+                            <a href="/mission{{ m.MissionID }}">{{  m.MissionID }} {{ m.Name}}{{ m.Info }}</a>
+                        </div>
+                    </div>
+                {% endfor %}
 
 {% endblock %}
 

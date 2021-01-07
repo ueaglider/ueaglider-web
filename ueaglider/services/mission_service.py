@@ -13,3 +13,11 @@ def get_mission_count() -> int:
 def get_dive_count() -> int:
     session = create_session()
     return session.query(Dives).count()
+
+def list_missions() -> dict:
+    session = create_session()
+    missions = session.query(Missions).order_by(Missions.MissionID.desc()).all()
+    session.close()
+    return missions
+
+

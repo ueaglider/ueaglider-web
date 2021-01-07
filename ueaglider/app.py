@@ -9,14 +9,11 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_ECHO'] = True
 
 def main():
+    # Collect all the page routes and instructions
     register_blueprints()
+    # Initialise the database
     global_init('seaglider')
     app.run(debug=True)
-
-def get_glider_count() -> int:
-    session = create_session()
-    return session.query(Gliders).count()
-
 
 def register_blueprints():
     from ueaglider.views import home_views
