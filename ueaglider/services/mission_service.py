@@ -21,3 +21,10 @@ def list_missions() -> dict:
     return missions
 
 
+def get_mission_by_id(mission_id):
+    if not mission_id:
+        return None
+    session = create_session()
+    mission = session.query(Missions).filter(Missions.MissionID == mission_id).first()
+    session.close()
+    return mission

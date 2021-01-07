@@ -17,8 +17,10 @@ def main():
 
 def register_blueprints():
     from ueaglider.views import home_views
+    from ueaglider.views import mission_views
 
     app.register_blueprint(home_views.blueprint)
+    app.register_blueprint(mission_views.blueprint)
 
 if __name__ == '__main__':
     main()
