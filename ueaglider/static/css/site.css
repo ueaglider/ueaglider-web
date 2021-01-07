@@ -1,14 +1,16 @@
 body {
+
+    padding-left: 50px;
+    padding-right: 50px;
     background-color:white;
     color: #4682B4;
 }
 
-body h1 {
-    text-align: center;
-}
+
 .totals {
     margin-bottom: 20px;
 }
+
 footer {
     margin-top: 30px;
     text-align: center;

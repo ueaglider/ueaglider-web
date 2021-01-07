@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% block additional_css %}
+
      <!-- Link to leaflet CSS and javascript for maps-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -8,17 +9,19 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
+
 {% endblock %}
 
 {% block main_content %}
 
-    <h1>UEA glider main page</h1>
     <div class="totals">
-    Uea glider group has carried out {{ "{:,}".format(mission_count) }} missions with {{ "{:,}".format(glider_count) }}
-        gliders, completing a total of {{ "{:,}".format(dive_count) }} dives .
+    <h3>
+    UEA glider group has carried out {{ "{:,}".format(mission_count) }} missions with {{ "{:,}".format(glider_count) }}
+        gliders, completing a total of {{ "{:,}".format(dive_count) }} dives.</h3>
     </div>
+    <div class="mapbox">
      <!-- Create a map div -->
-    <div id="map" style="height: 600px;"></div>
+    <div id="map" style="height: 800px; "></div>
     <!-- Script to create a leaflet map-->
     <script>
 
@@ -27,11 +30,11 @@
 
     // Gebco base layer, we add it to map so it will always be the background
 
-    var gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
+    let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
         layers: 'GEBCO_2019_Grid',
         attribution: 'GEBCO Compilation Group (2020)'}).addTo(map);
     // A series of optional map layers
-    var basemaps = {
+    let basemaps = {
 
         Ice: L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
             layers: 'polarview:antarctic_icechart_nic',
@@ -56,15 +59,33 @@
     // Length scale with mad width in pixels
     L.control.scale({maxWidth: 200}).addTo(map)
     </script>
+    </div>
+<div class="container mission-list">
 
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Mission</th>
+      <th scope="col">Mission Name</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Info</th>
+      <th scope="col">Link</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for m in mission_list %}
 
-                {% for m in mission_list %}
-                    <div class="project">
-                        <div class="title">
-                            <a href="/mission{{ m.MissionID }}">{{  m.MissionID }} {{ m.Name}}{{ m.Info }}</a>
-                        </div>
-                    </div>
-                {% endfor %}
-
+    <tr>
+      <th scope="row">{{  m.MissionID }}</th>
+      <td>{{  m.Name}}</td>
+      <td>{{  m.StartDate.strftime("%Y-%m-%d")}}</td>
+      <td>{{  m.EndDate.strftime("%Y-%m-%d")}}</td>
+      <td>{{  m.Info}}</td>
+      <td><a href="/mission{{ m.MissionID }}" class="btn btn-primary" role="button">Select Mission</a></td>
+ {%  endfor %}
+  </tbody>
+</table>
+</div>
 {% endblock %}
 

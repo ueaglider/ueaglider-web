@@ -34,6 +34,7 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
   - [ ] Gebco bathymetric depth at the location of the last surfacing (Rob)
 
 - [ ] Security
+  - [ ] install bootstrap locally with npm
   - [ ] secure with SSL
   - [ ] Make sure you can't delete stuff from the website
   - [ ] sql injection vulns
