@@ -6,7 +6,9 @@ body {
 body h1 {
     text-align: center;
 }
-
+.totals {
+    margin-bottom: 20px;
+}
 footer {
     margin-top: 30px;
     text-align: center;

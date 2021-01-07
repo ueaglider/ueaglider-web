@@ -134,3 +134,4 @@ dmypy.json
 # mysql
 *.sql
 ueaglider/secrets.txt
+ueaglider/static/img/dives/Mission*

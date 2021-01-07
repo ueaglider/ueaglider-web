@@ -13,9 +13,9 @@
 {% block main_content %}
 
     <h1>UEA glider main page</h1>
-    <div>
-    Uea glider group has completed {{ "{:,}".format(mission_count) }} missions with {{ "{:,}".format(glider_count) }}
-        gliders, completing a combined total of {{ "{:,}".format(dive_count) }} dives.
+    <div class="totals">
+    Uea glider group has carried out {{ "{:,}".format(mission_count) }} missions with {{ "{:,}".format(glider_count) }}
+        gliders, completing a total of {{ "{:,}".format(dive_count) }} dives.
     </div>
      <!-- Create a map div -->
     <div id="map" style="height: 600px;"></div>
