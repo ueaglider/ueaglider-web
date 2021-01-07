@@ -13,5 +13,7 @@ def missions(mission_id: int):
     :returns: counts of total missions, unique gliders and dives completed
     """
     mission = mission_service.get_mission_by_id(mission_id)
+    targets = mission_service.get_mission_targets(mission_id)
 
-    return {'mission': mission}
+    return {'mission': mission,
+            'targets': targets}

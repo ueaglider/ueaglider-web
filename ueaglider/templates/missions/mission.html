@@ -13,7 +13,10 @@
 {% endblock %}
 
 {% block main_content %}
+    {% for t in targets %}
+        {{ t.Longitude }}
 
+    {% endfor %}
     <div class="totals">
         this mission is {{ mission.MissionID }}
     </div>
@@ -58,6 +61,7 @@
     L.control.scale({maxWidth: 200}).addTo(map)
     </script>
     </div>
+
 
 {% endblock %}
 
