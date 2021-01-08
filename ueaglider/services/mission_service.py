@@ -45,5 +45,11 @@ def get_mission_targets(mission_id) -> List[Targets]:
             .all()
 
         session.close()
+        lon, lat, name = [], [], []
+        for target in targets:
+            lon.append(target.Longitude)
+            lat.append(target.Latitude)
+            name.append(target.Name)
+        target_dict = {'lon':lon, 'lat': lat, 'name': name}
 
         return targets

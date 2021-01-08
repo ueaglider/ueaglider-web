@@ -13,10 +13,6 @@
 {% endblock %}
 
 {% block main_content %}
-    {% for t in targets %}
-        {{ t.Longitude }}
-
-    {% endfor %}
     <div class="totals">
         this mission is {{ mission.MissionID }}
     </div>
@@ -26,8 +22,8 @@
     <!-- Script to create a leaflet map-->
     <script>
 
-    <!-- Map centered at setVew([lat, lon], zoom-level) -->
-    let map = L.map('map').setView([-50, -40], 5)
+    <!-- Map centered at the first target in the list. Could improve -->
+    let map = L.map('map').setView([{{ targets[0].Latitude}}, {{targets[0].Longitude }}], 5)
 
     // Gebco base layer, we add it to map so it will always be the background
 
@@ -54,6 +50,20 @@
         }),
 
     };
+
+
+    // Add the targets
+
+    let marker = L.marker([{{targets[0].Latitude, targets[1].Latitude}}, {{ targets[0].Longitude, targets[1].Longitude}}]).addTo(map);
+    marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+
+    let circle = L.circle([{{ 0 }}, {{ 0}}], {
+    color: 'red',
+    fillColor: 'black',
+    fillOpacity: 0.5,
+    radius: 500
+    }).addTo(map);
+
 
     // Controls for the map
     L.control.layers(basemaps).addTo(map);
