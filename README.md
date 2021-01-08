@@ -32,6 +32,7 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
   - [ ] Better pcolor plots, using cmocean
   - [ ] Overview of the critical issues - batteries, and when the next call is due (Karen)
   - [ ] Gebco bathymetric depth at the location of the last surfacing (Rob)
+  - [ ] page for each glider showing most recent mission etc (Gareth)
 
 - [ ] Security
   - [ ] install bootstrap locally with npm
