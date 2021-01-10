@@ -63,11 +63,16 @@ def get_mission_dives(mission_id) -> Optional[Any]:
     dives = session.query(Dives) \
         .filter(Dives.MissionID == mission_id) \
         .all()
-    gliders = session.query(Gliders) \
-        .filter(Gliders.MissionID == mission_id) \
-        .all()
-    session.close()
+    # Necessary because Gliders table records only them most recent mission for each glider
+    glider_ids = []
+    for value in session.query(Dives.GliderID) \
+            .filter(Dives.MissionID == mission_id) \
+            .distinct():
+        glider_ids.append(value[0])
+    query = session.query(Gliders).filter(Gliders.GliderID.in_(glider_ids))
+    gliders = query.all()
 
+    session.close()
     return dives, gliders
 
 
@@ -75,6 +80,7 @@ def dives_to_json(dives, gliders) -> dict:
     # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
     gliders_name_dict = {}
     glider_number_dict = {}
+    print("gliders found " + str(len(gliders)))
     for glider in gliders:
         gliders_name_dict[glider.GliderID] = glider.Name
         glider_number_dict[glider.GliderID] = glider.Number
@@ -84,7 +90,8 @@ def dives_to_json(dives, gliders) -> dict:
     glider_order_dict = {val: i for i, val in enumerate(glider_ids)}
     features = []
     for i, dive in enumerate(dives):
-        tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[dive.GliderID] + "<br>Dive " + str(
+        tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
+            dive.GliderID] + "<br>Dive " + str(
             dive.DiveNo) + "<br>Lat: " + str(dive.Latitude) + "<br>Lon: " + str(dive.Longitude)
         dive_item = {
             "geometry": {
@@ -97,7 +104,7 @@ def dives_to_json(dives, gliders) -> dict:
             "type": "Feature",
             "properties": {
                 "popupContent": tgt_popup,
-                "gliderOrder":glider_order_dict[dive.GliderID]
+                "gliderOrder": glider_order_dict[dive.GliderID]
             },
             "id": i
         }
