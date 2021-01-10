@@ -66,21 +66,58 @@
 
     // geojson layers
     let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
+    let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
 
-    // Add popup content to targets
+    // Adds popup content to markers
 	function onEachFeature(feature, layer) {
 		layer.bindPopup(feature.properties.popupContent);
 	}
 
-    // Use the target icon on each target
+    // Use the target icon on each target and add popup content
 	let targetsLayer = L.geoJSON(targetDict, {
-
 		pointToLayer: function (feature, latlng) {
 			return L.marker(latlng, {icon: targetIcon});
 		},
-
 		onEachFeature: onEachFeature
 	}).addTo(map);
+
+
+
+	// setting color from geojson. We have enough unique colors for 8 gliders. After that they'll all be white
+        function getColor(stype) {
+          switch (stype) {
+            case 0:
+              return "#ff7f0e" ;
+            case 1:
+              return "#4ac6a9";
+            case 2:
+              return '#d71f2c';
+            case 3:
+              return '#8aff5e';
+            case 4:
+              return '#d910be';
+            case 5:
+              return '#daff00';
+            case 6:
+              return '#07010a';
+            default:
+              return 'white';
+          }
+        }
+
+        // LAYERS/SITES ADD LAYER
+        L.geoJson(divesDict, {
+            pointToLayer: function (feature, latlng) {
+            return new L.CircleMarker(latlng, {radius: 8,
+                                                fillOpacity: 1,
+                                                color: 'black',
+                                                fillColor: getColor(feature.properties.gliderOrder),
+                                                weight: 1,});
+            },
+         onEachFeature: onEachFeature
+        }).addTo(map);
+
+
 
 
     // Controls for the map
