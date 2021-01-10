@@ -22,8 +22,7 @@
     <!-- Script to create a leaflet map-->
     <script>
 
-    <!-- Map centered at the first target in the list. Could improve -->
-    let map = L.map('map').setView([{{ targets[0].Latitude}}, {{targets[0].Longitude }}], 5)
+    let map = L.map('map')
 
     // Gebco base layer, we add it to map so it will always be the background
 
@@ -54,9 +53,6 @@
 
     // Add the targets
 
-    let marker = L.marker([{{targets[0].Latitude, targets[1].Latitude}}, {{ targets[0].Longitude, targets[1].Longitude}}]).addTo(map);
-    marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
-
 	let targetIcon = L.icon({
 		iconUrl: '/static/img/icons/target.png',
 		shadowUrl: '/static/img/icons/targetshadow.png',
@@ -68,14 +64,32 @@
 	});
 
 
-	let targetMarker = L.marker([{{ targets[0].Latitude}},  {{  targets[0].Longitude}}], {icon: targetIcon})
-    map.addLayer(targetMarker);
-    targetMarker.bindPopup('<a href="http://www.google.com">{{ targets[0].Name }} <br>{{ targets[0].Latitude}} {{ targets[0].Longitude}} </a>')
+    // geojson layers
+    let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
+
+    // Add popup content to targets
+	function onEachFeature(feature, layer) {
+		layer.bindPopup(feature.properties.popupContent);
+	}
+
+    // Use the target icon on each target
+	let targetsLayer = L.geoJSON(targetDict, {
+
+		pointToLayer: function (feature, latlng) {
+			return L.marker(latlng, {icon: targetIcon});
+		},
+
+		onEachFeature: onEachFeature
+	}).addTo(map);
+
 
     // Controls for the map
     L.control.layers(basemaps).addTo(map);
     // Length scale with mad width in pixels
     L.control.scale({maxWidth: 200}).addTo(map)
+
+    // Fit map to targets
+    map.fitBounds(targetsLayer.getBounds());
     </script>
     </div>
 

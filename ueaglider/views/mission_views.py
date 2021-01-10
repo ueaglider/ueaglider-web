@@ -9,11 +9,16 @@ blueprint = flask.Blueprint('missions', __name__, template_folder='templates')
 @response(template_file='missions/mission.html')
 def missions(mission_id: int):
     """
-    Home page method,
-    :returns: counts of total missions, unique gliders and dives completed
+    Mission page method,
+    :returns:
+    mission: selected mission information
+    targets: targets for this this mission
+    target_dict: targets formatted to JSON style dict for JS map
     """
     mission = mission_service.get_mission_by_id(mission_id)
     targets = mission_service.get_mission_targets(mission_id)
-
+    target_dict = mission_service.targets_to_json(targets)
     return {'mission': mission,
-            'targets': targets}
+            'targets': targets,
+            'targetdict': target_dict,
+            }
