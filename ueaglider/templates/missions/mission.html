@@ -82,22 +82,43 @@
 	}).addTo(map);
 
 
-	let geojsonMarkerOptions = {
-    radius: 8,
-    fillColor: "#ff7800",
-    color: "#000",
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0.8
-};
+
+	// setting color from geojson. We have enough unique colors for 8 gliders. After that they'll all be white
+        function getColor(stype) {
+          switch (stype) {
+            case 0:
+              return "#ff7f0e" ;
+            case 1:
+              return "#4ac6a9";
+            case 2:
+              return '#d71f2c';
+            case 3:
+              return '#8aff5e';
+            case 4:
+              return '#d910be';
+            case 5:
+              return '#daff00';
+            case 6:
+              return '#07010a';
+            default:
+              return 'white';
+          }
+        }
+
+        // LAYERS/SITES ADD LAYER
+        L.geoJson(divesDict, {
+            pointToLayer: function (feature, latlng) {
+            return new L.CircleMarker(latlng, {radius: 8,
+                                                fillOpacity: 1,
+                                                color: 'black',
+                                                fillColor: getColor(feature.properties.gliderOrder),
+                                                weight: 1,});
+            },
+         onEachFeature: onEachFeature
+        }).addTo(map);
 
 
-    let divesLayer = L.geoJSON(divesDict, {
-        pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng,geojsonMarkerOptions);
-        },
-        onEachFeature: onEachFeature
-    }).addTo(map);
+
 
     // Controls for the map
     L.control.layers(basemaps).addTo(map);

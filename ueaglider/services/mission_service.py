@@ -72,11 +72,16 @@ def get_mission_dives(mission_id) -> Optional[Any]:
 
 
 def dives_to_json(dives, gliders) -> dict:
+    # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
     gliders_name_dict = {}
     glider_number_dict = {}
     for glider in gliders:
         gliders_name_dict[glider.GliderID] = glider.Name
         glider_number_dict[glider.GliderID] = glider.Number
+    # Make a sorted dictionary of ascending integers per gliderID for colouring the map dive icons
+    glider_ids = list(glider_number_dict.keys())
+    glider_ids.sort()
+    glider_order_dict = {val: i for i, val in enumerate(glider_ids)}
     features = []
     for i, dive in enumerate(dives):
         tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[dive.GliderID] + "<br>Dive " + str(
@@ -92,7 +97,7 @@ def dives_to_json(dives, gliders) -> dict:
             "type": "Feature",
             "properties": {
                 "popupContent": tgt_popup,
-                "gliderNum":glider_number_dict[dive.GliderID]
+                "gliderOrder":glider_order_dict[dive.GliderID]
             },
             "id": i
         }
