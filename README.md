@@ -5,7 +5,7 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
 # Aims
 
 - [ ] Emulate funcionality of old website
-  - [ ] Map with dive locations and optional layers
+  - [x] Map with dive locations and optional layers
   - [ ] Menu of glider dives
   - [ ] Page of dive plots
   - [ ] Glider status page
@@ -17,7 +17,7 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
   - [ ] All figures showing on site
 
 - [ ] Improve the map
-  - [ ] No more blue markers
+  - [x] No more blue markers
   - [ ] GEBCO 1000 m contour
   - [ ] Add Caravela location
   - [ ] Add ships location (Rob)
@@ -41,7 +41,7 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
   - [ ] sql injection vulns
   - [ ] XSS vulns
 
-- [ ] include sitemap and robots
+- [ ] include ~~sitemap~~ and robots
 
 - [ ] Documentation
 
