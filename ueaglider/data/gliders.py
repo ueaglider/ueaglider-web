@@ -10,6 +10,10 @@ class Gliders(SqlAlchemyBase):
     __tablename__ = 'Gliders'
     __table_args__ = {'extend_existing': True}
     GliderID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
+    MissionID = sqlalchemy.Column(sqlalchemy.INT)
+    Name = sqlalchemy.Column(sqlalchemy.VARCHAR)
+    Number = sqlalchemy.Column(sqlalchemy.INT)
+    Info = sqlalchemy.Column(sqlalchemy.TEXT)
 
 
 class Targets(SqlAlchemyBase):
@@ -22,9 +26,24 @@ class Targets(SqlAlchemyBase):
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Radius = sqlalchemy.Column(sqlalchemy.INT)
     Goto = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    # Package relationship
+    # Mission relationship
     MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.MissionID"))
     mission = orm.relation('Missions')
+
+
+class Dives(SqlAlchemyBase):
+    __tablename__ = 'DiveInfo'
+    __table_args__ = {'extend_existing': True}
+    DiveInfoID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
+    GliderID = sqlalchemy.Column(sqlalchemy.INT)
+    MissionID = sqlalchemy.Column(sqlalchemy.INT)
+    DiveNo = sqlalchemy.Column(sqlalchemy.INT)
+    Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
+    Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
+    # Mission relationship
+    MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.MissionID"))
+    mission = orm.relation('Missions')
+
 
 
 class Missions(SqlAlchemyBase):
@@ -40,9 +59,9 @@ class Missions(SqlAlchemyBase):
     targets: List[Targets] = orm.relation("Targets", order_by=[
         Targets.TargetsID.asc(),
     ], back_populates='mission')
+    # Dives relationship
+    dives: List[Dives] = orm.relation("Dives", order_by=[
+        Dives.DiveInfoID.asc(),
+    ], back_populates='mission')
 
 
-class Dives(SqlAlchemyBase):
-    __tablename__ = 'DiveInfo'
-    __table_args__ = {'extend_existing': True}
-    DiveInfoID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
