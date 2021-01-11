@@ -6,10 +6,10 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
 
 - [ ] Emulate funcionality of old website
   - [x] Map with dive locations and optional layers
-  - [ ] Menu of glider dives
-  - [ ] Page of dive plots
-  - [ ] Glider status page
-  - [ ] Science page
+  - [x] Menu of glider dives
+  - [x] Page of dive plots
+  - [x] Glider status page
+  - [x] Science page
   - [ ] login to add missions and waypoints
   
 - [ ] Show all legacy data
@@ -49,11 +49,15 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
 
 ### Inspiration
 
+Architecture follows several of the paradigms taught by Michael Kenndy in his [flask course on TalkPython.fm](https://training.talkpython.fm/courses/explore_flask/building-data-driven-web-applications-in-python-with-flask-sqlalchemy-and-bootstrap)
+
 Other glider sites to check out
 - https://iop.apl.washington.edu/seaglider/index.php
+- https://roammiz.com/
 
-# Tools
+# Tools used
 
 - flask for the main web app
+- bootstrap for pretty front end stuff
 - sqlalchemy to talk to the database
 - leaflet for maps
