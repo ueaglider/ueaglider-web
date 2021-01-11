@@ -22,6 +22,14 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
         path = '/' + item
         dive_plot_paths.append(path)
     dive_plot_paths.sort()
+    links_dict = {
+        'prev dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num-1),
+        'glider status': "stat",
+        'science': "scient",
+        'mission page': "/mission"+str(mission_id),
+        'next dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num + 1),
+    }
     return {
-        'dive_plots': dive_plot_paths
+        'dive_plots': dive_plot_paths,
+        'links_dict': links_dict
     }

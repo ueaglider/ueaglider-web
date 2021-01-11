@@ -24,6 +24,13 @@
         </div>
 
     {% endfor %}
+    <div class="navdives">
+        {% for item, link in links_dict.items() %}
+            <a  class="btn btn-primary" role="button" href={{ link }}> {{ item }} </a>
+
+        {% endfor %}
+
+    </div>
 
 {% endblock %}
 
