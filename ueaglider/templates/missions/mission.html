@@ -148,8 +148,8 @@
     </div>
 
     <div class="dives">
-        {% for dive in divesdict["features"] %}
-            <a href={{ dive["properties"]["dive_page_link"] }}> SG{{ dive["properties"]["dive_page_link"][-12:-9]}} Dive {{ dive["properties"]["dive_page_link"][-4:]}}</a><br>
+        {% for dive in dive_page_links %}
+            <a href={{ dive }}> {{ 'SG' + dive[-12:-9] +" Dive" + dive[-4:] }}</a><br>
         {% endfor %}
     </div>
 
