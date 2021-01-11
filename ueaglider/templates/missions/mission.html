@@ -69,7 +69,7 @@
     let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
 
     // Adds popup content to markers
-	function onEachFeature(feature, layer) {
+	function popupText(feature, layer) {
 		layer.bindPopup(feature.properties.popupContent);
 	}
 
@@ -78,7 +78,7 @@
 		pointToLayer: function (feature, latlng) {
 			return L.marker(latlng, {icon: targetIcon});
 		},
-		onEachFeature: onEachFeature
+		onEachFeature: popupText
 	}).addTo(map);
 
 
@@ -105,8 +105,8 @@
           }
         }
 
-        // LAYERS/SITES ADD LAYER
-        L.geoJson(divesDict, {
+        // Adding dives to map. Fillcolor by glider number, adding popup text
+        let divesLayer = L.geoJson(divesDict, {
             pointToLayer: function (feature, latlng) {
             return new L.CircleMarker(latlng, {radius: 8,
                                                 fillOpacity: 1,
@@ -114,7 +114,7 @@
                                                 fillColor: getColor(feature.properties.gliderOrder),
                                                 weight: 1,});
             },
-         onEachFeature: onEachFeature
+         onEachFeature: popupText
         }).addTo(map);
 
 
@@ -126,7 +126,7 @@
     L.control.scale({maxWidth: 200}).addTo(map)
 
     // Fit map to targets
-    map.fitBounds(targetsLayer.getBounds());
+    map.fitBounds(divesLayer.getBounds());
     </script>
     </div>
 
