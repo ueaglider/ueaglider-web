@@ -71,16 +71,24 @@ def get_mission_dives(mission_id) -> Optional[Any]:
         glider_ids.append(value[0])
     query = session.query(Gliders).filter(Gliders.GliderID.in_(glider_ids))
     gliders = query.all()
+    # Get most recent dive from each glider
+    most_recent_dives = []
+    for glider_id in glider_ids:
+        dive = session.query(Dives) \
+            .filter(Dives.MissionID == mission_id) \
+            .filter(Dives.GliderID == glider_id) \
+            .order_by(Dives.DiveNo.desc())\
+            .first()
+        most_recent_dives.append(dive)
 
     session.close()
-    return dives, gliders
+    return dives, gliders, most_recent_dives
 
 
 def dives_to_json(dives, gliders) -> dict:
     # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
     gliders_name_dict = {}
     glider_number_dict = {}
-    print("gliders found " + str(len(gliders)))
     for glider in gliders:
         gliders_name_dict[glider.GliderID] = glider.Name
         glider_number_dict[glider.GliderID] = glider.Number
