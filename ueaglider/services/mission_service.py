@@ -101,6 +101,8 @@ def dives_to_json(dives, gliders) -> dict:
         tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
             dive.GliderID] + "<br>Dive " + str(
             dive.DiveNo) + "<br>Lat: " + str(dive.Latitude) + "<br>Lon: " + str(dive.Longitude)
+        dive_page_link = "/mission" + str(dive.MissionID) + "/glider" + str(glider_number_dict[dive.GliderID])\
+                         + "/dive" + str(dive.DiveNo).zfill(4)
         dive_item = {
             "geometry": {
                 "type": "Point",
@@ -112,7 +114,8 @@ def dives_to_json(dives, gliders) -> dict:
             "type": "Feature",
             "properties": {
                 "popupContent": tgt_popup,
-                "gliderOrder": glider_order_dict[dive.GliderID]
+                "gliderOrder": glider_order_dict[dive.GliderID],
+                "dive_page_link": dive_page_link
             },
             "id": i
         }

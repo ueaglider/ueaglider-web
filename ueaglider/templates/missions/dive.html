@@ -1,21 +1,12 @@
 {% extends "layout.html" %}
 
-{% block additional_css %}
-
-     <!-- Link to leaflet CSS and javascript for maps-->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-    crossorigin=""></script>
-
-{% endblock %}
-
 {% block main_content %}
+
     {% for plot in dive_plots %}
         <br>
-    <img src={{ plot }}><br>
+        <img src={{ plot }} class="img-fluid" alt="piloting plot image" width="2500" >
+
     {% endfor %}
+
 {% endblock %}
 

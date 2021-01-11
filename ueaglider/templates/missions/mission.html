@@ -146,6 +146,13 @@
     map.fitBounds(divesLayer.getBounds());
     </script>
     </div>
+
+    <div class="dives">
+        {% for dive in divesdict["features"] %}
+            <a href={{ dive["properties"]["dive_page_link"] }}> SG{{ dive["properties"]["dive_page_link"][-12:-9]}} Dive {{ dive["properties"]["dive_page_link"][-4:]}}</a><br>
+        {% endfor %}
+    </div>
+
     <div class="images">
     <h3> TODO generic mission plots here</h3><br>
         {% for plot in missionplots %}
@@ -153,6 +160,7 @@
         {% endfor %}
 
     </div>
+
 
 {% endblock %}
 
