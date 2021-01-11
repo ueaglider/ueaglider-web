@@ -1,10 +1,27 @@
 {% extends "layout.html" %}
-
+{% block additional_css %}
+        <link rel="stylesheet" href="/static/css/dive.css"/>
+{% endblock %}
 {% block main_content %}
 
     {% for plot in dive_plots %}
-        <br>
-        <img src={{ plot }} class="img-fluid" alt="piloting plot image" width="2500" >
+        <a data-bs-toggle="modal" data-bs-target={{ '#'+plot[-8:-4] }}>
+         <img src={{ plot }} width="400" alt="Piloting image thumbnail">
+        </a>
+
+        <!-- Modal -->
+        <div class="modal fade" id={{ plot[-8:-4] }} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                    <img src={{ plot }}><br>
+              </div>
+            </div>
+          </div>
+        </div>
 
     {% endfor %}
 
