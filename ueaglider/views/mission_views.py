@@ -21,10 +21,14 @@ def missions(mission_id: int):
     dives, gliders, most_recent_dives = mission_service.get_mission_dives(mission_id)
     divesdict = mission_service.dives_to_json(dives, gliders)
     recentdivesdict = mission_service.dives_to_json(most_recent_dives, gliders)
+    mission_plots = [
+        'static/img/dives/Mission' + str(mission_id) + '/map.png'
+    ]
 
     return {'mission': mission,
             'targets': targets,
             'targetdict': target_dict,
             'divesdict': divesdict,
             'recentdivesdict': recentdivesdict,
+            'missionplots': mission_plots,
             }

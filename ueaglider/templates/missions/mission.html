@@ -146,7 +146,13 @@
     map.fitBounds(divesLayer.getBounds());
     </script>
     </div>
+    <div class="images">
+    <h3> TODO generic mission plots here</h3><br>
+        {% for plot in missionplots %}
+        <img src={{ plot }}><br>
+        {% endfor %}
 
+    </div>
 
 {% endblock %}
 
