@@ -13,7 +13,7 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
   - [ ] login to add missions and waypoints
   
 - [ ] Show all legacy data
-  - [ ] Waypoints on map
+  - [x] Waypoints on map
   - [ ] All figures showing on site
 
 - [ ] Improve the map
@@ -21,7 +21,7 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
   - [ ] GEBCO 1000 m contour
   - [ ] Add Caravela location
   - [ ] Add ships location (Rob)
-  - [ ] Click on a particular dive on the map to get the plots up (Karen)
+  - [x] Click on a particular dive on the map to get the plots up (Karen)
 
 - [ ] Improve the dive plots
   - [ ] Add/remove lines on main dive plot (Gareth)
