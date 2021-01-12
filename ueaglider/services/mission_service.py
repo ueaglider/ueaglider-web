@@ -1,4 +1,7 @@
 from typing import Optional, Any, Tuple
+
+from sqlalchemy import func
+
 from ueaglider.data.db_session import create_session
 from ueaglider.data.gliders import Gliders, Missions, Dives, Targets
 
@@ -137,11 +140,14 @@ def dives_to_json(dives, gliders) -> Tuple:
     return divedict, dive_page_links
 
 
-def targets_to_json(targets) -> dict:
+def targets_to_json(targets, mission_tgt=False) -> dict:
     features = []
     for i, target in enumerate(targets):
-        tgt_popup = "Target: " + target.Name + "<br>Lat: " + str(target.Latitude) + "<br>Lon: " + str(
-            target.Longitude) + "<br>GOTO: " + target.Goto + "<br>Radius: " + str(target.Radius) + ' m'
+        if mission_tgt:
+            tgt_popup = "Mission " + str(target.MissionID) + "<br><a href=/mission" + str(target.MissionID) + ">" + target.Name
+        else:
+            tgt_popup = "Target: " + target.Name + "<br>Lat: " + str(target.Latitude) + "<br>Lon: " + str(
+                target.Longitude) + "<br>GOTO: " + target.Goto + "<br>Radius: " + str(target.Radius) + ' m'
         target_item = {
             "geometry": {
                 "type": "Point",
@@ -164,3 +170,21 @@ def targets_to_json(targets) -> dict:
         "features": features
     }
     return tgtdict
+
+
+def mission_av_loc():
+    session = create_session()
+    targets = session.query(Targets) \
+        .all()
+    session.close()
+    missions = []
+    mission_tgts = []
+    for tgt in targets:
+        if tgt.MissionID not in missions:
+            missions.append(tgt.MissionID)
+            mission_tgts.append(tgt)
+            session = create_session()
+            mission = session.query(Missions.Name).filter(Missions.MissionID == tgt.MissionID).first()
+            session.close()
+            tgt.Name = mission[0]
+    return mission_tgts

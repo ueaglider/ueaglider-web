@@ -53,11 +53,35 @@
         }),
 
     };
+	let targetIcon = L.icon({
+		iconUrl: '/static/img/icons/target.png',
+		shadowUrl: '/static/img/icons/targetshadow.png',
+		iconSize:     [16, 32], // size of the icon
+		shadowSize:   [32, 32], // size of the shadow
+		iconAnchor:   [8, 31], // point of the icon which will correspond to marker's location
+		shadowAnchor: [6, 31],  // the same for the shadow
+		popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
+	});
+    let targetDict = JSON.parse('{{ mission_tgts| tojson | safe}}');
+
+    // Function adds popup content to markers
+	function popupText(feature, layer) {
+		layer.bindPopup(feature.properties.popupContent);
+	}
+
+    // Use the target icon on each target and add popup content
+	let targetsLayer = L.geoJSON(targetDict, {
+		pointToLayer: function (feature, latlng) {
+			return L.marker(latlng, {icon: targetIcon});
+		},
+		onEachFeature: popupText
+	}).addTo(map);
 
     // Controls for the map
     L.control.layers(basemaps).addTo(map);
     // Length scale with mad width in pixels
     L.control.scale({maxWidth: 200}).addTo(map)
+    map.fitBounds(targetsLayer.getBounds());
     </script>
     </div>
 <div class="container mission-list">
