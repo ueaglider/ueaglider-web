@@ -1,4 +1,6 @@
-from typing import Optional, Any
+from typing import Optional, Any, Tuple
+
+from sqlalchemy import func
 
 from ueaglider.data.db_session import create_session
 from ueaglider.data.gliders import Gliders, Missions, Dives, Targets
@@ -6,17 +8,23 @@ from ueaglider.data.gliders import Gliders, Missions, Dives, Targets
 
 def get_glider_count() -> int:
     session = create_session()
-    return session.query(Gliders).count()
+    gliders = session.query(Gliders).count()
+    session.close()
+    return gliders
 
 
 def get_mission_count() -> int:
     session = create_session()
-    return session.query(Missions).count()
+    missions = session.query(Missions).count()
+    session.close
+    return missions
 
 
 def get_dive_count() -> int:
     session = create_session()
-    return session.query(Dives).count()
+    dives = session.query(Dives).count()
+    session.close()
+    return dives
 
 
 def list_missions() -> dict:
@@ -24,6 +32,14 @@ def list_missions() -> dict:
     missions = session.query(Missions).order_by(Missions.MissionID.desc()).all()
     session.close()
     return missions
+
+
+def coord_db_decimal(coord_in):
+    # convert from kongsberg style degree-mins in table to decimal degrees
+    deg = int(coord_in)
+    minutes = coord_in - deg
+    decimal_degrees = deg + minutes / 0.6
+    return decimal_degrees
 
 
 def get_mission_by_id(mission_id):
@@ -77,7 +93,7 @@ def get_mission_dives(mission_id) -> Optional[Any]:
         dive = session.query(Dives) \
             .filter(Dives.MissionID == mission_id) \
             .filter(Dives.GliderID == glider_id) \
-            .order_by(Dives.DiveNo.desc())\
+            .order_by(Dives.DiveNo.desc()) \
             .first()
         most_recent_dives.append(dive)
 
@@ -85,7 +101,7 @@ def get_mission_dives(mission_id) -> Optional[Any]:
     return dives, gliders, most_recent_dives
 
 
-def dives_to_json(dives, gliders) -> dict:
+def dives_to_json(dives, gliders) -> Tuple:
     # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
     gliders_name_dict = {}
     glider_number_dict = {}
@@ -99,18 +115,19 @@ def dives_to_json(dives, gliders) -> dict:
     features = []
     dive_page_links = []
     for i, dive in enumerate(dives):
-        tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
-            dive.GliderID] + "<br>Dive " + str(
-            dive.DiveNo) + "<br>Lat: " + str(dive.Latitude) + "<br>Lon: " + str(dive.Longitude)
-        dive_page_link = "/mission" + str(dive.MissionID) + "/glider" + str(glider_number_dict[dive.GliderID])\
+        dive_page_link = "/mission" + str(dive.MissionID) + "/glider" + str(glider_number_dict[dive.GliderID]) \
                          + "/dive" + str(dive.DiveNo).zfill(4)
         dive_page_links.append(dive_page_link)
+        tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
+            dive.GliderID] + "<br><a href=" + dive_page_link +">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " + str(dive.Latitude) \
+                    + "<br>Lon: " + str(dive.Longitude)
         dive_item = {
             "geometry": {
                 "type": "Point",
                 "coordinates": [
-                    dive.Longitude,
-                    dive.Latitude
+                    # convert from kongsberg style degree-mins in table to decimal degrees
+                    coord_db_decimal(dive.Longitude),
+                    coord_db_decimal(dive.Latitude)
                 ]
             },
             "type": "Feature",
@@ -129,17 +146,21 @@ def dives_to_json(dives, gliders) -> dict:
     return divedict, dive_page_links
 
 
-def targets_to_json(targets) -> dict:
+def targets_to_json(targets, mission_tgt=False) -> dict:
     features = []
     for i, target in enumerate(targets):
-        tgt_popup = "Target: " + target.Name + "<br>Lat: " + str(target.Latitude) + "<br>Lon: " + str(
-            target.Longitude) + "<br>GOTO: " + target.Goto + "<br>Radius: " + str(target.Radius) + ' m'
+        if mission_tgt:
+            tgt_popup = "Mission " + str(target.MissionID) + "<br><a href=/mission" + str(target.MissionID) + ">" + target.Name
+        else:
+            tgt_popup = "Target: " + target.Name + "<br>Lat: " + str(target.Latitude) + "<br>Lon: " + str(
+                target.Longitude) + "<br>GOTO: " + target.Goto + "<br>Radius: " + str(target.Radius) + ' m'
         target_item = {
             "geometry": {
                 "type": "Point",
                 "coordinates": [
-                    target.Longitude,
-                    target.Latitude
+                    # convert from kongsberg style degree-mins in table to decimal degrees
+                    coord_db_decimal(target.Longitude),
+                    coord_db_decimal(target.Latitude)
                 ]
             },
             "type": "Feature",
@@ -155,3 +176,21 @@ def targets_to_json(targets) -> dict:
         "features": features
     }
     return tgtdict
+
+
+def mission_av_loc():
+    session = create_session()
+    targets = session.query(Targets) \
+        .all()
+    session.close()
+    missions = []
+    mission_tgts = []
+    for tgt in targets:
+        if tgt.MissionID not in missions:
+            missions.append(tgt.MissionID)
+            mission_tgts.append(tgt)
+            session = create_session()
+            mission = session.query(Missions.Name).filter(Missions.MissionID == tgt.MissionID).first()
+            session.close()
+            tgt.Name = mission[0]
+    return mission_tgts

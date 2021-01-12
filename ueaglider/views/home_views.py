@@ -16,7 +16,10 @@ def index():
     mission_count = mission_service.get_mission_count()
     dive_count = mission_service.get_dive_count()
     missions_list = mission_service.list_missions()
+    mission_target_list = mission_service.mission_av_loc()
+    mission_targets = mission_service.targets_to_json(mission_target_list, mission_tgt=True)
     return {'glider_count': glider_count,
             'mission_count': mission_count,
             'dive_count': dive_count,
-            'mission_list':missions_list}
+            'mission_list':missions_list,
+            'mission_tgts': mission_targets}
