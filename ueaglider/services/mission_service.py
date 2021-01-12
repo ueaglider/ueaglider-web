@@ -8,17 +8,23 @@ from ueaglider.data.gliders import Gliders, Missions, Dives, Targets
 
 def get_glider_count() -> int:
     session = create_session()
-    return session.query(Gliders).count()
+    gliders = session.query(Gliders).count()
+    session.close()
+    return gliders
 
 
 def get_mission_count() -> int:
     session = create_session()
-    return session.query(Missions).count()
+    missions = session.query(Missions).count()
+    session.close
+    return missions
 
 
 def get_dive_count() -> int:
     session = create_session()
-    return session.query(Dives).count()
+    dives = session.query(Dives).count()
+    session.close()
+    return dives
 
 
 def list_missions() -> dict:
