@@ -106,12 +106,12 @@ def dives_to_json(dives, gliders) -> Tuple:
     features = []
     dive_page_links = []
     for i, dive in enumerate(dives):
-        tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
-            dive.GliderID] + "<br>Dive " + str(
-            dive.DiveNo) + "<br>Lat: " + str(dive.Latitude) + "<br>Lon: " + str(dive.Longitude)
         dive_page_link = "/mission" + str(dive.MissionID) + "/glider" + str(glider_number_dict[dive.GliderID]) \
                          + "/dive" + str(dive.DiveNo).zfill(4)
         dive_page_links.append(dive_page_link)
+        tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
+            dive.GliderID] + "<br><a href=" + dive_page_link +">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " + str(dive.Latitude) \
+                    + "<br>Lon: " + str(dive.Longitude)
         dive_item = {
             "geometry": {
                 "type": "Point",
