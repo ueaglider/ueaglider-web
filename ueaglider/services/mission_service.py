@@ -1,5 +1,4 @@
-from typing import Optional, Any
-
+from typing import Optional, Any, Tuple
 from ueaglider.data.db_session import create_session
 from ueaglider.data.gliders import Gliders, Missions, Dives, Targets
 
@@ -24,6 +23,14 @@ def list_missions() -> dict:
     missions = session.query(Missions).order_by(Missions.MissionID.desc()).all()
     session.close()
     return missions
+
+
+def coord_db_decimal(coord_in):
+    # convert from kongsberg style degree-mins in table to decimal degrees
+    deg = int(coord_in)
+    minutes = coord_in - deg
+    decimal_degrees = deg + minutes / 0.6
+    return decimal_degrees
 
 
 def get_mission_by_id(mission_id):
@@ -77,7 +84,7 @@ def get_mission_dives(mission_id) -> Optional[Any]:
         dive = session.query(Dives) \
             .filter(Dives.MissionID == mission_id) \
             .filter(Dives.GliderID == glider_id) \
-            .order_by(Dives.DiveNo.desc())\
+            .order_by(Dives.DiveNo.desc()) \
             .first()
         most_recent_dives.append(dive)
 
@@ -85,7 +92,7 @@ def get_mission_dives(mission_id) -> Optional[Any]:
     return dives, gliders, most_recent_dives
 
 
-def dives_to_json(dives, gliders) -> dict:
+def dives_to_json(dives, gliders) -> Tuple:
     # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
     gliders_name_dict = {}
     glider_number_dict = {}
@@ -102,15 +109,16 @@ def dives_to_json(dives, gliders) -> dict:
         tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
             dive.GliderID] + "<br>Dive " + str(
             dive.DiveNo) + "<br>Lat: " + str(dive.Latitude) + "<br>Lon: " + str(dive.Longitude)
-        dive_page_link = "/mission" + str(dive.MissionID) + "/glider" + str(glider_number_dict[dive.GliderID])\
+        dive_page_link = "/mission" + str(dive.MissionID) + "/glider" + str(glider_number_dict[dive.GliderID]) \
                          + "/dive" + str(dive.DiveNo).zfill(4)
         dive_page_links.append(dive_page_link)
         dive_item = {
             "geometry": {
                 "type": "Point",
                 "coordinates": [
-                    dive.Longitude,
-                    dive.Latitude
+                    # convert from kongsberg style degree-mins in table to decimal degrees
+                    coord_db_decimal(dive.Longitude),
+                    coord_db_decimal(dive.Latitude)
                 ]
             },
             "type": "Feature",
@@ -138,8 +146,9 @@ def targets_to_json(targets) -> dict:
             "geometry": {
                 "type": "Point",
                 "coordinates": [
-                    target.Longitude,
-                    target.Latitude
+                    # convert from kongsberg style degree-mins in table to decimal degrees
+                    coord_db_decimal(target.Longitude),
+                    coord_db_decimal(target.Latitude)
                 ]
             },
             "type": "Feature",
