@@ -1,9 +1,7 @@
 from typing import Optional, Any, Tuple
 
-from sqlalchemy import func
-
 from ueaglider.data.db_session import create_session
-from ueaglider.data.gliders import Gliders, Missions, Dives, Targets
+from ueaglider.data.gliders import Gliders, Missions, Dives, Targets, Waypoints
 
 
 def get_glider_count() -> int:
@@ -16,7 +14,7 @@ def get_glider_count() -> int:
 def get_mission_count() -> int:
     session = create_session()
     missions = session.query(Missions).count()
-    session.close
+    session.close()
     return missions
 
 
@@ -66,6 +64,22 @@ def get_mission_targets(mission_id) -> Optional[Any]:
     session.close()
 
     return targets
+
+def get_mission_waypoints(mission_id) -> Optional[Any]:
+    if not mission_id:
+        return None
+
+    mission_id = int(mission_id)
+
+    session = create_session()
+
+    waypoints = session.query(Waypoints) \
+        .filter(Waypoints.MissionID == mission_id) \
+        .all()
+
+    session.close()
+
+    return waypoints
 
 
 def get_mission_dives(mission_id) -> Optional[Any]:
@@ -176,6 +190,35 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
         "features": features
     }
     return tgtdict
+
+
+def waypoints_to_json(waypoints) -> dict:
+    features = []
+    for i, waypoint in enumerate(waypoints):
+        tgt_popup = "Waypoint: " + waypoint.Name + "<br>Lat: " + str(waypoint.Latitude) + "<br>Lon: " + str(
+            waypoint.Longitude)
+        target_item = {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    # convert from kongsberg style degree-mins in table to decimal degrees
+                    coord_db_decimal(waypoint.Longitude),
+                    coord_db_decimal(waypoint.Latitude)
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "popupContent": tgt_popup
+            },
+            "id": i
+        }
+        features.append(target_item)
+
+    waypointdict = {
+        "type": "FeatureCollection",
+        "features": features
+    }
+    return waypointdict
 
 
 def mission_av_loc():

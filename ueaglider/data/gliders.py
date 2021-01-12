@@ -30,6 +30,19 @@ class Targets(SqlAlchemyBase):
     MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.MissionID"))
     mission = orm.relation('Missions')
 
+class Waypoints(SqlAlchemyBase):
+    __tablename__ = 'Waypoints'
+    __table_args__ = {'extend_existing': True}
+    WaypointsID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
+    MissionID = sqlalchemy.Column(sqlalchemy.INT)
+    Name = sqlalchemy.Column(sqlalchemy.VARCHAR)
+    Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
+    Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
+    Info = sqlalchemy.Column(sqlalchemy.TEXT)
+    # Mission relationship
+    MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.MissionID"))
+    mission = orm.relation('Missions')
+
 
 class Dives(SqlAlchemyBase):
     __tablename__ = 'DiveInfo'
@@ -58,6 +71,10 @@ class Missions(SqlAlchemyBase):
     # Targets relationship
     targets: List[Targets] = orm.relation("Targets", order_by=[
         Targets.TargetsID.asc(),
+    ], back_populates='mission')
+    # Waypoints relationship
+    waypoints: List[Waypoints] = orm.relation("Waypoints", order_by=[
+        Waypoints.WaypointsID.asc(),
     ], back_populates='mission')
     # Dives relationship
     dives: List[Dives] = orm.relation("Dives", order_by=[

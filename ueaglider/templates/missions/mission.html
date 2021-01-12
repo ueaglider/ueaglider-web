@@ -76,6 +76,7 @@
 
     // geojson layers passed from view method
     let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
+    let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
     let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
 
@@ -92,6 +93,10 @@
 		onEachFeature: popupText
 	}).addTo(map);
 
+	let waypointLayer = L.geoJSON(waypointDict, {
+
+		onEachFeature: popupText
+	}).addTo(map);
 
 
 	// setting color from geojson. We have enough unique colors for 8 gliders. After that they'll all be white
