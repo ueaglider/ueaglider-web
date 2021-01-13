@@ -17,14 +17,15 @@ def science(mission_id: int, glider_num: int):
     :returns:
     dive_plots: list of paths to images associated with the dive
     """
-    sci_glob = glob.glob(os.path.join('static/img/dives/Mission' + str(mission_id)
-                                      + '/' + str(glider_num)
-                                      + '/Science/*.png'))
+    folder_path = Path(folder)
+    path_add = 'static/img/dives/Science' + str(mission_id) + '/' + str(glider_num) + '/Monitor'
+    dive_path = folder_path / path_add
+    figure_paths = sorted(dive_path.glob('*'))
+    figure_strings = []
     dive_plot_paths = []
-    for item in sci_glob:
-        path = '/' + item
-        dive_plot_paths.append(path)
-    dive_plot_paths.sort()
+    for path in figure_paths:
+        figure_strings.append(str(path))
+        dive_plot_paths.append(str(path)[30:])
     links_dict = {
         'glider status': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status",
         'science': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science",
@@ -43,14 +44,16 @@ def status(mission_id: int, glider_num: int):
     :returns:
     dive_plots: list of paths to images associated with the dive
     """
-    sci_glob = glob.glob(os.path.join('static/img/dives/Mission' + str(mission_id)
-                                      + '/' + str(glider_num)
-                                      + '/Monitor/*.png'))
+
+    folder_path = Path(folder)
+    path_add = 'static/img/dives/Mission' + str(mission_id) + '/' + str(glider_num) + '/Monitor'
+    dive_path = folder_path / path_add
+    figure_paths = sorted(dive_path.glob('*'))
+    figure_strings = []
     dive_plot_paths = []
-    for item in sci_glob:
-        path = '/' + item
-        dive_plot_paths.append(path)
-    dive_plot_paths.sort()
+    for path in figure_paths:
+        figure_strings.append(str(path))
+        dive_plot_paths.append(str(path)[30:])
     links_dict = {
         'glider status': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status",
         'science': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science",
@@ -69,15 +72,14 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
     :returns:
     dive_plots: list of paths to images associated with the dive
     """
-    dive_glob = glob.glob(os.path.join('static/img/dives/Mission' , '*.png'))
-    p = Path(folder)
-    path_add = 'static/img/dives/Mission'+ str(mission_id) + '/' + str(glider_num) + '/Dive' + str(dive_num).zfill(4)
-    pp = p / path_add
-    f = sorted(pp.glob('*'))
-    foo = []
+    folder_path = Path(folder)
+    path_add = 'static/img/dives/Mission' + str(mission_id) + '/' + str(glider_num) + '/Dive' + str(dive_num).zfill(4)
+    dive_path = folder_path / path_add
+    figure_paths = sorted(dive_path.glob('*'))
+    figure_strings = []
     dive_plot_paths = []
-    for path in f:
-        foo.append(str(path))
+    for path in figure_paths:
+        figure_strings.append(str(path))
         dive_plot_paths.append(str(path)[30:])
     links_dict = {
         'prev dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num - 1),
@@ -87,7 +89,7 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
         'next dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num + 1),
     }
     return {
-        'path': foo,
+        'path': figure_strings,
         'dive_plots': dive_plot_paths,
         'links_dict': links_dict
     }
