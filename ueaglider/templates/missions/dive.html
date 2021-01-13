@@ -3,7 +3,7 @@
         <link rel="stylesheet" href="/static/css/dive.css"/>
 {% endblock %}
 {% block main_content %}
-    <div><h3>{{ dive_plots[0] }}</h3></div>
+    <div><h3>{{ path }}</h3></div>
     {% for plot in dive_plots %}
         <a data-bs-toggle="modal" data-bs-target={{ '#'+plot[-8:-4] }}>
          <img src={{ plot }} width="400" alt="Piloting image thumbnail">

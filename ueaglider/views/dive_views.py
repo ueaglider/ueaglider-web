@@ -5,8 +5,6 @@ import os
 import sys
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, folder)
-print('here')
-print(folder)
 blueprint = flask.Blueprint('dives', __name__, template_folder='templates')
 
 
@@ -86,6 +84,7 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
         'next dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num + 1),
     }
     return {
+        'path': folder,
         'dive_plots': dive_plot_paths,
         'links_dict': links_dict
     }
