@@ -69,11 +69,9 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
     :returns:
     dive_plots: list of paths to images associated with the dive
     """
-    dive_glob = glob.glob(os.path.join('static/img/dives/Mission' + str(mission_id)
-                                       + '/' + str(glider_num)
-                                       + '/Dive' + str(dive_num).zfill(4), '*.png'))
+    dive_glob = glob.glob(os.path.join('static/img/dives/Mission' , '*.png'))
     p = Path(folder)
-    path_add = 'static/img/dives/Mission60/579/Dive0001'
+    path_add = 'static/img/dives/Mission'+ str(mission_id) + '/' + str(glider_num) + '/Dive' + str(dive_num).zfill(4)
     pp = p / path_add
     f = sorted(pp.glob('*'))
     foo = []
