@@ -2,7 +2,11 @@ import flask
 from ueaglider.infrastructure.view_modifiers import response
 import glob
 import os
-
+import sys
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, folder)
+print('here')
+print(folder)
 blueprint = flask.Blueprint('dives', __name__, template_folder='templates')
 
 

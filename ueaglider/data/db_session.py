@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from ueaglider.data.modelbase import SqlAlchemyBase
 import json
 import os
-import sys
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 # Store credentials in a external file that is never added to git or shared over insecure channels
 with open(folder+'/secrets.txt') as json_file:
