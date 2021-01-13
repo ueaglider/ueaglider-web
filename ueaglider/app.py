@@ -1,4 +1,8 @@
 from flask import Flask
+import sys
+import os
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, folder)
 from ueaglider.data.db_session import global_init, create_session
 from ueaglider.data.gliders import Gliders
 from ueaglider.infrastructure.view_modifiers import response
