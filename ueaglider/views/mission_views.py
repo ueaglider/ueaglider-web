@@ -22,9 +22,9 @@ def missions(mission_id: int):
     print(waypoint_dict)
     target_dict = mission_service.targets_to_json(targets)
     print(target_dict)
-    dives, gliders, most_recent_dives = mission_service.get_mission_dives(mission_id)
-    divesdict, dive_page_links = mission_service.dives_to_json(dives, gliders)
-    recentdivesdict, __ = mission_service.dives_to_json(most_recent_dives, gliders)
+    dives, mission_gliders, most_recent_dives = mission_service.get_mission_dives(mission_id)
+    divesdict, dive_page_links = mission_service.dives_to_json(dives, mission_gliders)
+    recentdivesdict, __ = mission_service.dives_to_json(most_recent_dives, mission_gliders)
     mission_plots = [
         'static/img/dives/Mission' + str(mission_id) + '/map.png'
     ]
@@ -38,3 +38,31 @@ def missions(mission_id: int):
             'dive_page_links': dive_page_links,
             'waypointdict': waypoint_dict
             }
+
+
+@blueprint.route('/gliders')
+@response(template_file='missions/gliders_list.html')
+def gliders_list():
+    """
+    :return:
+    list of all gliders and links to them
+    """
+    glider_list = mission_service.list_gliders()
+    return {
+        'glider_list': glider_list
+    }
+
+
+@blueprint.route('/gliders/SG<int:glider_num>')
+@response(template_file='missions/glider.html')
+def gliders(glider_num: int):
+    """
+    :param glider_num: the glider number e.g. SG637
+    :return:
+    info on the glider and its missions
+    """
+    glider_data = mission_service.glider_info(glider_num)
+    print(glider_data.Name)
+    return {
+        'glider_data': glider_data
+    }

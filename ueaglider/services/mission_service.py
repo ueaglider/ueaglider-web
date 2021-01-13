@@ -35,6 +35,20 @@ def list_missions() -> dict:
     session.close()
     return missions
 
+def list_gliders() -> dict:
+    session = create_session()
+    gliders = session.query(Gliders).order_by(Gliders.Number.asc()).all()
+    session.close()
+    return gliders
+
+
+
+def glider_info(glider_num):
+    session = create_session()
+    glider_info = session.query(Gliders).filter(Gliders.Number == glider_num).first()
+    session.close()
+    return glider_info
+
 
 def coord_db_decimal(coord_in):
     # convert from kongsberg style degree-mins in table to decimal degrees
