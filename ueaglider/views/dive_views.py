@@ -3,7 +3,7 @@ from ueaglider.infrastructure.view_modifiers import response
 import glob
 import os
 import sys
-import pathlib as Path
+from pathlib import Path
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, folder)
 blueprint = flask.Blueprint('dives', __name__, template_folder='templates')
@@ -73,11 +73,14 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
                                        + '/' + str(glider_num)
                                        + '/Dive' + str(dive_num).zfill(4), '*.png'))
     p = Path(folder)
+    path_add = 'static/img/dives/Mission60/579/Dive0001'
+    pp = p / path_add
+    f = sorted(pp.glob('*'))
+    foo = []
     dive_plot_paths = []
-    for item in dive_glob:
-        path = '/' + item
-        dive_plot_paths.append(path)
-    dive_plot_paths.sort()
+    for path in f:
+        foo.append(str(path))
+        dive_plot_paths.append(str(path)[30:])
     links_dict = {
         'prev dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num - 1),
         'glider status': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status",
@@ -86,7 +89,7 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
         'next dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num + 1),
     }
     return {
-        'path': p,
+        'path': foo,
         'dive_plots': dive_plot_paths,
         'links_dict': links_dict
     }
