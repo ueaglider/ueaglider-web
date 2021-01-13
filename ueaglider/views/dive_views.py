@@ -18,7 +18,7 @@ def science(mission_id: int, glider_num: int):
     dive_plots: list of paths to images associated with the dive
     """
     folder_path = Path(folder)
-    path_add = 'static/img/dives/Science' + str(mission_id) + '/' + str(glider_num) + '/Monitor'
+    path_add = 'static/img/dives/Mission' + str(mission_id) + '/' + str(glider_num) + '/Science'
     dive_path = folder_path / path_add
     figure_paths = sorted(dive_path.glob('*'))
     figure_strings = []
