@@ -4,23 +4,27 @@ from ueaglider.data.db_session import create_session
 from ueaglider.data.gliders import Gliders, Missions, Dives, Targets, Waypoints
 
 
+# Add more non-UEA assets and missions here so they don't inflate our front page statistics
+non_uea_mission_numbers = [1, 2, 16, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 53]
+non_uea_gliders = [503, 539, 546, 566, 533, 565, 524, 999, 532, 534, 550, 602, 621, 643, 640]
+
 def get_glider_count() -> int:
     session = create_session()
-    gliders = session.query(Gliders).count()
+    gliders = session.query(Gliders).filter(Gliders.Number.notin_(non_uea_gliders)).count()
     session.close()
     return gliders
 
 
 def get_mission_count() -> int:
     session = create_session()
-    missions = session.query(Missions).count()
+    missions = session.query(Missions).filter(Missions.MissionID.notin_(non_uea_mission_numbers)).count()
     session.close()
     return missions
 
 
 def get_dive_count() -> int:
     session = create_session()
-    dives = session.query(Dives).count()
+    dives = session.query(Dives).filter(Dives.MissionID.notin_(non_uea_mission_numbers)).count()
     session.close()
     return dives
 
@@ -64,6 +68,7 @@ def get_mission_targets(mission_id) -> Optional[Any]:
     session.close()
 
     return targets
+
 
 def get_mission_waypoints(mission_id) -> Optional[Any]:
     if not mission_id:
@@ -133,8 +138,8 @@ def dives_to_json(dives, gliders) -> Tuple:
                          + "/dive" + str(dive.DiveNo).zfill(4)
         dive_page_links.append(dive_page_link)
         tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
-            dive.GliderID] + "<br><a href=" + dive_page_link +">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " + str(dive.Latitude) \
-                    + "<br>Lon: " + str(dive.Longitude)
+            dive.GliderID] + "<br><a href=" + dive_page_link + ">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " + str(
+            dive.Latitude) + "<br>Lon: " + str(dive.Longitude)
         dive_item = {
             "geometry": {
                 "type": "Point",
@@ -164,7 +169,8 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
     features = []
     for i, target in enumerate(targets):
         if mission_tgt:
-            tgt_popup = "Mission " + str(target.MissionID) + "<br><a href=/mission" + str(target.MissionID) + ">" + target.Name
+            tgt_popup = "Mission " + str(target.MissionID) + "<br><a href=/mission" + str(
+                target.MissionID) + ">" + target.Name
         else:
             tgt_popup = "Target: " + target.Name + "<br>Lat: " + str(target.Latitude) + "<br>Lon: " + str(
                 target.Longitude) + "<br>GOTO: " + target.Goto + "<br>Radius: " + str(target.Radius) + ' m'
