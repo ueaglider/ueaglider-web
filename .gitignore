@@ -135,4 +135,4 @@ dmypy.json
 *.sql
 ueaglider/secrets.txt
 ueaglider/static/img/dives/Mission*
-ueaglider/server/
+ueaglider/server/server_setup.sh
