@@ -136,3 +136,6 @@ dmypy.json
 ueaglider/secrets.txt
 ueaglider/static/img/dives/Mission*
 ueaglider/server/server_setup.sh
+*.swp
+*.swo
+*~
