@@ -9,9 +9,12 @@ app = Flask(__name__)
 
 def main():
     # Collect all the page routes and instructions
+    print("registering blueprints)")
     register_blueprints()
     # Initialise the database
+    print("initialising db")
     global_init('seaglider')
+    print("db registered, starting app")
     app.run(debug=False)
 
 def register_blueprints():
