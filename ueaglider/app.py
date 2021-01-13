@@ -6,16 +6,20 @@ sys.path.insert(0, folder)
 from ueaglider.data.db_session import global_init, create_session
 
 app = Flask(__name__)
-
 def main():
-    # Collect all the page routes and instructions
-    print("registering blueprints)")
+    configure()
+    app.run(debug=True, port=5006)
+
+
+def configure():
+    print("Configuring Flask app:")
+
     register_blueprints()
-    # Initialise the database
-    print("initialising db")
+    print("Registered blueprints")
+
     global_init('seaglider')
-    print("db registered, starting app")
-    app.run(debug=False)
+    print("DB setup completed.")
+    print("", flush=True)
 
 def register_blueprints():
     from ueaglider.views import home_views
@@ -28,4 +32,6 @@ def register_blueprints():
 
 if __name__ == '__main__':
     main()
+else:
+    configure()
 
