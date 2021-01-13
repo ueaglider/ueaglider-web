@@ -4,6 +4,7 @@ import ueaglider.services.mission_service as mission_service
 
 blueprint = flask.Blueprint('home', __name__, template_folder='templates')
 
+
 @blueprint.route('/')
 @response(template_file='home/index.html')
 def index():
@@ -21,5 +22,5 @@ def index():
     return {'glider_count': glider_count,
             'mission_count': mission_count,
             'dive_count': dive_count,
-            'mission_list':missions_list,
+            'mission_list': missions_list,
             'mission_tgts': mission_targets}

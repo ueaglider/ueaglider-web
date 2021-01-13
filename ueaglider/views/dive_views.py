@@ -3,10 +3,11 @@ from ueaglider.infrastructure.view_modifiers import response
 import os
 import sys
 from pathlib import Path
+
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, folder)
 blueprint = flask.Blueprint('dives', __name__, template_folder='templates')
-print(folder)
+
 
 @blueprint.route('/mission<int:mission_id>/glider<int:glider_num>/science')
 @response(template_file='missions/dive.html')
@@ -37,6 +38,7 @@ def science(mission_id: int, glider_num: int):
         'links_dict': links_dict
     }
 
+
 @blueprint.route('/mission<int:mission_id>/glider<int:glider_num>/status')
 @response(template_file='missions/dive.html')
 def status(mission_id: int, glider_num: int):
@@ -64,6 +66,7 @@ def status(mission_id: int, glider_num: int):
         'dive_plots': dive_plot_paths,
         'links_dict': links_dict
     }
+
 
 @blueprint.route('/mission<int:mission_id>/glider<int:glider_num>/dive<int:dive_num>')
 @response(template_file='missions/dive.html')

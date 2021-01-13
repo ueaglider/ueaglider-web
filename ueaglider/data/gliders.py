@@ -30,6 +30,7 @@ class Targets(SqlAlchemyBase):
     MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.MissionID"))
     mission = orm.relation('Missions')
 
+
 class Waypoints(SqlAlchemyBase):
     __tablename__ = 'Waypoints'
     __table_args__ = {'extend_existing': True}
@@ -58,7 +59,6 @@ class Dives(SqlAlchemyBase):
     mission = orm.relation('Missions')
 
 
-
 class Missions(SqlAlchemyBase):
     __tablename__ = 'Missions'
     __table_args__ = {'extend_existing': True}
@@ -80,5 +80,3 @@ class Missions(SqlAlchemyBase):
     dives: List[Dives] = orm.relation("Dives", order_by=[
         Dives.DiveInfoID.asc(),
     ], back_populates='mission')
-
-
