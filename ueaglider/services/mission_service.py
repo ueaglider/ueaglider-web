@@ -130,16 +130,19 @@ def get_mission_dives(mission_id) -> Optional[Any]:
     gliders = query.all()
     # Get most recent dive from each glider
     most_recent_dives = []
+    # Group dives by glider
+    dives_by_glider = []
     for glider_id in glider_ids:
-        dive = session.query(Dives) \
+        dives = session.query(Dives) \
             .filter(Dives.MissionID == mission_id) \
             .filter(Dives.GliderID == glider_id) \
             .order_by(Dives.DiveNo.desc()) \
-            .first()
-        most_recent_dives.append(dive)
+            .all()
+        dives_by_glider.append(dives)
+        most_recent_dives.append(dives[0])
 
     session.close()
-    return dives, gliders, most_recent_dives
+    return dives, gliders, dives_by_glider, most_recent_dives
 
 
 def dives_to_json(dives, gliders) -> Tuple:
@@ -175,6 +178,9 @@ def dives_to_json(dives, gliders) -> Tuple:
             "properties": {
                 "popupContent": tgt_popup,
                 "gliderOrder": glider_order_dict[dive.GliderID],
+                "gliderNum": glider_number_dict[dive.GliderID],
+                "diveLink": dive_page_link,
+                "diveNum": str(dive.DiveNo),
             },
             "id": i
         }

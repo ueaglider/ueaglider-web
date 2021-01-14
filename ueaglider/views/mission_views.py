@@ -20,10 +20,12 @@ def missions(mission_id: int):
     targets = mission_service.get_mission_targets(mission_id)
     waypoints = mission_service.get_mission_waypoints(mission_id)
     waypoint_dict = mission_service.waypoints_to_json(waypoints)
-    print(waypoint_dict)
     target_dict = mission_service.targets_to_json(targets)
-    print(target_dict)
-    dives, mission_gliders, most_recent_dives = mission_service.get_mission_dives(mission_id)
+    dives, mission_gliders, dives_by_glider, most_recent_dives = mission_service.get_mission_dives(mission_id)
+    dives_by_glider_json = []
+    for dives_list in dives_by_glider:
+        dives_json, dive_page_links = mission_service.dives_to_json(dives_list, mission_gliders)
+        dives_by_glider_json.append(dives_json)
     divesdict, dive_page_links = mission_service.dives_to_json(dives, mission_gliders)
     recentdivesdict, __ = mission_service.dives_to_json(most_recent_dives, mission_gliders)
     mission_plots = [
@@ -38,7 +40,8 @@ def missions(mission_id: int):
             'recentdivesdict': recentdivesdict,
             'missionplots': mission_plots,
             'dive_page_links': dive_page_links,
-            'waypointdict': waypoint_dict
+            'waypointdict': waypoint_dict,
+            'dives_by_glider_json': dives_by_glider_json,
             }
 
 
