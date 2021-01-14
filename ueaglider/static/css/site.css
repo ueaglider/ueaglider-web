@@ -6,10 +6,6 @@ body {
     color: #000000;
 }
 
-.navbar {
-  position: sticky;
-  top: 0;
-}
 
 #content {
   background-color: blu;
