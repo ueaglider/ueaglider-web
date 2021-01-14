@@ -139,3 +139,4 @@ ueaglider/server/server_setup.sh
 *.swp
 *.swo
 *~
+server/server_setup.sh

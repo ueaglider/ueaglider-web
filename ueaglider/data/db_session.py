@@ -12,16 +12,16 @@ with open(folder+'/secrets.txt') as json_file:
 __factory = None
 
 
-def global_init(db_file: str):
+def global_init(db_name: str):
     global __factory
     # If the factory is already running, don't run it again
     if __factory:
         return
-    if not db_file or not db_file.strip():
-        raise Exception("You must specify a db file.")
+    if not db_name or not db_name.strip():
+        raise Exception("You must specify a db name.")
 
     # Using pymysql to talk to db, resolves lack of mypyDB
-    conn_str = 'mysql+pymysql://' + secrets['sql_user'] + ':'+secrets['sql_pwd'] + '@localhost/' + db_file.strip()
+    conn_str = 'mysql+pymysql://' + secrets['sql_user'] + ':' + secrets['sql_pwd'] + '@localhost/' + db_name.strip()
     print("Connecting to DB with {}".format(conn_str))
 
     # Can switch echo to True for debug, SQL actions print out to terminal
@@ -37,4 +37,3 @@ def global_init(db_file: str):
 def create_session() -> Session:
     global __factory
     return __factory()
-
