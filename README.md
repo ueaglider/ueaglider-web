@@ -2,6 +2,8 @@
 
 A new website to replace the venerable PHP job by Bastien at http://ueaglider.uea.ac.uk/
 
+The development version is now live at https://demo-ueaglider.hopto.org/
+
 # Aims
 
 - [ ] Emulate funcionality of old website
@@ -33,10 +35,14 @@ A new website to replace the venerable PHP job by Bastien at http://ueaglider.ue
   - [ ] Overview of the critical issues - batteries, and when the next call is due (Karen)
   - [ ] Gebco bathymetric depth at the location of the last surfacing (Rob)
   - [ ] page for each glider showing most recent mission etc (Gareth)
+  
+- [ ] Extra pages
+  - [ ] Summary of each glider
+  - [ ] Summary of each mission
 
 - [ ] Security
   - [ ] install bootstrap locally with npm
-  - [ ] secure with SSL
+  - [x] secure with SSL
   - [ ] Make sure you can't delete stuff from the website
   - [ ] sql injection vulns
   - [ ] XSS vulns
