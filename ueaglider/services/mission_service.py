@@ -3,7 +3,7 @@ from typing import Optional, Any, Tuple
 from ueaglider.data.db_session import create_session
 from ueaglider.data.gliders import Gliders, Missions, Dives, Targets, Waypoints
 
-
+degree_sign = u'\N{DEGREE SIGN}'
 # Add more non-UEA assets and missions here so they don't inflate our front page statistics
 non_uea_mission_numbers = [1, 2, 16, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 53]
 non_uea_gliders = [503, 539, 546, 566, 533, 565, 524, 999, 532, 534, 550, 602, 621, 643, 640]
@@ -56,6 +56,14 @@ def coord_db_decimal(coord_in):
     minutes = coord_in - deg
     decimal_degrees = deg + minutes / 0.6
     return decimal_degrees
+
+
+def coord_db_to_pretty(coord_in):
+    # convert from db record to pretty formatted string for popup text
+    deg = int(coord_in)
+    minutes = abs(coord_in - deg) * 100
+    coord_str = str(deg) + degree_sign + " " + str(round(minutes, 2)) + "'"
+    return coord_str
 
 
 def get_mission_by_id(mission_id):
@@ -152,8 +160,8 @@ def dives_to_json(dives, gliders) -> Tuple:
                          + "/dive" + str(dive.DiveNo).zfill(4)
         dive_page_links.append(dive_page_link)
         tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
-            dive.GliderID] + "<br><a href=" + dive_page_link + ">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " + str(
-            dive.Latitude) + "<br>Lon: " + str(dive.Longitude)
+            dive.GliderID] + "<br><a href=" + dive_page_link + ">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " + coord_db_to_pretty(
+            dive.Latitude) + "<br>Lon: " + coord_db_to_pretty(dive.Longitude)
         dive_item = {
             "geometry": {
                 "type": "Point",
@@ -186,7 +194,7 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
             tgt_popup = "Mission " + str(target.MissionID) + "<br><a href=/mission" + str(
                 target.MissionID) + ">" + target.Name
         else:
-            tgt_popup = "Target: " + target.Name + "<br>Lat: " + str(target.Latitude) + "<br>Lon: " + str(
+            tgt_popup = "Target: " + target.Name + "<br>Lat: " + coord_db_to_pretty(target.Latitude) + "<br>Lon: " + coord_db_to_pretty(
                 target.Longitude) + "<br>GOTO: " + target.Goto + "<br>Radius: " + str(target.Radius) + ' m'
         target_item = {
             "geometry": {
