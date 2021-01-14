@@ -11,3 +11,17 @@ def edit_waypoint_info(waypoint_id, info_txt):
     session.commit()
     session.close()
     return
+
+
+def create_waypoint(missionid, name, lat, lon, info):
+    session = create_session()
+    waypoint = Waypoints()
+    waypoint.MissionID = missionid
+    waypoint.Name = name
+    waypoint.Latitude = lat
+    waypoint.Longitude = lon
+    waypoint.Info = info
+    session.add(waypoint)
+    session.commit()
+    session.close()
+    return
