@@ -12,6 +12,20 @@
     <title>Mission {{ mission.MissionID }}</title>
 {% endblock %}
 
+{% block extra_nav %}
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Select Mission
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        {% for m in mission_list %}
+            <a class="dropdown-item" href="/mission{{ m.Number }}" >Mission {{ m.Number }} {{ m.Name }}</a>
+        {% endfor %}
+    </div>
+</li>
+{% endblock %}
+
 {% block main_content %}
     <div class="totals">
         this mission is {{ mission.MissionID }}

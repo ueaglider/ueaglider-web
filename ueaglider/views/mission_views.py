@@ -15,6 +15,7 @@ def missions(mission_id: int):
     targets: targets for this this mission
     target_dict: targets formatted to JSON style dict for JS map
     """
+    missions_list = mission_service.list_missions()
     mission = mission_service.get_mission_by_id(mission_id)
     targets = mission_service.get_mission_targets(mission_id)
     waypoints = mission_service.get_mission_waypoints(mission_id)
@@ -30,6 +31,7 @@ def missions(mission_id: int):
     ]
 
     return {'mission': mission,
+            'mission_list': missions_list,
             'targets': targets,
             'targetdict': target_dict,
             'divesdict': divesdict,
