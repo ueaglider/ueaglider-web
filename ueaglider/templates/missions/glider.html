@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 
+{% block additional_css %}
+    <title>SG{{ glider_data.Number }} {{ glider_data.Name }}</title>
+{% endblock %}
 {% block main_content %}
     <div class="headline">
         Number: SG{{ glider_data.Number }}<br>

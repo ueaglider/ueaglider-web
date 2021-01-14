@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block additional_css %}
         <link rel="stylesheet" href="/static/css/dive.css"/>
+        <title>SG{{ dive_plots[0][-26:-23]}} Dive {{ dive_plots[0][-18:-14].lstrip("0")}}</title>
 {% endblock %}
 {% block main_content %}
     {% for plot in dive_plots %}

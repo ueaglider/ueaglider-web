@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
-
+    <title>Mission {{ mission.MissionID }}</title>
 {% endblock %}
 
 {% block main_content %}
@@ -154,7 +154,7 @@
 
     <div class="dives">
         {% for dive in dive_page_links %}
-            <a href={{ dive }}> {{ 'SG' + dive[-12:-9] +" Dive" + dive[-4:] }}</a><br>
+            <a href={{ dive }}> {{ 'SG' + dive[-12:-9] +" Dive " + dive[-4:].lstrip("0") }}</a><br>
         {% endfor %}
     </div>
 
