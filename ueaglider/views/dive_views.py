@@ -92,6 +92,8 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
         'mission page': "/mission" + str(mission_id),
         'next dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num + 1),
     }
+    if not dive_plot_paths:
+        dive_plot_paths = ['/static/img/dives/hedge.png']
     return {
         'dive_plots': dive_plot_paths,
         'links_dict': links_dict
