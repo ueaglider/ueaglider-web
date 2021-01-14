@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from services.mission_service import degree_sign
+from ueaglider.services.mission_service import degree_sign
 
 
 def coord_db_decimal(coord_in):
