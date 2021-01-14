@@ -33,6 +33,8 @@ def science(mission_id: int, glider_num: int):
         'science': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science",
         'mission page': "/mission" + str(mission_id),
     }
+    if not dive_plot_paths:
+        dive_plot_paths = ['/static/img/dives/hedge.png']
     return {
         'dive_plots': dive_plot_paths,
         'links_dict': links_dict
@@ -62,6 +64,8 @@ def status(mission_id: int, glider_num: int):
         'science': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science",
         'mission page': "/mission" + str(mission_id),
     }
+    if not dive_plot_paths:
+        dive_plot_paths = ['/static/img/dives/hedge.png']
     return {
         'dive_plots': dive_plot_paths,
         'links_dict': links_dict
