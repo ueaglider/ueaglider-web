@@ -1,4 +1,6 @@
 import flask
+
+import services.json_conversion
 from ueaglider.infrastructure.view_modifiers import response
 import ueaglider.services.mission_service as mission_service
 
@@ -18,7 +20,7 @@ def index():
     dive_count = mission_service.get_dive_count()
     missions_list = mission_service.list_missions()
     mission_target_list = mission_service.mission_av_loc()
-    mission_targets = mission_service.targets_to_json(mission_target_list, mission_tgt=True)
+    mission_targets = services.json_conversion.targets_to_json(mission_target_list, mission_tgt=True)
     return {'glider_count': glider_count,
             'mission_count': mission_count,
             'dive_count': dive_count,

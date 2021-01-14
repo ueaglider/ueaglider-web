@@ -5,11 +5,37 @@
 {% endblock %}
 {% block main_content %}
     <div class="headline">
-        Number: SG{{ glider_data.Number }}<br>
-        Name: {{ glider_data.Name }}<br>
-        About: {{ glider_data.Info }} <br>
 
     </div>
+<div class="container mission-list">
+<h1> SG{{ glider_data.Number }} {{ glider_data.Name }}</h1>
+ {{ glider_data.Info }} <br>
+ Total dives: {{dives_count}}
+<h3>Missions Completed</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Mission</th>
+      <th scope="col">Mission</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Info</th>
+      <th scope="col">Link</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for m in mission_list %}
 
+    <tr>
+      <th scope="row">{{  m.MissionID }}</th>
+      <td>{{  m.Name}}</td>
+      <td>{{  m.StartDate.strftime("%Y-%m-%d")}}</td>
+      <td>{{  m.EndDate.strftime("%Y-%m-%d")}}</td>
+      <td>{{  m.Info}}</td>
+      <td><a href="/mission{{ m.MissionID }}" class="btn btn-primary" role="button">Select Mission</a></td>
+ {%  endfor %}
+  </tbody>
+</table>
+</div>
 {% endblock %}
 

@@ -28,10 +28,12 @@ def configure():
 def register_blueprints():
     from ueaglider.views import home_views
     from ueaglider.views import mission_views
+    from ueaglider.views import glider_views
     from ueaglider.views import dive_views
 
     app.register_blueprint(home_views.blueprint)
     app.register_blueprint(mission_views.blueprint)
+    app.register_blueprint(glider_views.blueprint)
     app.register_blueprint(dive_views.blueprint)
 
 

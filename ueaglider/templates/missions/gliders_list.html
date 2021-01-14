@@ -10,12 +10,10 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">Glider Num</th>
                 <th scope="col">Glider </th>
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
+                <th scope="col">Name</th>
                 <th scope="col">Glider Info</th>
-                <th scope="col">Link</th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -24,8 +22,6 @@
                 <tr>
                 <th scope="row">SG{{  g.Number }}</th>
                 <td>{{  g.Name}}</td>
-                <td>placehold</td>
-                <td>placehold</td>
                 <td>{{  g.Info}}</td>
                 <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">Select Glider</a></td>
             {%  endfor %}
