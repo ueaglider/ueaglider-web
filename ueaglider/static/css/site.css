@@ -2,10 +2,18 @@ body {
 
     padding-left: 50px;
     padding-right: 50px;
-    background-color:white;
-    color: #4682B4;
+    background-color: white;
+    color: #000000;
 }
 
+.navbar {
+  position: sticky;
+  top: 0;
+}
+
+#content {
+  background-color: blu;
+}
 
 .totals {
     margin-bottom: 20px;
