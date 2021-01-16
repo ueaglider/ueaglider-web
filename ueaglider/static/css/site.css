@@ -19,3 +19,8 @@ footer {
     text-align: center;
 
 }
+
+.error-message {
+    color: #a00d0d;
+    text-align: center;
+}

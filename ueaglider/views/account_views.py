@@ -4,27 +4,36 @@ from ueaglider.infrastructure.view_modifiers import response
 blueprint = flask.Blueprint('account', __name__, template_folder='templates')
 
 
-@blueprint.route('/account/index')
+@blueprint.route('/account')
 @response(template_file='account/index.html')
 def account_options():
     return {
-        'value': None
     }
 
 
 @blueprint.route('/account/register', methods=['GET'])
 @response(template_file='account/register.html')
 def register_get():
+
     return {
-        'value': None
     }
 
 
 @blueprint.route('/account/register', methods=['POST'])
 @response(template_file='account/register.html')
 def register_post():
+    r = flask.request
+    print(r.form)
+    name = r.form.get('name')
+    secret = r.form.get('secret', '').lower().strip()
+    password = r.form.get('password').strip()
+    if not name or not secret or not password:
+        return {
+            'name': name,
+            'secret': secret,
+            'password': password,
+            'error': 'better fill all those fields boyo'}
     return {
-        'value': None
     }
 
 
@@ -32,7 +41,6 @@ def register_post():
 @response(template_file='account/login.html')
 def login_get():
     return {
-        'value': None
     }
 
 
@@ -40,5 +48,4 @@ def login_get():
 @response(template_file='account/login.html')
 def login_post():
     return {
-        'value': None
     }
