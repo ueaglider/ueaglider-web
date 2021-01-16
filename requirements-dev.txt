@@ -3,3 +3,4 @@
 alembic~=1.4.3
 
 Werkzeug~=1.0.1
+passlib~=1.7.4
