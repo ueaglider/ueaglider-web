@@ -2,8 +2,6 @@ from functools import wraps
 import flask
 import werkzeug
 import werkzeug.wrappers
-
-
 # This file mostly copied from TalkPython FM course  on building flask apps
 # https://training.talkpython.fm/courses/details/building-data-driven-web-applications-in-python-with-flask-sqlalchemy-and-bootstrap
 

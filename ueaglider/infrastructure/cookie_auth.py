@@ -1,5 +1,5 @@
-# Another file mostly copied from the talkpython tutorial
-
+# This file mostly copied from TalkPython FM course  on building flask apps
+# https://training.talkpython.fm/courses/details/building-data-driven-web-applications-in-python-with-flask-sqlalchemy-and-bootstrap
 import hashlib
 from datetime import timedelta
 from typing import Optional
