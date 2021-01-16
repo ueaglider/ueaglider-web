@@ -1,14 +1,24 @@
 import flask
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service
+from ueaglider.infrastructure import cookie_auth as cookie_auth
 
 blueprint = flask.Blueprint('account', __name__, template_folder='templates')
 
 
 @blueprint.route('/account')
 @response(template_file='account/index.html')
-def account_options():
+def index():
+    user_id = cookie_auth.get_user_id_via_auth_cookie(flask.request)
+    if user_id is None:
+        return flask.redirect('/account/login')
+    user = user_service.find_user_by_id(user_id)
+    if not user:
+        return flask.redirect('/account/login')
     return {
+        'user': user,
+        'user_id': cookie_auth.get_user_id_via_auth_cookie(flask.request),
+
     }
 
 
@@ -49,7 +59,9 @@ def register_post():
             'email': email,
             'password': password,
             'error': "A user with that email is already registered"}
-    return flask.redirect('/account')
+    resp = flask.redirect('/account')
+    cookie_auth.set_auth(resp, user.UserID)
+    return resp
 
 
 @blueprint.route('/account/login', methods=['GET'])
@@ -77,4 +89,14 @@ def login_post():
             'password': password,
             'error': 'email not registered or password does not match'}
 
-    return flask.redirect('/account')
+    resp = flask.redirect('/account')
+    cookie_auth.set_auth(resp, user.UserID)
+    return resp
+
+
+@blueprint.route('/account/logout')
+def logout():
+    resp = flask.redirect('/')
+    cookie_auth.logout(resp)
+    return resp
+
