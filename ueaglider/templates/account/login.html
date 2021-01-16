@@ -4,8 +4,8 @@
     <div class="form-container">
         <form action="" method="POST" class="account-form">
             <h1>Login for UEA glider group members</h1>
-            <input name="email" type="text" placeholder=" Your email address" class="form-control" value="{{ email}}">
-            <input name="password" type="password" placeholder=" Your password"class="form-control">
+            <input name="email" type="text" placeholder=" Your email address" class="form-control" value="{{ email}}" required>
+            <input name="password" type="password" placeholder=" Your password"class="form-control" required>
             Not got an account? <a href="/account/register">sign up</a>
             <button type="submit" class="btn btn-primary">Login</button>
             <div style="clear: both;"></div>
