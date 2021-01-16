@@ -80,3 +80,10 @@ class Missions(SqlAlchemyBase):
     dives: List[Dives] = orm.relation("Dives", order_by=[
         Dives.DiveInfoID.asc(),
     ], back_populates='mission')
+
+class User(SqlAlchemyBase):
+    __tablename__ = 'Users'
+    UserID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
+    Name = sqlalchemy.Column(sqlalchemy.VARCHAR(100))
+    Email = sqlalchemy.Column(sqlalchemy.VARCHAR(100))
+    HashedPassword = sqlalchemy.Column(sqlalchemy.VARCHAR(100))
