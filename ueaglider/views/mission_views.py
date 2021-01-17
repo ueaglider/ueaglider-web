@@ -1,7 +1,8 @@
 import os
-
+import sys
 import flask
-
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, folder)
 import ueaglider.services.json_conversion as json_conversion
 from ueaglider.infrastructure.view_modifiers import response
 import ueaglider.services.mission_service as mission_service
@@ -36,10 +37,11 @@ def missions(mission_id: int):
         'static/img/dives/Mission' + str(mission_id) + '/map.png'
     ]
     isobath_dict = {}
-    if os.path.exists('static/json/Mission' + str(mission_id)):
-        mission_folder = 'static/json/Mission' + str(mission_id)
+    if os.path.exists('/apps/ueaglider_repo/ueaglider/static/json/Mission' + str(mission_id)):
+        mission_folder = '/apps/ueaglider_repo/ueaglider/static/json/Mission' + str(mission_id)
     else:
-        mission_folder = 'static/json/Mission23'
+        mission_folder = '/apps/ueaglider_repo/ueaglider/static/json/Mission23'
+    print(mission_folder)
     for depth in [50, 200, 1000]:
         with open(mission_folder+'/isobaths_' + str(depth) + 'm.json', 'r') as myfile:
             json_in = json.load(myfile)
