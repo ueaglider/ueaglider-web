@@ -65,35 +65,50 @@
     <!-- Script to create a leaflet map-->
     <script>
 
+    // geojson layers passed from view method
+    let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
+    let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
+    let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
+    let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
+    let depthDict = JSON.parse('{{ dict_10m | tojson | safe}}');
     let map = L.map('map')
 
     // Gebco base layer, we add it to map so it will always be the background
 
-    let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
-        layers: 'GEBCO_2019_Grid',
-        attribution: 'GEBCO Compilation Group (2020)'}).addTo(map);
+
     // A series of optional map layers
     let basemaps = {
 
+        GEBCO: L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
+            layers: 'GEBCO_2019_Grid',
+            attribution: 'GEBCO Compilation Group (2020)',
+        }),
+    };
+
+
+    let isobaths = {
+
+
         Ice: L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
             layers: 'polarview:antarctic_icechart_nic',
-           	opacity: 0.5,
-    		format: 'image/png',
-    		transparent: true,
+            opacity: 0.5,
+            format: 'image/png',
+            transparent: true,
             attribution: "Polar View (ESA)"
         }),
 
         EEZ: L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
-    		layers: 'eez_boundaries,eez', //'eez,eez_12nm,eez_24nm,eez_archipelagic_waters,eez_boundaries',
-    		opacity: 0.5,
-    		format: 'image/png',
-    		transparent: true,
+            layers: 'eez_boundaries,eez', //'eez,eez_12nm,eez_24nm,eez_archipelagic_waters,eez_boundaries',
+            opacity: 0.5,
+            format: 'image/png',
+            transparent: true,
             attribution:"Flanders Marine Institute (VLIZ)"
+        }),
+        GEBCO_10m: L.geoJSON(depthDict, {
+            attribution: "GEBCO)"
         }),
 
     };
-
-
     // Add the targets and seaglider icons
 
 	let targetIcon = L.icon({
@@ -116,18 +131,12 @@
 		popupAnchor:  [3, -30] // point from which the popup should open relative to the iconAnchor
 	});
 
-    // geojson layers passed from view method
-    let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
-    let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
-    let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
-    let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
-    let depthDict = JSON.parse('{{ dict_10m | tojson | safe}}');
+
     // Function adds popup content to markers
 	function popupText(feature, layer) {
 		layer.bindPopup(feature.properties.popupContent);
 	}
 
-	L.geoJSON(depthDict).addTo(map);
 
 
 
@@ -189,7 +198,7 @@
 	}).addTo(map);
 
     // Controls for the map
-    L.control.layers(basemaps).addTo(map);
+    L.control.layers(basemaps, isobaths).addTo(map);
     // Length scale with mad width in pixels
     L.control.scale({maxWidth: 200}).addTo(map)
 

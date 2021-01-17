@@ -37,8 +37,6 @@ def missions(mission_id: int):
     with open('static/json/data_10.json','r') as myfile:
         json_in = json.load(myfile)
     dict_10m = json.loads(json_in)
-
-    print(dict_10m)
     return {'mission': mission,
             'mission_list': missions_list,
             'targets': targets,
