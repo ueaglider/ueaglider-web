@@ -70,7 +70,9 @@
     let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
     let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
-    let depthDict = JSON.parse('{{ dict_10m | tojson | safe}}');
+    let depth10 = JSON.parse('{{ isobath_dict["depth_10_m"] | tojson | safe}}');
+    let depth100 = JSON.parse('{{ isobath_dict["depth_100_m"] | tojson | safe}}');
+    let depth1000 = JSON.parse('{{ isobath_dict["depth_1000_m"] | tojson | safe}}');
     let map = L.map('map')
 
     // Gebco base layer, we add it to map so it will always be the background
@@ -104,9 +106,17 @@
             transparent: true,
             attribution:"Flanders Marine Institute (VLIZ)"
         }),
-        GEBCO_10m: L.geoJSON(depthDict, {
+        GEBCO_10m: L.geoJSON(depth10, {
+            attribution: "GEBCO)",
+            color:'red',
+        }),
+        GEBCO_100m: L.geoJSON(depth100, {
             attribution: "GEBCO)"
         }),
+        GEBCO_1000m: L.geoJSON(depth1000, {
+            attribution: "GEBCO)"
+        }),
+
 
     };
     // Add the targets and seaglider icons

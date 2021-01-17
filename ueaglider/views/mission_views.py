@@ -33,10 +33,12 @@ def missions(mission_id: int):
     mission_plots = [
         'static/img/dives/Mission' + str(mission_id) + '/map.png'
     ]
-    #with open('/home/callum/Documents/basestation-migration/ueaglider-web/ueaglider/static/json/data_10.json', 'r') as myfile:
-    with open('static/json/data_10.json','r') as myfile:
-        json_in = json.load(myfile)
-    dict_10m = json.loads(json_in)
+    isobath_dict = {}
+    for depth in [10, 100, 1000]:
+        with open('static/json/isobath_' + str(depth) + 'm.json', 'r') as myfile:
+            json_in = json.load(myfile)
+        isobath_dict['depth_' + str(depth) + '_m'] = json.loads(json_in)
+
     return {'mission': mission,
             'mission_list': missions_list,
             'targets': targets,
@@ -47,7 +49,7 @@ def missions(mission_id: int):
             'dive_page_links': dive_page_links,
             'waypointdict': waypoint_dict,
             'dives_by_glider_json': dives_by_glider_json,
-            'dict_10m': dict_10m,
+            'isobath_dict': isobath_dict,
             }
 
 
