@@ -79,6 +79,7 @@
 
 
     // A series of optional map layers
+    
     let basemaps = {
 
         GEBCO: L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
@@ -106,7 +107,7 @@
             transparent: true,
             attribution:"Flanders Marine Institute (VLIZ)"
         }),
-        GEBCO_10m: L.geoJSON(depth10, {
+        "<span style='color: red'>GEBCO 10 m</span>": L.geoJSON(depth10, {
             attribution: "GEBCO)",
             color:'red',
         }),
