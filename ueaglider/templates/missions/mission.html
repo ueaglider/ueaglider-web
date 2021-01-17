@@ -70,8 +70,8 @@
     let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
     let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
-    let depth10 = JSON.parse('{{ isobath_dict["depth_10_m"] | tojson | safe}}');
-    let depth100 = JSON.parse('{{ isobath_dict["depth_100_m"] | tojson | safe}}');
+    let depth50 = JSON.parse('{{ isobath_dict["depth_50_m"] | tojson | safe}}');
+    let depth200 = JSON.parse('{{ isobath_dict["depth_200_m"] | tojson | safe}}');
     let depth1000 = JSON.parse('{{ isobath_dict["depth_1000_m"] | tojson | safe}}');
     let map = L.map('map')
 
@@ -82,7 +82,7 @@
     let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
         layers: 'GEBCO_2019_Grid',
         attribution: 'GEBCO Compilation Group (2020)'}).addTo(map);
-    
+
     let basemaps = {
 
         GEBCO: gebco
@@ -107,15 +107,17 @@
             transparent: true,
             attribution:"Flanders Marine Institute (VLIZ)"
         }),
-        "<span style='color: red'>GEBCO 10 m</span>": L.geoJSON(depth10, {
+        "<span style='color: red'>GEBCO 50 m</span>": L.geoJSON(depth50, {
             attribution: "GEBCO)",
             color:'red',
         }),
-        GEBCO_100m: L.geoJSON(depth100, {
-            attribution: "GEBCO)"
+         "<span style='color: blue'>GEBCO 200 m</span>": L.geoJSON(depth200, {
+            attribution: "GEBCO)",
+             color:'blue',
         }),
-        GEBCO_1000m: L.geoJSON(depth1000, {
-            attribution: "GEBCO)"
+         "<span style='color: gray'>GEBCO 1000 m</span>": L.geoJSON(depth1000, {
+            attribution: "GEBCO)",
+             color:'gray',
         }),
 
 
