@@ -37,10 +37,10 @@ def missions(mission_id: int):
         'static/img/dives/Mission' + str(mission_id) + '/map.png'
     ]
     isobath_dict = {}
-    if os.path.exists('/apps/ueaglider_repo/ueaglider/static/json/Mission' + str(mission_id)):
-        mission_folder = '/apps/ueaglider_repo/ueaglider/static/json/Mission' + str(mission_id)
+    if os.path.exists(folder+'/static/json/Mission' + str(mission_id)):
+        mission_folder = folder + '/static/json/Mission' + str(mission_id)
     else:
-        mission_folder = '/apps/ueaglider_repo/ueaglider/static/json/Mission23'
+        mission_folder = folder + '/static/json/Mission23'
     print(mission_folder)
     for depth in [50, 200, 1000]:
         with open(mission_folder+'/isobaths_' + str(depth) + 'm.json', 'r') as myfile:
