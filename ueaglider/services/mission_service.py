@@ -8,6 +8,7 @@ degree_sign = u'\N{DEGREE SIGN}'
 non_uea_mission_numbers = [1, 2, 16, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 53]
 non_uea_gliders = [503, 539, 546, 566, 533, 565, 524, 999, 532, 534, 550, 602, 621, 643, 640]
 
+
 def get_glider_count() -> int:
     session = create_session()
     gliders = session.query(Gliders).filter(Gliders.Number.notin_(non_uea_gliders)).count()
@@ -158,7 +159,6 @@ def mission_loc(filter=False, mission_no=None):
     for mission in missions:
         dive = session.query(Dives).filter(Dives.MissionID == mission.MissionID).order_by(Dives.DiveNo.asc()).first()
         if dive:
-            print(mission.MissionID)
             tgt_template = Targets()
             tgt_template.Longitude = dive.Longitude
             tgt_template.Latitude = dive.Latitude
@@ -172,5 +172,3 @@ def mission_loc(filter=False, mission_no=None):
             mission_locs.append(target)
     session.close()
     return mission_locs
-
-
