@@ -7,8 +7,10 @@ import matplotlib.pyplot as plt
 import json
 from shapely.geometry import LineString
 import geopandas as gpd
-
-path_to_gebco_nc = '/media/callum/storage/Documents/global_datasets/GEBCO_2019/GEBCO_2019.nc'
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+with open(folder+'/secrets.txt') as json_file:
+    secrets = json.load(json_file)
+path_to_gebco_nc = secrets["gebco_path"]
 
 
 def main():

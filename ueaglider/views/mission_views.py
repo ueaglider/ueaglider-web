@@ -2,14 +2,17 @@ import os
 import subprocess
 import sys
 import flask
+import json
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, folder)
+
 import ueaglider.services.json_conversion as json_conversion
 from ueaglider.infrastructure.view_modifiers import response
 import ueaglider.services.mission_service as mission_service
-import json
 blueprint = flask.Blueprint('missions', __name__, template_folder='templates')
 
+with open(folder+'/secrets.txt') as json_file:
+    secrets = json.load(json_file)
 
 @blueprint.route('/mission<int:mission_id>')
 @response(template_file='missions/mission.html')
@@ -46,7 +49,7 @@ def missions(mission_id: int):
         if not mission_targets:
             mission_folder = folder + '/static/json/Mission23'
         else:
-            subprocess.run(["/home/callum/anaconda3/envs/geospatial/bin/python", "-u",
+            subprocess.run([secrets["gebco_python"], "-u",
                             "bin/gebco_bathy.py",
                             str(tgt.Longitude),
                             str(tgt.Latitude),
