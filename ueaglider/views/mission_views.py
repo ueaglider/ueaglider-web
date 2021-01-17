@@ -47,7 +47,7 @@ def missions(mission_id: int):
             mission_folder = folder + '/static/json/Mission23'
         else:
             subprocess.run(["/home/callum/anaconda3/envs/geospatial/bin/python", "-u",
-                            "/media/callum/storage/Documents/foo/geojson/subby.py",
+                            "bin/gebco_bathy.py",
                             str(tgt.Longitude),
                             str(tgt.Latitude),
                             str(mission_id),
