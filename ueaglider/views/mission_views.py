@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import flask
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -40,7 +41,19 @@ def missions(mission_id: int):
     if os.path.exists(folder+'/static/json/Mission' + str(mission_id)):
         mission_folder = folder + '/static/json/Mission' + str(mission_id)
     else:
-        mission_folder = folder + '/static/json/Mission23'
+        mission_targets = mission_service.mission_loc(mission_no=mission_id)
+        tgt = mission_targets[0]
+        if not mission_targets:
+            mission_folder = folder + '/static/json/Mission23'
+        else:
+            subprocess.run(["/home/callum/anaconda3/envs/geospatial/bin/python", "-u",
+                            "/media/callum/storage/Documents/foo/geojson/subby.py",
+                            str(tgt.Longitude),
+                            str(tgt.Latitude),
+                            str(mission_id),
+                            ])
+            #mission_folder = folder + '/static/json/Mission23'
+            mission_folder = folder + '/static/json/Mission' + str(mission_id)
     print(mission_folder)
     for depth in [50, 200, 1000]:
         with open(mission_folder+'/isobaths_' + str(depth) + 'm.json', 'r') as myfile:

@@ -146,10 +146,12 @@ def get_mission_dives(mission_id) -> Optional[Any]:
     return dives, gliders, dives_by_glider, most_recent_dives
 
 
-def mission_loc(filter=False):
+def mission_loc(filter=False, mission_no=None):
     session = create_session()
     if filter:
         missions = session.query(Missions).filter(Missions.MissionID.notin_(non_uea_mission_numbers)).all()
+    elif mission_no:
+        missions = session.query(Missions).filter(Missions.MissionID == mission_no)
     else:
         missions = session.query(Missions).all()
     mission_locs = []
