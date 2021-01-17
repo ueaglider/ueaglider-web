@@ -121,11 +121,15 @@
     let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
     let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
-
+    let depthDict = JSON.parse('{{ dict_10m | tojson | safe}}');
     // Function adds popup content to markers
 	function popupText(feature, layer) {
 		layer.bindPopup(feature.properties.popupContent);
 	}
+
+	L.geoJSON(depthDict).addTo(map);
+
+
 
     // Use the target icon on each target and add popup content
 	let targetsLayer = L.geoJSON(targetDict, {
@@ -197,7 +201,7 @@
     <div class="images">
     <h3> TODO generic mission plots here</h3><br>
         {% for plot in missionplots %}
-        <img src={{ plot }} alt="mission plot"><br>
+        <img src={{ plot }} ><br>
         {% endfor %}
 
     </div>

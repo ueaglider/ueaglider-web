@@ -3,7 +3,7 @@ import flask
 import ueaglider.services.json_conversion as json_conversion
 from ueaglider.infrastructure.view_modifiers import response
 import ueaglider.services.mission_service as mission_service
-
+import json
 blueprint = flask.Blueprint('missions', __name__, template_folder='templates')
 
 
@@ -33,7 +33,12 @@ def missions(mission_id: int):
     mission_plots = [
         'static/img/dives/Mission' + str(mission_id) + '/map.png'
     ]
+    #with open('/home/callum/Documents/basestation-migration/ueaglider-web/ueaglider/static/json/data_10.json', 'r') as myfile:
+    with open('static/json/data_10.json','r') as myfile:
+        json_in = json.load(myfile)
+    dict_10m = json.loads(json_in)
 
+    print(dict_10m)
     return {'mission': mission,
             'mission_list': missions_list,
             'targets': targets,
@@ -44,6 +49,7 @@ def missions(mission_id: int):
             'dive_page_links': dive_page_links,
             'waypointdict': waypoint_dict,
             'dives_by_glider_json': dives_by_glider_json,
+            'dict_10m': dict_10m,
             }
 
 
