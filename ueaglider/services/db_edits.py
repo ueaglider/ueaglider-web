@@ -24,4 +24,4 @@ def create_waypoint(missionid, name, lat, lon, info):
     session.add(waypoint)
     session.commit()
     session.close()
-    return
+    return waypoint

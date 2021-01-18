@@ -23,6 +23,13 @@ def get_mission_count() -> int:
     return missions
 
 
+def mission_ids() -> list:
+    session = create_session()
+    missions = session.query(Missions.MissionID).all()
+    session.close()
+    return missions
+
+
 def get_dive_count(filter_glider=False) -> int:
     session = create_session()
     if filter_glider:

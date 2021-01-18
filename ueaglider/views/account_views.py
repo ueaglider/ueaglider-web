@@ -1,7 +1,8 @@
 import flask
 from ueaglider.infrastructure.view_modifiers import response
-from ueaglider.services import user_service
+from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth, request_dict
+from ueaglider.viewmodels.account.edit_viewmodel import AddWaypointViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
@@ -80,3 +81,31 @@ def logout():
     cookie_auth.logout(resp)
     return resp
 
+
+@blueprint.route('/account/add_waypoint', methods=['GET'])
+@response(template_file='account/add_waypoint.html')
+def addwaypoint_get():
+    vm = AddWaypointViewModel()
+
+    if not vm.user_id:
+        return flask.redirect('/account/login')
+    return vm.to_dict()
+
+
+@blueprint.route('/account/add_waypoint', methods=['POST'])
+@response(template_file='account/add_waypoint.html')
+def addwaypoint_post():
+    vm = AddWaypointViewModel()
+    vm.validate()
+
+    if vm.error:
+        return vm.to_dict()
+
+    waypoint = db_edits.create_waypoint(vm.missionid, vm.name, vm.lat, vm.lon, vm.info)
+
+    if not waypoint:
+        vm.error = 'The waypoint could not be created'
+        return vm.to_dict()
+
+    resp = flask.redirect('/account')
+    return resp

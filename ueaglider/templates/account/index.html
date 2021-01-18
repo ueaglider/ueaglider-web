@@ -1,6 +1,12 @@
 {% extends "layout.html" %}
 
 {% block main_content %}
-    welcome {{ user.Name }}!        <a href="/" class="btn btn-warning" role="button">Logout</a>
-
+    <div class="welcome">
+        <h3>welcome <b>{{ user.Name }}</b></h3><br>
+        What would you like to do?
+    </div>
+    <div class="navdives">
+            <a  class="btn btn-warning" role="button" href="/account/add_waypoint"> Add waypoint </a>
+    </div>
+<a href="/" class="btn btn-danger" role="button">Logout</a>
 {% endblock %}
