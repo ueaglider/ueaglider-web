@@ -86,4 +86,6 @@ class User(SqlAlchemyBase):
     UserID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
     Name = sqlalchemy.Column(sqlalchemy.VARCHAR(100))
     Email = sqlalchemy.Column(sqlalchemy.VARCHAR(100))
-    HashedPassword = sqlalchemy.Column(sqlalchemy.VARCHAR(100))
+    HashedPassword = sqlalchemy.Column(sqlalchemy.VARCHAR(255))
+    LastLogin = sqlalchemy.Column(sqlalchemy.DATETIME)
+    CreatedDate = sqlalchemy.Column(sqlalchemy.DATETIME)
