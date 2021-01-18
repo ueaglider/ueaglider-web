@@ -68,7 +68,7 @@
     // geojson layers passed from view method
     let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
     let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
-    let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
+    let divesDict = JSON.parse('{{ dives_by_glider_json| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
     let depth50 = JSON.parse('{{ isobath_dict["depth_50_m"] | tojson | safe}}');
     let depth200 = JSON.parse('{{ isobath_dict["depth_200_m"] | tojson | safe}}');

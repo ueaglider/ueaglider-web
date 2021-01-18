@@ -39,6 +39,7 @@ def missions(mission_id: int):
         dives_json, dive_page_links = json_conversion.dives_to_json(dives_list, mission_gliders)
         dives_by_glider_json.append(dives_json)
     divesdict, dive_page_links = json_conversion.dives_to_json(dives, mission_gliders)
+    print(dives_by_glider_json)
     recentdivesdict, __ = json_conversion.dives_to_json(most_recent_dives, mission_gliders)
     mission_plots = [
         'static/img/dives/Mission' + str(mission_id) + '/map.png'
