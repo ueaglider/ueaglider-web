@@ -11,6 +11,7 @@ folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 with open(folder+'/secrets.txt') as json_file:
     secrets = json.load(json_file)
 path_to_gebco_nc = secrets["gebco_path"]
+json_dir = secrets["json_dir"]
 
 
 def main():
@@ -31,7 +32,7 @@ def main():
     if east > 180:
         east = 180
     gebco_to_geojson(extent=[south, north, west, east], depths=[-50, -200, -1000],
-                     directory='/apps/ueaglider_repo/ueaglider/static/json/Mission' + str(mission))
+                     directory=json_dir + 'Mission' + str(mission))
 
 
 def gebco_to_geojson(extent=(58, 55, -2, 5), depths=(-50, -200, -1000), directory='Mission'):
