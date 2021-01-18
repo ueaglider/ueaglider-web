@@ -12,6 +12,7 @@ class ViewModelBase:
         self.request_dict = request_dict.create('')
 
         self.error: Optional[str] = None
+        self.message: Optional[str] = None
         self.user_id: Optional[int] = cookie_auth.get_user_id_via_auth_cookie(self.request)
 
     def to_dict(self):

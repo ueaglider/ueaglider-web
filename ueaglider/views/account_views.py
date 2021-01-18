@@ -107,5 +107,11 @@ def addwaypoint_post():
         vm.error = 'The waypoint could not be created'
         return vm.to_dict()
 
-    resp = flask.redirect('/account')
-    return resp
+    vm.message = 'Success! You have added Waypoint ' + vm.name + ' to mission ' + str(vm.missionid)
+    vm.name = ''
+    vm.missionid = ''
+    vm.lat = ''
+    vm.lon = ''
+    vm.info = ''
+    #resp = flask.redirect('/account')
+    return vm.to_dict()
