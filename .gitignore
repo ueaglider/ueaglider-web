@@ -141,3 +141,4 @@ ueaglider/server/server_setup.sh
 *~
 server/server_setup.sh
 alembic.ini
+ueaglider/static/json/
