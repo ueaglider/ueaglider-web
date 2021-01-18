@@ -35,12 +35,13 @@ def missions(mission_id: int):
     target_dict = json_conversion.targets_to_json(targets)
     dives, mission_gliders, dives_by_glider, most_recent_dives = mission_service.get_mission_dives(mission_id)
     dives_by_glider_json = []
+    lines_by_glider_json = []
     for dives_list in dives_by_glider:
-        dives_json, dive_page_links = json_conversion.dives_to_json(dives_list, mission_gliders)
+        dives_json, dive_page_links, line_json = json_conversion.dives_to_json(dives_list, mission_gliders)
         dives_by_glider_json.append(dives_json)
-    divesdict, dive_page_links = json_conversion.dives_to_json(dives, mission_gliders)
-    print(dives_by_glider_json)
-    recentdivesdict, __ = json_conversion.dives_to_json(most_recent_dives, mission_gliders)
+        lines_by_glider_json.append(line_json)
+    print(lines_by_glider_json[0])
+    recentdivesdict, __, __ = json_conversion.dives_to_json(most_recent_dives, mission_gliders)
     mission_plots = [
         'static/img/dives/Mission' + str(mission_id) + '/map.png'
     ]
@@ -70,11 +71,11 @@ def missions(mission_id: int):
             'mission_list': missions_list,
             'targets': targets,
             'targetdict': target_dict,
-            'divesdict': divesdict,
             'recentdivesdict': recentdivesdict,
             'missionplots': mission_plots,
             'dive_page_links': dive_page_links,
             'waypointdict': waypoint_dict,
             'dives_by_glider_json': dives_by_glider_json,
+            'lines_by_glider_json': lines_by_glider_json,
             'isobath_dict': isobath_dict,
             }

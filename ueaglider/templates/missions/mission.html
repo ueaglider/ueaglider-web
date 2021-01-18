@@ -69,6 +69,7 @@
     let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
     let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
     let divesDict = JSON.parse('{{ dives_by_glider_json| tojson | safe}}');
+    let linesDict = JSON.parse('{{ lines_by_glider_json| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
     let depth50 = JSON.parse('{{ isobath_dict["depth_50_m"] | tojson | safe}}');
     let depth200 = JSON.parse('{{ isobath_dict["depth_200_m"] | tojson | safe}}');
@@ -167,6 +168,18 @@
 	}).addTo(map);
 
 
+    // Adding all dive connecting lines to map. Fillcolor by glider number
+
+
+    function style(feature) {
+        return {
+            weight: 2,
+            color: getColor(feature.properties.gliderOrder),
+        };
+    }
+    L.geoJson(linesDict, {style: style}).addTo(map);
+
+
 	// setting color from geojson. We have enough unique colors for 8 gliders. After that they'll all be white
         function getColor(stype) {
           switch (stype) {
@@ -200,6 +213,8 @@
             },
          onEachFeature: popupText
         }).addTo(map);
+
+
 
 
     // Use the seaglider icon on most recent dive by each glider and add popup content
