@@ -9,6 +9,9 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
+    <!-- Link to providers CSS and javascript for leawflet extension-->
+    <script src="http://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+    <script src="static/js/leaflet-providers.js"></script>
     <title>Mission {{ mission.MissionID }}</title>
 {% endblock %}
 
@@ -65,10 +68,14 @@
     <!-- Script to create a leaflet map-->
     <script>
 
+
+
+
     // geojson layers passed from view method
     let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
     let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
-    let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
+    let divesDict = JSON.parse('{{ dives_by_glider_json| tojson | safe}}');
+    let linesDict = JSON.parse('{{ lines_by_glider_json| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
     let depth50 = JSON.parse('{{ isobath_dict["depth_50_m"] | tojson | safe}}');
     let depth200 = JSON.parse('{{ isobath_dict["depth_200_m"] | tojson | safe}}');
@@ -81,10 +88,12 @@
     // A series of optional map layers
     let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
         layers: 'GEBCO_2019_Grid',
-        attribution: 'GEBCO Compilation Group (2020)'}).addTo(map);
+        attribution: 'GEBCO Compilation Group (2020)'})//.addTo(map);
+    //let foo = L.tileLayer.provider('Stamen.Watercolor').addTo(map);
+    let orthofr = L.tileLayer.provider('GeoportailFrance.orthos').addTo(map);
 
     let basemaps = {
-
+        Ortho: orthofr,
         GEBCO: gebco
     };
 
@@ -167,6 +176,18 @@
 	}).addTo(map);
 
 
+    // Adding all dive connecting lines to map. Fillcolor by glider number
+
+
+    function style(feature) {
+        return {
+            weight: 2,
+            color: getColor(feature.properties.gliderOrder),
+        };
+    }
+    L.geoJson(linesDict, {style: style}).addTo(map);
+
+
 	// setting color from geojson. We have enough unique colors for 8 gliders. After that they'll all be white
         function getColor(stype) {
           switch (stype) {
@@ -200,6 +221,8 @@
             },
          onEachFeature: popupText
         }).addTo(map);
+
+
 
 
     // Use the seaglider icon on most recent dive by each glider and add popup content
