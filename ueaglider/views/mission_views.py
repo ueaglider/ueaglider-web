@@ -1,10 +1,20 @@
+import os
+import subprocess
+import sys
 import flask
+import json
+
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, folder)
 
 import ueaglider.services.json_conversion as json_conversion
 from ueaglider.infrastructure.view_modifiers import response
 import ueaglider.services.mission_service as mission_service
 
 blueprint = flask.Blueprint('missions', __name__, template_folder='templates')
+
+with open(folder + '/secrets.txt') as json_file:
+    secrets = json.load(json_file)
 
 
 @blueprint.route('/mission<int:mission_id>')
@@ -33,6 +43,27 @@ def missions(mission_id: int):
     mission_plots = [
         'static/img/dives/Mission' + str(mission_id) + '/map.png'
     ]
+    isobath_dict = {}
+    if os.path.exists(folder + '/static/json/Mission' + str(mission_id)):
+        mission_folder = folder + '/static/json/Mission' + str(mission_id)
+    else:
+        mission_targets = mission_service.mission_loc(mission_no=mission_id)
+        tgt = mission_targets[0]
+        if not mission_targets:
+            mission_folder = folder + '/static/json/Mission23'
+        else:
+            subprocess.run([secrets["gebco_python"], "-u",
+                            secrets["gebco_exec"],
+                            str(tgt.Longitude),
+                            str(tgt.Latitude),
+                            str(mission_id),
+                            ])
+            # mission_folder = folder + '/static/json/Mission23'
+            mission_folder = folder + '/static/json/Mission' + str(mission_id)
+    for depth in [50, 200, 1000]:
+        with open(mission_folder + '/isobaths_' + str(depth) + 'm.json', 'r') as myfile:
+            json_in = json.load(myfile)
+        isobath_dict['depth_' + str(depth) + '_m'] = json.loads(json_in)
 
     return {'mission': mission,
             'mission_list': missions_list,
@@ -44,6 +75,5 @@ def missions(mission_id: int):
             'dive_page_links': dive_page_links,
             'waypointdict': waypoint_dict,
             'dives_by_glider_json': dives_by_glider_json,
+            'isobath_dict': isobath_dict,
             }
-
-
