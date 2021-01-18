@@ -1,10 +1,11 @@
-from ueaglider.services import mission_service, json_conversion
+from ueaglider.services import mission_service
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 
 class GliderListViewModel(ViewModelBase):
     def __init__(self):
         super().__init__()
         self.glider_list = mission_service.list_gliders()
+        self.other_glider_list = mission_service.list_gliders(non_uea=True)
 
 
 

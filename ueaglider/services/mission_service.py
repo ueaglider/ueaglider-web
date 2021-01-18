@@ -51,9 +51,13 @@ def list_missions(filter_missions=False, mission_ids=[]) -> dict:
     return missions
 
 
-def list_gliders() -> dict:
+def list_gliders(non_uea=False) -> dict:
     session = create_session()
-    gliders = session.query(Gliders).filter(Gliders.Number.notin_(non_uea_gliders)).order_by(Gliders.Number.asc()).all()
+    if non_uea:
+        gliders = session.query(Gliders).filter(Gliders.Number.in_(non_uea_gliders)).order_by(
+            Gliders.Number.asc()).all()
+    else:
+        gliders = session.query(Gliders).filter(Gliders.Number.notin_(non_uea_gliders)).order_by(Gliders.Number.asc()).all()
     session.close()
     return gliders
 
