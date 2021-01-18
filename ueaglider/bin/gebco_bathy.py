@@ -31,7 +31,7 @@ def main():
     if east > 180:
         east = 180
     gebco_to_geojson(extent=[south, north, west, east], depths=[-50, -200, -1000],
-                     directory='static/json/Mission' + str(mission))
+                     directory='/apps/ueaglider_repo/ueaglider/static/json/Mission' + str(mission))
 
 
 def gebco_to_geojson(extent=(58, 55, -2, 5), depths=(-50, -200, -1000), directory='Mission'):

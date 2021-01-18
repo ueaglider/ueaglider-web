@@ -53,7 +53,7 @@ def missions(mission_id: int):
             mission_folder = folder + '/static/json/Mission23'
         else:
             subprocess.run([secrets["gebco_python"], "-u",
-                            "bin/gebco_bathy.py",
+                            secrets["gebco_exec"],
                             str(tgt.Longitude),
                             str(tgt.Latitude),
                             str(mission_id),
