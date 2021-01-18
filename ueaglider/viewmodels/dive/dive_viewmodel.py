@@ -1,4 +1,3 @@
-from ueaglider.services import mission_service
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 import os
 import sys

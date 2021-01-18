@@ -1,13 +1,9 @@
 import flask
 from ueaglider.infrastructure.view_modifiers import response
-import os
-import sys
-from pathlib import Path
 
 from ueaglider.viewmodels.dive.dive_viewmodel import DiveViewModel, StatusViewModel, ScienceViewModel
 
-folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, folder)
+
 blueprint = flask.Blueprint('dives', __name__, template_folder='templates')
 
 
