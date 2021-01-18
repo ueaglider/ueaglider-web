@@ -44,7 +44,9 @@ def list_missions(filter_missions=False, mission_ids=[]) -> dict:
             .order_by(Missions.MissionID.desc()) \
             .all()
     else:
-        missions = session.query(Missions).order_by(Missions.MissionID.desc()).all()
+        missions = session.query(Missions) \
+            .filter(Missions.MissionID.notin_(mission_ids)) \
+            .order_by(Missions.MissionID.desc()).all()
     session.close()
     return missions
 

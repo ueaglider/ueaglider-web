@@ -2,7 +2,7 @@ import flask
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service
 from ueaglider.infrastructure import cookie_auth as cookie_auth, request_dict
-from ueaglider.viewmodels.account.index_viewmodel import IndexViewModel
+from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
 
@@ -12,7 +12,7 @@ blueprint = flask.Blueprint('account', __name__, template_folder='templates')
 @blueprint.route('/account')
 @response(template_file='account/index.html')
 def index():
-    vm = IndexViewModel()
+    vm = AccountIndexViewModel()
 
     if not vm.user:
         return flask.redirect('/account/login')

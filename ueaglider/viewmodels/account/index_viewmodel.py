@@ -1,7 +1,7 @@
 from ueaglider.services import user_service
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 
-class IndexViewModel(ViewModelBase):
+class AccountIndexViewModel(ViewModelBase):
     def __init__(self):
         super().__init__()
 

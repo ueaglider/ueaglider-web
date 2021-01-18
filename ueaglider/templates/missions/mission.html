@@ -89,12 +89,13 @@
     let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
         layers: 'GEBCO_2019_Grid',
         attribution: 'GEBCO Compilation Group (2020)'})//.addTo(map);
-    //let foo = L.tileLayer.provider('Stamen.Watercolor').addTo(map);
+    let watercolor = L.tileLayer.provider('Stamen.Watercolor')
     let orthofr = L.tileLayer.provider('GeoportailFrance.orthos').addTo(map);
 
     let basemaps = {
         Ortho: orthofr,
-        GEBCO: gebco
+        GEBCO: gebco,
+        watercolor: watercolor,
     };
 
 
