@@ -19,8 +19,8 @@ def index():
     dive_count = mission_service.get_dive_count()
     missions_list = mission_service.list_missions()
     timespan = int(missions_list[0].EndDate.strftime("%Y")) - int(missions_list[-1].EndDate.strftime("%Y"))
-    mission_target_list = mission_service.mission_av_loc()
-    mission_targets = json_conversion.targets_to_json(mission_target_list, mission_tgt=True)
+    mission_loc = mission_service.mission_loc(filter=True)
+    mission_targets = json_conversion.targets_to_json(mission_loc, mission_tgt=True)
     return {'glider_count': glider_count,
             'mission_count': mission_count,
             'dive_count': dive_count,

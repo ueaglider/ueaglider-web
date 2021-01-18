@@ -32,13 +32,15 @@ def dives_to_json(dives, gliders) -> Tuple:
     glider_order_dict = {val: i for i, val in enumerate(glider_ids)}
     features = []
     dive_page_links = []
+    coords = []
     for i, dive in enumerate(dives):
+        coords.append([coord_db_decimal(dive.Longitude), coord_db_decimal(dive.Latitude)])
         dive_page_link = "/mission" + str(dive.MissionID) + "/glider" + str(glider_number_dict[dive.GliderID]) \
                          + "/dive" + str(dive.DiveNo).zfill(4)
         dive_page_links.append(dive_page_link)
         tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
-            dive.GliderID] + "<br><a href=" + dive_page_link + ">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " + coord_db_to_pretty(
-            dive.Latitude) + "<br>Lon: " + coord_db_to_pretty(dive.Longitude)
+            dive.GliderID] + "<br><a href=" + dive_page_link + ">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " \
+                    + coord_db_to_pretty(dive.Latitude) + "<br>Lon: " + coord_db_to_pretty(dive.Longitude)
         dive_item = {
             "geometry": {
                 "type": "Point",
@@ -64,7 +66,44 @@ def dives_to_json(dives, gliders) -> Tuple:
         "type": "FeatureCollection",
         "features": features
     }
-    return divedict, dive_page_links
+    linedict ={
+        "type": "FeatureCollection",
+        "features": [{
+            "geometry": {
+                "type": "LineString",
+                "coordinates": coords
+            },
+            "type": "Feature",
+            "properties": {
+                "gliderOrder": glider_order_dict[dive.GliderID],
+            },
+            "id": i
+        }]
+    }
+
+
+    return divedict, dive_page_links, linedict
+
+
+def dives_to_json_lines(dives, gliders) -> Tuple:
+    # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
+    gliders_name_dict = {}
+    glider_number_dict = {}
+    for glider in gliders:
+        gliders_name_dict[glider.GliderID] = glider.Name
+        glider_number_dict[glider.GliderID] = glider.Number
+    # Make a sorted dictionary of ascending integers per gliderID for colouring the map dive icons
+    glider_ids = list(glider_number_dict.keys())
+    glider_ids.sort()
+    glider_order_dict = {val: i for i, val in enumerate(glider_ids)}
+    features = []
+    coords = []
+    for i, dive in enumerate(dives):
+        coords.append([coord_db_decimal(dive.Longitude), coord_db_decimal(dive.Latitude)])
+
+    return divedict
+
+
 
 
 def targets_to_json(targets, mission_tgt=False) -> dict:
@@ -74,7 +113,8 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
             tgt_popup = "Mission " + str(target.MissionID) + "<br><a href=/mission" + str(
                 target.MissionID) + ">" + target.Name
         else:
-            tgt_popup = "Target: " + target.Name + "<br>Lat: " + coord_db_to_pretty(target.Latitude) + "<br>Lon: " + coord_db_to_pretty(
+            tgt_popup = "Target: " + target.Name + "<br>Lat: " + coord_db_to_pretty(
+                target.Latitude) + "<br>Lon: " + coord_db_to_pretty(
                 target.Longitude) + "<br>GOTO: " + target.Goto + "<br>Radius: " + str(target.Radius) + ' m'
         target_item = {
             "geometry": {

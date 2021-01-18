@@ -20,7 +20,7 @@ The development version is now live at https://demo-ueaglider.hopto.org/
 
 - [ ] Improve the map
   - [x] No more blue markers
-  - [ ] GEBCO 1000 m contour
+  - [x] GEBCO 1000 m contour
   - [ ] Add Caravela location
   - [ ] Add ships location (Rob)
   - [x] Click on a particular dive on the map to get the plots up (Karen)
@@ -34,7 +34,7 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   - [ ] Better pcolor plots, using cmocean
   - [ ] Overview of the critical issues - batteries, and when the next call is due (Karen)
   - [ ] Gebco bathymetric depth at the location of the last surfacing (Rob)
-  - [ ] page for each glider showing most recent mission etc (Gareth)
+  - [x] page for each glider showing most recent mission etc (Gareth)
   
 - [ ] Extra pages
   - [ ] Summary of each glider

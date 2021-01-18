@@ -8,6 +8,7 @@ degree_sign = u'\N{DEGREE SIGN}'
 non_uea_mission_numbers = [1, 2, 16, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 53]
 non_uea_gliders = [503, 539, 546, 566, 533, 565, 524, 999, 532, 534, 550, 602, 621, 643, 640]
 
+
 def get_glider_count() -> int:
     session = create_session()
     gliders = session.query(Gliders).filter(Gliders.Number.notin_(non_uea_gliders)).count()
@@ -146,19 +147,28 @@ def get_mission_dives(mission_id) -> Optional[Any]:
     return dives, gliders, dives_by_glider, most_recent_dives
 
 
-def mission_av_loc():
+def mission_loc(filter=False, mission_no=None):
     session = create_session()
-    targets = session.query(Targets) \
-        .all()
+    if filter:
+        missions = session.query(Missions).filter(Missions.MissionID.notin_(non_uea_mission_numbers)).all()
+    elif mission_no:
+        missions = session.query(Missions).filter(Missions.MissionID == mission_no)
+    else:
+        missions = session.query(Missions).all()
+    mission_locs = []
+    for mission in missions:
+        dive = session.query(Dives).filter(Dives.MissionID == mission.MissionID).order_by(Dives.DiveNo.asc()).first()
+        if dive:
+            tgt_template = Targets()
+            tgt_template.Longitude = dive.Longitude
+            tgt_template.Latitude = dive.Latitude
+            tgt_template.Name = mission.Name
+            tgt_template.MissionID = mission.MissionID
+            mission_locs.append(tgt_template)
+            continue
+        target = session.query(Targets).filter(Targets.MissionID == mission.MissionID).first()
+        if target:
+            target.Name = mission.MissionID
+            mission_locs.append(target)
     session.close()
-    missions = []
-    mission_tgts = []
-    for tgt in targets:
-        if tgt.MissionID not in missions:
-            missions.append(tgt.MissionID)
-            mission_tgts.append(tgt)
-            session = create_session()
-            mission = session.query(Missions.Name).filter(Missions.MissionID == tgt.MissionID).first()
-            session.close()
-            tgt.Name = mission[0]
-    return mission_tgts
+    return mission_locs
