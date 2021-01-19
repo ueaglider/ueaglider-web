@@ -20,14 +20,13 @@ class Targets(SqlAlchemyBase):
     __tablename__ = 'Targets'
     __table_args__ = {'extend_existing': True}
     TargetsID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
-    MissionID = sqlalchemy.Column(sqlalchemy.INT)
     Name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Radius = sqlalchemy.Column(sqlalchemy.INT)
     Goto = sqlalchemy.Column(sqlalchemy.VARCHAR)
     # Mission relationship
-    MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.MissionID"))
+    MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.Number"))
     mission = orm.relation('Missions')
 
 
@@ -41,7 +40,7 @@ class Waypoints(SqlAlchemyBase):
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Info = sqlalchemy.Column(sqlalchemy.TEXT)
     # Mission relationship
-    MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.MissionID"))
+    MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.Number"))
     mission = orm.relation('Missions')
 
 
@@ -55,7 +54,7 @@ class Dives(SqlAlchemyBase):
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     # Mission relationship
-    MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.MissionID"))
+    MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.Number"))
     mission = orm.relation('Missions')
 
 
