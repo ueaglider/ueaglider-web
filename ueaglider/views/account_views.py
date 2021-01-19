@@ -93,11 +93,11 @@ def logout():
 ########################## EDITS ##########################
 
 
-########################## ADD WAYPOINT ##########################
+########################## ADD Pin ##########################
 
 
-@blueprint.route('/account/add_waypoint', methods=['GET'])
-@response(template_file='account/add_waypoint.html')
+@blueprint.route('/account/add_pin', methods=['GET'])
+@response(template_file='account/add_pin.html')
 def addwaypoint_get():
     vm = AddWaypointViewModel()
 
@@ -107,7 +107,7 @@ def addwaypoint_get():
 
 
 @blueprint.route('/account/add_waypoint', methods=['POST'])
-@response(template_file='account/add_waypoint.html')
+@response(template_file='account/add_pin.html')
 def addwaypoint_post():
     vm = AddWaypointViewModel()
     vm.validate()
