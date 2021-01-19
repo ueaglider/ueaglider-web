@@ -101,7 +101,7 @@ def dives_to_json_lines(dives, gliders) -> Tuple:
     for i, dive in enumerate(dives):
         coords.append([coord_db_decimal(dive.Longitude), coord_db_decimal(dive.Latitude)])
 
-    return divedict
+    return None
 
 
 
@@ -111,11 +111,11 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
     for i, target in enumerate(targets):
         if mission_tgt:
             tgt_popup = "Mission " + str(target.MissionID) + "<br><a href=/mission" + str(
-                target.MissionID) + ">" + target.Name
+                target.MissionID) + ">" + str(target.Name)
         else:
-            tgt_popup = "Target: " + target.Name + "<br>Lat: " + coord_db_to_pretty(
+            tgt_popup = "Target: " + str(target.Name) + "<br>Lat: " + coord_db_to_pretty(
                 target.Latitude) + "<br>Lon: " + coord_db_to_pretty(
-                target.Longitude) + "<br>GOTO: " + target.Goto + "<br>Radius: " + str(target.Radius) + ' m'
+                target.Longitude) + "<br>GOTO: " + str(target.Goto) + "<br>Radius: " + str(target.Radius) + ' m'
         target_item = {
             "geometry": {
                 "type": "Point",

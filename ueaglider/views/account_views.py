@@ -181,6 +181,7 @@ def addtarget_post():
 @blueprint.route('/account/add_mission', methods=['GET'])
 @response(template_file='account/add_mission.html')
 def addmission_get():
+    return flask.redirect('/')
     vm = AddMissionViewModel()
 
     if not vm.user_id:
@@ -191,6 +192,7 @@ def addmission_get():
 @blueprint.route('/account/add_mission', methods=['POST'])
 @response(template_file='account/add_mission.html')
 def addmission_post():
+    return flask.redirect('/')
     vm = AddMissionViewModel()
     vm.validate()
 
