@@ -105,6 +105,14 @@
     let isobaths = {
 
 
+        EEZ: L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
+            layers: 'eez_boundaries,eez', //'eez,eez_12nm,eez_24nm,eez_archipelagic_waters,eez_boundaries',
+            opacity: 0.5,
+            format: 'image/png',
+            transparent: true,
+            attribution:"Flanders Marine Institute (VLIZ)"
+        }),
+
         Ice: L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
             layers: 'polarview:antarctic_icechart_nic',
             opacity: 0.5,
@@ -113,13 +121,58 @@
             attribution: "Polar View (ESA)"
         }),
 
-        EEZ: L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
-            layers: 'eez_boundaries,eez', //'eez,eez_12nm,eez_24nm,eez_archipelagic_waters,eez_boundaries',
-            opacity: 0.5,
-            format: 'image/png',
-            transparent: true,
-            attribution:"Flanders Marine Institute (VLIZ)"
-        }),
+
+
+	    "AMSR (sea ice)" : L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
+		layers: 'polarview:antarctic_AMSR2.3031,polarview:arctic_AMSR2.3413',
+		opacity: 0.5,
+		format: 'image/png',
+		transparent: true
+		}),
+
+
+
+	Icebergs : L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
+		layers: 'polarview:icebergs_s_current',
+		opacity: 0.8,
+		format: 'image/png',
+		transparent: true
+		}),
+
+	"FAO fishing areas" : L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
+		layers: 'fao',
+		opacity: 0.5,
+		format: 'image/png',
+		transparent: true
+		}),
+
+	 CMEMS_SST : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
+		layers: 'thetao', // thetao, uo, vo, zos
+		opacity: 0.5,
+		format: 'image/png',
+		transparent: true
+		}),
+
+	 CMEMS_SSH : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
+		layers: 'zos', // thetao, uo, vo, zos
+		opacity: 0.5,
+		format: 'image/png',
+		transparent: true
+		}),
+	CMEMS_UO : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
+		layers: 'uo', // thetao, uo, vo, zos
+		opacity: 0.5,
+		format: 'image/png',
+		transparent: true
+		}),
+	CMEMS_VO : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
+		layers: 'vo', // thetao, uo, vo, zos
+		opacity: 0.5,
+		format: 'image/png',
+		transparent: true
+		}),
+
+
         "<span style='color: red'>GEBCO 50 m</span>": L.geoJSON(depth50, {
             attribution: "GEBCO)",
             color:'red',
@@ -253,6 +306,7 @@
             {start: 12, end: 13, interval: 0.1},
         ]
     }).addTo(map);
+
 
 
     // Controls for the map
