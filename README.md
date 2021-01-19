@@ -24,6 +24,9 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   - [ ] Add Caravela location
   - [ ] Add ships location (Rob)
   - [x] Click on a particular dive on the map to get the plots up (Karen)
+  - [x] Add graticule (Adrian and Gareth)
+  - [x] Add 500m isobath (Karen and Gillian)
+  - [x] Add all overlays from old site (Gillian)
 
 - [ ] Improve the dive plots
   - [ ] Add/remove lines on main dive plot (Gareth)
@@ -37,7 +40,7 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   - [x] page for each glider showing most recent mission etc (Gareth)
   
 - [ ] Extra pages
-  - [ ] Summary of each glider
+  - [x] Summary of each glider
   - [ ] Summary of each mission
 
 - [ ] Security
