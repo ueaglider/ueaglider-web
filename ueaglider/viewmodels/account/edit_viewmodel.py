@@ -1,7 +1,7 @@
 from ueaglider.services import mission_service
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 
-class AddWaypointViewModel(ViewModelBase):
+class AddPinViewModel(ViewModelBase):
     def __init__(self):
         super().__init__()
         self.missionid = self.request_dict.missionid

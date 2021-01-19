@@ -3,7 +3,7 @@ from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth
 from ueaglider.services.db_edits import audit_entry
-from ueaglider.viewmodels.account.edit_viewmodel import AddWaypointViewModel, AddMissionViewModel, AddTargetViewModel
+from ueaglider.viewmodels.account.edit_viewmodel import AddPinViewModel, AddMissionViewModel, AddTargetViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
@@ -98,18 +98,18 @@ def logout():
 
 @blueprint.route('/account/add_pin', methods=['GET'])
 @response(template_file='account/add_pin.html')
-def addwaypoint_get():
-    vm = AddWaypointViewModel()
+def addpin_get():
+    vm = AddPinViewModel()
 
     if not vm.user_id:
         return flask.redirect('/account/login')
     return vm.to_dict()
 
 
-@blueprint.route('/account/add_waypoint', methods=['POST'])
+@blueprint.route('/account/add_pin', methods=['POST'])
 @response(template_file='account/add_pin.html')
-def addwaypoint_post():
-    vm = AddWaypointViewModel()
+def addpin_post():
+    vm = AddPinViewModel()
     vm.validate()
 
     if vm.error:

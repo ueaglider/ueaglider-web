@@ -18,8 +18,8 @@ class MissionViewModel(ViewModelBase):
         missions_list = mission_service.list_missions()
         mission = mission_service.get_mission_by_id(mission_id)
         targets = mission_service.get_mission_targets(mission_id)
-        waypoints = mission_service.get_mission_waypoints(mission_id)
-        waypoint_dict = json_conversion.waypoints_to_json(waypoints)
+        waypoints = mission_service.get_mission_pins(mission_id)
+        waypoint_dict = json_conversion.pins_to_json(waypoints)
         target_dict = json_conversion.targets_to_json(targets)
         dives, mission_gliders, dives_by_glider, most_recent_dives = mission_service.get_mission_dives(mission_id)
         dives_by_glider_json = []

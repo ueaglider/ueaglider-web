@@ -140,7 +140,7 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
     return tgtdict
 
 
-def waypoints_to_json(waypoints) -> dict:
+def pins_to_json(waypoints) -> dict:
     features = []
     for i, waypoint in enumerate(waypoints):
         tgt_popup = "<b>" + waypoint.Name + "</b>" + "<br>Lat: " + str(waypoint.Latitude) + "<br>Lon: " + str(

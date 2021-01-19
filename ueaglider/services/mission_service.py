@@ -113,7 +113,7 @@ def get_mission_targets(mission_id) -> Optional[Any]:
     return targets
 
 
-def get_mission_waypoints(mission_id) -> Optional[Any]:
+def get_mission_pins(mission_id) -> Optional[Any]:
     if not mission_id:
         return None
 
@@ -121,13 +121,13 @@ def get_mission_waypoints(mission_id) -> Optional[Any]:
 
     session = create_session()
 
-    waypoints = session.query(Pins) \
+    pins = session.query(Pins) \
         .filter(Pins.MissionID == mission_id) \
         .all()
 
     session.close()
 
-    return waypoints
+    return pins
 
 
 def get_mission_dives(mission_id) -> Optional[Any]:
