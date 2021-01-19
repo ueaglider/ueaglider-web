@@ -82,6 +82,7 @@
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
     let depth50 = JSON.parse('{{ isobath_dict["depth_50_m"] | tojson | safe}}');
     let depth200 = JSON.parse('{{ isobath_dict["depth_200_m"] | tojson | safe}}');
+    let depth500 = JSON.parse('{{ isobath_dict["depth_500_m"] | tojson | safe}}');
     let depth1000 = JSON.parse('{{ isobath_dict["depth_1000_m"] | tojson | safe}}');
     let map = L.map('map')
 
@@ -184,12 +185,16 @@
             attribution: "GEBCO & C Rollo",
             color:'red',
         }),
-         "<span style='color: blue'>GEBCO 200 m</span>": L.geoJSON(depth200, {
+         "<span style='color: #99CCFF'>GEBCO 200 m</span>": L.geoJSON(depth200, {
             attribution: "GEBCO & C Rollo",
-             color:'blue',
+             color:'#99CCFF',
+        }),
+        "<span style='color: blue'>GEBCO 500 m</span>": L.geoJSON(depth500, {
+            attribution: "GEBCO & C Rollo",
+            color:'blue',
         }),
          "<span style='color: gray'>GEBCO 1000 m</span>": L.geoJSON(depth1000, {
-             attribution: "GEBCO & C Rollo)",
+             attribution: "GEBCO & C Rollo",
              color:'gray',
         }),
 

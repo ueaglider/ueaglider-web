@@ -49,7 +49,7 @@ class MissionViewModel(ViewModelBase):
                                 ])
                 # mission_folder = folder + '/static/json/Mission23'
                 mission_folder = folder + '/static/json/Mission' + str(mission_id)
-        for depth in [50, 200, 1000]:
+        for depth in [50, 200, 500, 1000]:
             with open(mission_folder + '/isobaths_' + str(depth) + 'm.json', 'r') as myfile:
                 json_in = json.load(myfile)
             isobath_dict['depth_' + str(depth) + '_m'] = json.loads(json_in)

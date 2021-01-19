@@ -31,11 +31,11 @@ def main():
         west = -180
     if east > 180:
         east = 180
-    gebco_to_geojson(extent=[south, north, west, east], depths=[-50, -200, -1000],
+    gebco_to_geojson(extent=[south, north, west, east], depths=[-50, -200, -500, -1000],
                      directory=json_dir + 'Mission' + str(mission))
 
 
-def gebco_to_geojson(extent=(58, 55, -2, 5), depths=(-50, -200, -1000), directory='Mission'):
+def gebco_to_geojson(extent=(58, 55, -2, 5), depths=(0, -1000), directory='Mission'):
     """
     Extracts isobaths from gebco bathymetric grid and writes them to geoJSON format
     :param extent: lon - lat square defines region of interest[S, N, W, E]
