@@ -27,7 +27,7 @@
         {% endfor %}
     </div>
 </li>
-    {% for glider_dives_list in dives_by_glider_json %}
+    {% for glider_dives_list in dives_by_glider_json_list %}
 <li class="nav-item dropdown">
 
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -240,7 +240,7 @@
     L.control.scale({maxWidth: 200}).addTo(map)
 
     // Fit map to targets
-    map.fitBounds(divesLayer.getBounds());
+    //map.fitBounds(targetsLayer.getBounds());
     </script>
     </div>
 

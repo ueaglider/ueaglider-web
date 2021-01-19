@@ -196,19 +196,18 @@ def addmission_post():
 
     if vm.error:
         return vm.to_dict()
+    mission = db_edits.create_mission(vm.missionid, vm.name, vm.start, vm.end, vm.info)
 
-    waypoint = db_edits.create_waypoint(vm.missionid, vm.name, vm.lat, vm.lon, vm.info)
-
-    if not waypoint:
-        vm.error = 'The waypoint could not be created'
+    if not mission:
+        vm.error = 'The target could not be created'
         return vm.to_dict()
 
-    audit_message = 'Add Waypoint ' + vm.name + ' to mission ' + str(vm.missionid)
-    vm.message = 'Success! You have added Waypoint ' + vm.name + ' to mission ' + str(vm.missionid)
+    audit_message = 'Add Mission' + vm.name
+    vm.message = 'Success! You have added Mission' + vm.name + 'Now add a target to generate the map'
     vm.name = ''
     vm.missionid = ''
-    vm.lat = ''
-    vm.lon = ''
+    vm.start = ''
+    vm.end = ''
     vm.info = ''
     audit_log = audit_entry(vm.user_id, audit_message)
     if audit_log:

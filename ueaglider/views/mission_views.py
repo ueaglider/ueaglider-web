@@ -22,4 +22,9 @@ def missions(mission_id: int):
     target_dict: targets formatted to JSON style dict for JS map
     """
     vm = MissionViewModel(mission_id)
+    vm.validate_dives()
+    if vm.error:
+        return vm.to_dict()
+    vm.validate()
     return vm.to_dict()
+

@@ -19,7 +19,7 @@ def coord_db_to_pretty(coord_in):
     return coord_str
 
 
-def dives_to_json(dives, gliders) -> Tuple:
+def dives_to_json(dives, gliders, fake=False) -> Tuple:
     # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
     gliders_name_dict = {}
     glider_number_dict = {}
@@ -66,20 +66,36 @@ def dives_to_json(dives, gliders) -> Tuple:
         "type": "FeatureCollection",
         "features": features
     }
-    linedict ={
-        "type": "FeatureCollection",
-        "features": [{
-            "geometry": {
-                "type": "LineString",
-                "coordinates": coords
+    if fake:
+        linedict = {
+            "type": "FeatureCollection",
+            "features": [{
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": coords
+                },
+                "type": "Feature",
+                "properties": {
+                    "gliderOrder": 0,
+                },
+                "id": 0
+            }]
+        }
+    else:
+        linedict ={
+          "type": "FeatureCollection",
+            "features": [{
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": coords
             },
-            "type": "Feature",
-            "properties": {
+                "type": "Feature",
+                "properties": {
                 "gliderOrder": glider_order_dict[dive.GliderID],
-            },
-            "id": i
-        }]
-    }
+                },
+                "id": i
+            }]
+        }
 
 
     return divedict, dive_page_links, linedict
@@ -101,7 +117,7 @@ def dives_to_json_lines(dives, gliders) -> Tuple:
     for i, dive in enumerate(dives):
         coords.append([coord_db_decimal(dive.Longitude), coord_db_decimal(dive.Latitude)])
 
-    return divedict
+    return None
 
 
 
@@ -111,7 +127,7 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
     for i, target in enumerate(targets):
         if mission_tgt:
             tgt_popup = "Mission " + str(target.MissionID) + "<br><a href=/mission" + str(
-                target.MissionID) + ">" + target.Name
+                target.MissionID) + ">" + str(target.Name)
         else:
             tgt_popup = "Target: " + target.Name + "<br>Lat: " + coord_db_to_pretty(
                 target.Latitude) + "<br>Lon: " + coord_db_to_pretty(
