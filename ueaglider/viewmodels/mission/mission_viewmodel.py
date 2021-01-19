@@ -28,7 +28,6 @@ class MissionViewModel(ViewModelBase):
             dives_json, dive_page_links, line_json = json_conversion.dives_to_json(dives_list, mission_gliders)
             dives_by_glider_json.append(dives_json)
             lines_by_glider_json.append(line_json)
-        print(lines_by_glider_json[0])
         recentdivesdict, __, __ = json_conversion.dives_to_json(most_recent_dives, mission_gliders)
         mission_plots = [
             'static/img/dives/Mission' + str(mission_id) + '/map.png'

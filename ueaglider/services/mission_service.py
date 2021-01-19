@@ -46,14 +46,14 @@ def list_missions(filter_missions=False, mission_ids=[]) -> dict:
     session = create_session()
     if filter_missions:
         missions = session.query(Missions) \
-            .filter(Missions.MissionID.in_(mission_ids)) \
-            .filter(Missions.MissionID.notin_(non_uea_mission_numbers)) \
-            .order_by(Missions.MissionID.desc()) \
+            .filter(Missions.Number.in_(mission_ids)) \
+            .filter(Missions.Number.notin_(non_uea_mission_numbers)) \
+            .order_by(Missions.Number.desc()) \
             .all()
     else:
         missions = session.query(Missions) \
-            .filter(Missions.MissionID.notin_(mission_ids)) \
-            .order_by(Missions.MissionID.desc()).all()
+            .filter(Missions.Number.notin_(mission_ids)) \
+            .order_by(Missions.Number.desc()).all()
     session.close()
     return missions
 

@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from ueaglider.data.db_session import create_session
-from ueaglider.data.gliders import Waypoints, Audit
+from ueaglider.data.gliders import Waypoints, Audit, Missions, Targets
+from ueaglider.services.mission_service import list_missions
 from ueaglider.services.user_service import find_user_by_id
 
 
@@ -28,6 +29,36 @@ def create_waypoint(missionid, name, lat, lon, info):
     session.commit()
     session.close()
     return waypoint
+
+
+def create_target(missionid, name, lat, lon, radius, goto):
+    session = create_session()
+    target = Targets()
+    target.MissionID = missionid
+    target.Name = name
+    target.Latitude = lat
+    target.Longitude = lon
+    target.Radius = radius
+    target.Goto = goto
+    session.add(target)
+    session.commit()
+    session.close()
+    return target
+
+
+def create_mission(number, name, start, end, info):
+
+    mission = Missions()
+    mission.Number = number
+    mission.Name = name
+    mission.StartDate = start
+    mission.EndDate = end
+    mission.Info = info
+    session = create_session()
+    session.add(mission)
+    session.commit()
+    session.close()
+    return mission
 
 
 def audit_entry(user_id: int, message: str):
