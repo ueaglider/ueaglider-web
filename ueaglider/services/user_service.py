@@ -35,7 +35,7 @@ def create_user(name: str, email: str, password: str) -> Optional[User]:
     session = db_session.create_session()
     session.add(user)
     session.commit()
-
+    session.close()
     return user
 
 
@@ -47,6 +47,10 @@ def login_user(email: str, password: str) -> Optional[User]:
         return None
     if not verify_hash(user.HashedPassword, password):
         return None
+    user.LastLogin = datetime.now()
+    session.add(user)
+    session.commit()
+    session.close()
     return user
 
 
@@ -54,4 +58,5 @@ def find_user_by_id(user_id: int) -> Optional[User]:
     session = db_session.create_session()
 
     user = session.query(User).filter(User.UserID == user_id).first()
+    session.close()
     return user

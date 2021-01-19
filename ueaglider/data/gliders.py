@@ -81,6 +81,7 @@ class Missions(SqlAlchemyBase):
         Dives.DiveInfoID.asc(),
     ], back_populates='mission')
 
+
 class User(SqlAlchemyBase):
     __tablename__ = 'Users'
     UserID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
@@ -89,3 +90,10 @@ class User(SqlAlchemyBase):
     HashedPassword = sqlalchemy.Column(sqlalchemy.VARCHAR(255))
     LastLogin = sqlalchemy.Column(sqlalchemy.DATETIME)
     CreatedDate = sqlalchemy.Column(sqlalchemy.DATETIME)
+
+
+class Audit(SqlAlchemyBase):
+    __tablename__ = 'Audit'
+    LogID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
+    UserID = sqlalchemy.Column(sqlalchemy.INT)
+    Date = sqlalchemy.Column(sqlalchemy.DATETIME)

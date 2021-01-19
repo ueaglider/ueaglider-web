@@ -9,6 +9,7 @@ from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
 
 blueprint = flask.Blueprint('account', __name__, template_folder='templates')
 
+########################## INDEX ##########################
 
 @blueprint.route('/account')
 @response(template_file='account/index.html')
@@ -18,6 +19,9 @@ def index():
     if not vm.user:
         return flask.redirect('/account/login')
     return vm.to_dict()
+
+
+########################## REGISTER ##########################
 
 
 @blueprint.route('/account/register', methods=['GET'])
@@ -45,6 +49,9 @@ def register_post():
     resp = flask.redirect('/account')
     cookie_auth.set_auth(resp, user.UserID)
     return resp
+
+
+######################### LOGIN ##########################
 
 
 @blueprint.route('/account/login', methods=['GET'])
@@ -80,6 +87,9 @@ def logout():
     resp = flask.redirect('/')
     cookie_auth.logout(resp)
     return resp
+
+
+########################## EDITS ##########################
 
 
 @blueprint.route('/account/add_waypoint', methods=['GET'])
