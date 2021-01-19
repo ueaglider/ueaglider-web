@@ -56,7 +56,6 @@ def login_user(email: str, password: str) -> Optional[User]:
 
 def find_user_by_id(user_id: int) -> Optional[User]:
     session = db_session.create_session()
-
     user = session.query(User).filter(User.UserID == user_id).first()
     session.close()
     return user

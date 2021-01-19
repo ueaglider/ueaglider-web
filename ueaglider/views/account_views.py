@@ -1,7 +1,8 @@
 import flask
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service, db_edits
-from ueaglider.infrastructure import cookie_auth as cookie_auth, request_dict
+from ueaglider.infrastructure import cookie_auth as cookie_auth
+from ueaglider.services.db_edits import audit_entry
 from ueaglider.viewmodels.account.edit_viewmodel import AddWaypointViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
@@ -117,11 +118,15 @@ def addwaypoint_post():
         vm.error = 'The waypoint could not be created'
         return vm.to_dict()
 
+    audit_message = 'Add Waypoint ' + vm.name + ' to mission ' + str(vm.missionid)
     vm.message = 'Success! You have added Waypoint ' + vm.name + ' to mission ' + str(vm.missionid)
     vm.name = ''
     vm.missionid = ''
     vm.lat = ''
     vm.lon = ''
     vm.info = ''
+    audit_log = audit_entry(vm.user_id, audit_message)
+    if audit_log:
+        vm.message = vm.message + '. This entry has been logged'
     #resp = flask.redirect('/account')
     return vm.to_dict()

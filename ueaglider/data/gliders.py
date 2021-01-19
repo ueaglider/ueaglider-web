@@ -97,3 +97,4 @@ class Audit(SqlAlchemyBase):
     LogID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
     UserID = sqlalchemy.Column(sqlalchemy.INT)
     Date = sqlalchemy.Column(sqlalchemy.DATETIME)
+    Info = sqlalchemy.Column(sqlalchemy.TEXT)
