@@ -9,7 +9,7 @@
             <input name="lat" type="number" step="0.0001" min="-190" max="90" placeholder=" lat" class="form-control" value="{{ lat }}" required>
             <input name="lon" type="number" step="0.0001" min="-180" max="180" placeholder=" lon (degrees.decimal-minutes e.g. 53.30 for 55 deg 30 min N) " class="form-control" value="{{ lon}}" required>
             <input name="info" type="text" placeholder=" Info" class="form-control" value="{{ info }}" required>
-            <button type="submit" class="btn btn-danger">Register</button>
+            <button type="submit" class="btn btn-danger">Add Waypoint</button>
             <div style="clear: both;"></div>
 
             {% if message %}
@@ -23,5 +23,5 @@
 {% endblock %}
 
 {% block additional_css %}
-    <link rel="stylesheet" href="/static/css/account.css">
+    <link rel="stylesheet" href="/static/css/edit.css">
 {% endblock %}

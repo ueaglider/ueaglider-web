@@ -7,6 +7,7 @@ body {
 }
 
 
+
 .totals {
     margin-bottom: 20px;
 }
@@ -23,4 +24,14 @@ footer {
 .error-message {
     color: #a00d0d;
     text-align: center;
+}
+
+.welcome {
+    margin-bottom: 20px;
+}
+
+.glider-list {
+    margin-bottom: 50px;
+    margin-top: 50px;
+
 }

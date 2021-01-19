@@ -7,7 +7,7 @@ degree_sign = u'\N{DEGREE SIGN}'
 # Add more non-UEA assets and missions here so they don't inflate our front page statistics
 non_uea_mission_numbers = [1, 2, 16, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 53]
 non_uea_gliders = [503, 539, 546, 566, 533, 565, 524, 999, 532, 534, 550, 602, 621, 643, 640]
-
+not_gliders = [999]
 
 def get_glider_count() -> int:
     session = create_session()
@@ -61,10 +61,16 @@ def list_missions(filter_missions=False, mission_ids=[]) -> dict:
 def list_gliders(non_uea=False) -> dict:
     session = create_session()
     if non_uea:
-        gliders = session.query(Gliders).filter(Gliders.Number.in_(non_uea_gliders)).order_by(
+        gliders = session.query(Gliders) \
+            .filter(Gliders.Number.in_(non_uea_gliders)) \
+            .filter(Gliders.Number.notin_(not_gliders)) \
+            .order_by(
             Gliders.Number.asc()).all()
     else:
-        gliders = session.query(Gliders).filter(Gliders.Number.notin_(non_uea_gliders)).order_by(Gliders.Number.asc()).all()
+        gliders = session.query(Gliders) \
+            .filter(Gliders.Number.notin_(non_uea_gliders)) \
+            .order_by(Gliders.Number.asc()) \
+            .all()
     session.close()
     return gliders
 

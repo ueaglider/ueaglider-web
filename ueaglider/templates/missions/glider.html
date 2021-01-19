@@ -6,12 +6,13 @@
 {% block main_content %}
     <div class="headline">
 
+        <h1> SG{{ glider_data.Number }} {{ glider_data.Name }}</h1>
+        <h3>{{ glider_data.Info }} </h3><br>
+        Total dives: {{dives_count}}
     </div>
-<div class="container mission-list">
-<h1> SG{{ glider_data.Number }} {{ glider_data.Name }}</h1>
- {{ glider_data.Info }} <br>
- Total dives: {{dives_count}}
-<h3>Missions Completed</h3>
+<div class="container glider-list">
+
+<h2>Missions Completed</h2>
 <table class="table">
   <thead>
     <tr>
