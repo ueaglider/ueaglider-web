@@ -16,7 +16,7 @@ class RegisterViewModel(ViewModelBase):
             self.error = 'You must specify a name.'
         elif not self.email or not self.email.strip():
             self.error = 'You must specify a email.'
-        elif self.secret != 'please':
+        elif self.secret != 'apinchofsalt':
             self.error = "You didn't say the magic word"
         elif not self.password:
             self.error = 'You must specify a password.'
