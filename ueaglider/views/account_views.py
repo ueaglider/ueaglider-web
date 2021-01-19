@@ -121,8 +121,9 @@ def addpin_post():
         vm.error = 'The waypoint could not be created'
         return vm.to_dict()
 
-    audit_message = 'Add Waypoint ' + vm.name + ' to mission ' + str(vm.missionid)
-    vm.message = 'Success! You have added Waypoint ' + vm.name + ' to mission ' + str(vm.missionid)
+    audit_message = 'Add Pin ' + vm.name + ' to mission ' + str(vm.missionid)
+    vm.message = 'Success! You have added pin <b>' + vm.name + '</b> to ' + \
+                 '<a href="/mission'+str(vm.missionid) + '">' + "Mission " + str(vm.missionid) + "</a>"
     vm.name = ''
     vm.missionid = ''
     vm.lat = ''
@@ -163,7 +164,8 @@ def addtarget_post():
         return vm.to_dict()
 
     audit_message = 'Add Target ' + vm.name + ' to mission ' + str(vm.missionid)
-    vm.message = 'Success! You have added Target ' + vm.name + ' to mission ' + str(vm.missionid)
+    vm.message = 'Success! You have added target <b>' + vm.name + '</b> to ' + \
+                 '<a href="/mission'+str(vm.missionid) + '">' + "Mission " + str(vm.missionid) + "</a>"
     vm.name = ''
     vm.missionid = ''
     vm.lat = ''

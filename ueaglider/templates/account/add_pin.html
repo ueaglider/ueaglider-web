@@ -13,7 +13,7 @@
             <div style="clear: both;"></div>
 
             {% if message %}
-                <div class="success-message">{{ message }}</div>
+                <div class="success-message">{{ message|safe }}</div>
             {% endif %}
             {% if error %}
                 <div class="error-message">{{ error }}</div>
