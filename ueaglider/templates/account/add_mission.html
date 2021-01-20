@@ -6,8 +6,8 @@
             <h1>Add waypoint to a mission</h1>
             <input name="missionid" type="number" placeholder=" Mission ID (e.g. 60 for Eurec4a)" class="form-control" value="{{ missionid }}" required>
             <input name="name" type="text" placeholder=" Waypoint name" class="form-control" value="{{ name}}" required>
-            <input name="lat" type="number" step="0.0001" min="-190" max="90" placeholder=" lat" class="form-control" value="{{ lat }}" required>
-            <input name="lon" type="number" step="0.0001" min="-180" max="180" placeholder=" lon (degrees.decimal-minutes e.g. 53.30 for 55 deg 30 min N) " class="form-control" value="{{ lon}}" required>
+            <input name="lat" type="number" step="0.0001" min="-190" max="90" placeholder=" lat (degrees.decimal-minutes e.g. 53.30 for 55 deg 30 min N)" class="form-control" value="{{ lat }}" required>
+            <input name="lon" type="number" step="0.0001" min="-180" max="180" placeholder=" lon (degrees.decimal-minutes e.g. -13.05 for 13 deg 5 min W) " class="form-control" value="{{ lon}}" required>
             <input name="info" type="text" placeholder=" Info" class="form-control" value="{{ info }}" required>
             <button type="submit" class="btn btn-danger">Add Mission</button>
             <div style="clear: both;"></div>
