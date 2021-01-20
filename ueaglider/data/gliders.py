@@ -30,7 +30,7 @@ class Targets(SqlAlchemyBase):
     mission = orm.relation('Missions')
 
 
-class Waypoints(SqlAlchemyBase):
+class Pins(SqlAlchemyBase):
     __tablename__ = 'Waypoints'
     __table_args__ = {'extend_existing': True}
     WaypointsID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
@@ -72,8 +72,8 @@ class Missions(SqlAlchemyBase):
         Targets.TargetsID.asc(),
     ], back_populates='mission')
     # Waypoints relationship
-    waypoints: List[Waypoints] = orm.relation("Waypoints", order_by=[
-        Waypoints.WaypointsID.asc(),
+    waypoints: List[Pins] = orm.relation("Pins", order_by=[
+        Pins.WaypointsID.asc(),
     ], back_populates='mission')
     # Dives relationship
     dives: List[Dives] = orm.relation("Dives", order_by=[

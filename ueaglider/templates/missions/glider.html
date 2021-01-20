@@ -7,7 +7,7 @@
     <div class="headline">
 
         <h1> SG{{ glider_data.Number }} {{ glider_data.Name }}</h1>
-        <h3>{{ glider_data.Info }} </h3><br>
+        <h3>{{ glider_data.Info|safe }} </h3><br>
         Total dives: {{dives_count}}
     </div>
 <div class="container glider-list">
@@ -32,7 +32,7 @@
       <td>{{  m.Name}}</td>
       <td>{{  m.StartDate.strftime("%Y-%m-%d")}}</td>
       <td>{{  m.EndDate.strftime("%Y-%m-%d")}}</td>
-      <td>{{  m.Info}}</td>
+      <td>{{  m.Info|safe}}</td>
       <td><a href="/mission{{ m.MissionID }}" class="btn btn-primary" role="button">Select Mission</a></td>
  {%  endfor %}
   </tbody>

@@ -23,7 +23,7 @@
                 <tr>
                 <th scope="row">SG{{  g.Number }}</th>
                 <td>{{  g.Name}}</td>
-                <td>{{  g.Info}}</td>
+                <td>{{  g.Info|safe}}</td>
                 <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">Select Glider</a></td>
             {%  endfor %}
             </tbody>
@@ -49,7 +49,7 @@
                 <tr>
                 <th scope="row">SG{{  g.Number }}</th>
                 <td>{{  g.Name}}</td>
-                <td>{{  g.Info}}</td>
+                <td>{{  g.Info|safe}}</td>
                 <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">Select Glider</a></td>
             {%  endfor %}
             </tbody>

@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from ueaglider.data.db_session import create_session
-from ueaglider.data.gliders import Waypoints, Audit, Missions, Targets
+from ueaglider.data.gliders import Pins, Audit, Missions, Targets
 from ueaglider.services.mission_service import list_missions
 from ueaglider.services.user_service import find_user_by_id
 
@@ -10,7 +10,7 @@ def edit_waypoint_info(waypoint_id, info_txt):
     if not waypoint_id:
         return None
     session = create_session()
-    waypoint = session.query(Waypoints).filter(Waypoints.WaypointsID == waypoint_id).first()
+    waypoint = session.query(Pins).filter(Pins.WaypointsID == waypoint_id).first()
     waypoint.Info = info_txt
     session.commit()
     session.close()
@@ -19,7 +19,7 @@ def edit_waypoint_info(waypoint_id, info_txt):
 
 def create_waypoint(missionid, name, lat, lon, info):
     session = create_session()
-    waypoint = Waypoints()
+    waypoint = Pins()
     waypoint.MissionID = missionid
     waypoint.Name = name
     waypoint.Latitude = lat

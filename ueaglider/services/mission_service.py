@@ -1,7 +1,7 @@
 from typing import Optional, Any
 
 from ueaglider.data.db_session import create_session
-from ueaglider.data.gliders import Gliders, Missions, Dives, Targets, Waypoints
+from ueaglider.data.gliders import Gliders, Missions, Dives, Targets, Pins
 
 degree_sign = u'\N{DEGREE SIGN}'
 # Add more non-UEA assets and missions here so they don't inflate our front page statistics
@@ -113,7 +113,7 @@ def get_mission_targets(mission_id) -> Optional[Any]:
     return targets
 
 
-def get_mission_waypoints(mission_id) -> Optional[Any]:
+def get_mission_pins(mission_id) -> Optional[Any]:
     if not mission_id:
         return None
 
@@ -121,13 +121,13 @@ def get_mission_waypoints(mission_id) -> Optional[Any]:
 
     session = create_session()
 
-    waypoints = session.query(Waypoints) \
-        .filter(Waypoints.MissionID == mission_id) \
+    pins = session.query(Pins) \
+        .filter(Pins.MissionID == mission_id) \
         .all()
 
     session.close()
 
-    return waypoints
+    return pins
 
 
 def get_mission_dives(mission_id) -> Optional[Any]:
