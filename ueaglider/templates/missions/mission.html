@@ -30,7 +30,7 @@
         {% endfor %}
     </div>
 </li>
-    {% for glider_dives_list in dives_by_glider_json %}
+    {% for glider_dives_list in dives_by_glider_json_dupe %}
 <li class="nav-item dropdown">
 
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -320,14 +320,23 @@
     }).addTo(map);
 
 
+    let err = {{ zoom |tojson }}
+    if(err.length <8){
+        map.fitBounds(divesLayer.getBounds())
+    }
+    else {
+        let lon = {{ lon|tojson|safe }};
+        let lat = {{ lat|tojson|safe }};
+        map.setView([lat, lon], zoom = 8);
+
+    }
 
     // Controls for the map
     L.control.layers(basemaps, isobaths).addTo(map);
     // Length scale with mad width in pixels
     L.control.scale({maxWidth: 200}).addTo(map)
-
     // Fit map to targets
-    map.fitBounds(divesLayer.getBounds());
+
     </script>
     </div>
 
@@ -336,7 +345,7 @@
         {% for plot in missionplots %}
         <img src={{ plot }} ><br>
         {% endfor %}
-
+    {{ lon }} {{ lat }}
     </div>
 
 
