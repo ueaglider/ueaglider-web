@@ -101,7 +101,7 @@
       <td>{{  m.Name}}</td>
       <td>{{  m.StartDate.strftime("%Y-%m-%d")}}</td>
       <td>{{  m.EndDate.strftime("%Y-%m-%d")}}</td>
-      <td>{{  m.Info}}</td>
+      <td>{{  m.Info|safe}}</td>
       <td><a href="/mission{{ m.MissionID }}" class="btn btn-primary" role="button">Select</a></td>
  {%  endfor %}
   </tbody>
