@@ -52,7 +52,7 @@
         <h3>
             Mission {{ mission.MissionID }} {{ mission.Name }}
         </h3>
-        {{ mission.Info}} <br>
+        {{ mission.Info|safe}} <br>
         Start {{ mission.StartDate.strftime("%Y-%m-%d") }}<br> End {{ mission.EndDate.strftime("%Y-%m-%d") }}
     </div>
 
