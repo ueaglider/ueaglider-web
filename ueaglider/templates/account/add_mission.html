@@ -6,7 +6,7 @@
             <h1>Add Mission </h1>
             Most recent mission: {{ missions[0] }}
             <input name="missionid" type="number" placeholder="Mission number. Should be most recent mission +1" min="1" class="form-control" value="{{ missionid }}" required>
-            <input name="name" type="text" maxlength="15" placeholder=" Mission name. Max length 15 characters" class="form-control" value="{{ name}}" required>
+            <input name="name" type="text" maxlength="15" placeholder=" Mission name (max 15 characters)" class="form-control" value="{{ name}}" required>
             <label for="start">Start date:</label>
             <input name="start" type="date" placeholder=" Start date" class="form-control" value="{{ start }}" required>
             <label for="end">End date:</label>

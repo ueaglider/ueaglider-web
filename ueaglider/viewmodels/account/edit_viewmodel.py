@@ -67,3 +67,22 @@ class AddMissionViewModel(ViewModelBase):
         if self.missionid in self.missions:
             self.error = 'Mission ' + str(self.missionid) + ' already exists'
 
+
+class RemovePinViewModel(ViewModelBase):
+    def __init__(self):
+        super().__init__()
+        self.pins, pin_ids = mission_service.get_pins()
+        self.all_pin_ids = [y for x in pin_ids for y in x]
+
+        self.pin_id = self.request_dict.pin_id
+        self.pin_id_confirm = self.request_dict.pin_id_confirm
+
+    def validate(self):
+        if not self.pin_id or not self.pin_id_confirm:
+            self.error = 'Please fill in all fields'
+        self.pin_id = int(self.pin_id)
+        self.pin_id_confirm = int(self.pin_id_confirm)
+        if self.pin_id != self.pin_id_confirm:
+            self.error = 'Supplied values do not match'
+        if self.pin_id not in self.all_pin_ids:
+            self.error = 'Pin ID not found in table'

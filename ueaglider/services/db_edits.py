@@ -30,6 +30,16 @@ def create_waypoint(missionid, name, lat, lon, info):
     return waypoint
 
 
+def delete_pin(pin_id):
+    session = create_session()
+    pin = session.query(Pins) \
+        .filter(Pins.WaypointsID == pin_id) \
+        .first()
+    session.delete(pin)
+    session.commit()
+    return pin
+
+
 def create_target(missionid, name, lat, lon, radius, goto):
     session = create_session()
     target = Targets()
@@ -58,6 +68,8 @@ def create_mission(number, name, start, end, info):
     session.commit()
     session.close()
     return mission
+
+
 
 
 def audit_entry(user_id: int, message: str):
