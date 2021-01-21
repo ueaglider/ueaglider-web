@@ -6,13 +6,13 @@ The development version is now live at https://demo-ueaglider.hopto.org/
 
 # Aims
 
-- [ ] Emulate funcionality of old website
+- [x] Emulate funcionality of old website
   - [x] Map with dive locations and optional layers
   - [x] Menu of glider dives
   - [x] Page of dive plots
   - [x] Glider status page
   - [x] Science page
-  - [ ] login to add missions and waypoints
+  - [x] login to add missions and waypoints
   
 - [ ] Show all legacy data
   - [x] Waypoints on map
@@ -41,13 +41,13 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   
 - [ ] Extra pages
   - [x] Summary of each glider
-  - [ ] Summary of each mission
+  - [x] Summary of each mission
 
 - [ ] Security
   - [ ] install bootstrap locally with npm
   - [x] secure with SSL
-  - [ ] Make sure you can't delete stuff from the website
-  - [ ] sql injection vulns
+  - [x] Make sure you can't delete stuff from the website
+  - [x] sql injection vulns
   - [ ] XSS vulns
 
 - [ ] include ~~sitemap~~ and robots
