@@ -21,8 +21,11 @@ class MissionViewModel(ViewModelBase):
         self.mission_list = mission_service.list_missions()
         self.mission = mission_service.get_mission_by_id(mission_id)
         self.targets = mission_service.get_mission_targets(mission_id)
-        self.lon = self.targets[0].Longitude
-        self.lat = self.targets[0].Latitude
+        if not self.targets:
+            self.lon, self.lat = 1.236, 52.624
+        else:
+            self.lon = self.targets[0].Longitude
+            self.lat = self.targets[0].Latitude
         self.waypoints = mission_service.get_mission_pins(mission_id)
         self.waypointdict = json_conversion.pins_to_json(self.waypoints)
         self.targetdict = json_conversion.targets_to_json(self.targets)
@@ -31,10 +34,10 @@ class MissionViewModel(ViewModelBase):
             mission_folder = folder + '/static/json/Mission' + str(self.mission_id)
         else:
             mission_targets = mission_service.mission_loc(mission_no=self.mission_id)
-            tgt = mission_targets[0]
             if not mission_targets:
                 mission_folder = folder + '/static/json/Mission23'
             else:
+                tgt = mission_targets[0]
                 subprocess.run([secrets["gebco_python"], "-u",
                                 secrets["gebco_exec"],
                                 str(tgt.Longitude),

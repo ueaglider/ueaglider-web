@@ -19,14 +19,14 @@ def get_glider_count() -> int:
 
 def get_mission_count() -> int:
     session = create_session()
-    missions = session.query(Missions).filter(Missions.MissionID.notin_(non_uea_mission_numbers)).count()
+    missions = session.query(Missions).filter(Missions.Number.notin_(non_uea_mission_numbers)).count()
     session.close()
     return missions
 
 
 def mission_ids() -> list:
     session = create_session()
-    missions = session.query(Missions.MissionID).all()
+    missions = session.query(Missions.Number).all()
     session.close()
     return missions
 
@@ -92,7 +92,7 @@ def get_mission_by_id(mission_id):
     if not mission_id:
         return None
     session = create_session()
-    mission = session.query(Missions).filter(Missions.MissionID == mission_id).first()
+    mission = session.query(Missions).filter(Missions.Number == mission_id).first()
     session.close()
     return mission
 
@@ -170,25 +170,25 @@ def get_mission_dives(mission_id) -> Optional[Any]:
 def mission_loc(filter_missions=False, mission_no=None):
     session = create_session()
     if filter_missions:
-        missions = session.query(Missions).filter(Missions.MissionID.notin_(non_uea_mission_numbers)).all()
+        missions = session.query(Missions).filter(Missions.Number.notin_(non_uea_mission_numbers)).all()
     elif mission_no:
-        missions = session.query(Missions).filter(Missions.MissionID == mission_no)
+        missions = session.query(Missions).filter(Missions.Number == mission_no)
     else:
         missions = session.query(Missions).all()
     mission_locs = []
     for mission in missions:
-        dive = session.query(Dives).filter(Dives.MissionID == mission.MissionID).order_by(Dives.DiveNo.asc()).first()
+        dive = session.query(Dives).filter(Dives.MissionID == mission.Number).order_by(Dives.DiveNo.asc()).first()
         if dive:
             tgt_template = Targets()
             tgt_template.Longitude = dive.Longitude
             tgt_template.Latitude = dive.Latitude
             tgt_template.Name = mission.Name
-            tgt_template.MissionID = mission.MissionID
+            tgt_template.MissionID = mission.Number
             mission_locs.append(tgt_template)
             continue
-        target = session.query(Targets).filter(Targets.MissionID == mission.MissionID).first()
+        target = session.query(Targets).filter(Targets.MissionID == mission.Number).first()
         if target:
-            target.Name = mission.MissionID
+            target.Name = mission.Number
             mission_locs.append(target)
     session.close()
     return mission_locs

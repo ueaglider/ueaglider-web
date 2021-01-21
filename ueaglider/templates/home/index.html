@@ -97,12 +97,12 @@
   {% for m in mission_list %}
 
     <tr>
-      <th scope="row">{{  m.MissionID }}</th>
+      <th scope="row">{{  m.Number}}</th>
       <td>{{  m.Name}}</td>
       <td>{{  m.StartDate.strftime("%Y-%m-%d")}}</td>
       <td>{{  m.EndDate.strftime("%Y-%m-%d")}}</td>
       <td>{{  m.Info|safe}}</td>
-      <td><a href="/mission{{ m.MissionID }}" class="btn btn-primary" role="button">Select</a></td>
+      <td><a href="/mission{{ m.Number }}" class="btn btn-primary" role="button">Select</a></td>
  {%  endfor %}
   </tbody>
 </table>

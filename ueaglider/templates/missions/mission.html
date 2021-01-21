@@ -50,7 +50,7 @@
 
     <div class="totals">
         <h3>
-            Mission {{ mission.MissionID }} {{ mission.Name }}
+            Mission {{ mission.Number}} {{ mission.Name }}
         </h3>
         {{ mission.Info|safe}} <br>
         Start {{ mission.StartDate.strftime("%Y-%m-%d") }}<br> End {{ mission.EndDate.strftime("%Y-%m-%d") }}
