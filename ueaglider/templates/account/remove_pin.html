@@ -4,6 +4,7 @@
         <div class="form-container">
         <form action="" method="POST" class="account-form">
             <h1>Remove Pin</h1>
+            Don't forget there's no Ctrl-Z in sql! If in doubt, don't.
             <input name="pin_id" type="number" placeholder=" Pin ID from table below" min="1" class="form-control" value="{{ pin_id }}" required>
             <input name="pin_id_confirm" type="number" placeholder=" Confirm pin ID" min="1" class="form-control" value="{{ pin_id_confirm }}" required>
             <button type="submit" class="btn btn-danger">Remove Pin</button>
