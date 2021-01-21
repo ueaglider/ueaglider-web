@@ -26,7 +26,9 @@ def get_mission_count() -> int:
 
 def mission_ids() -> list:
     session = create_session()
-    missions = session.query(Missions.Number).all()
+    missions = session.query(Missions.Number) \
+        .order_by(Missions.Number.desc()) \
+        .all()
     session.close()
     return missions
 

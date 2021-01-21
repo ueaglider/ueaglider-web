@@ -62,7 +62,7 @@ class Missions(SqlAlchemyBase):
     __tablename__ = 'Missions'
     __table_args__ = {'extend_existing': True}
     MissionID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
-    Number = sqlalchemy.Column(sqlalchemy.INT)
+    Number = sqlalchemy.Column(sqlalchemy.INT, unique=True)
     Name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     StartDate = sqlalchemy.Column(sqlalchemy.DATETIME)
     EndDate = sqlalchemy.Column(sqlalchemy.DATETIME)

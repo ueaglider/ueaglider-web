@@ -183,7 +183,6 @@ def addtarget_post():
 @blueprint.route('/account/add_mission', methods=['GET'])
 @response(template_file='account/add_mission.html')
 def addmission_get():
-    return flask.redirect('/')
     vm = AddMissionViewModel()
 
     if not vm.user_id:
@@ -194,27 +193,27 @@ def addmission_get():
 @blueprint.route('/account/add_mission', methods=['POST'])
 @response(template_file='account/add_mission.html')
 def addmission_post():
-    return flask.redirect('/')
     vm = AddMissionViewModel()
     vm.validate()
+    print(vm.error)
 
     if vm.error:
         return vm.to_dict()
+    mission = db_edits.create_mission(vm.missionid, vm.name, vm.start, vm.end, vm.info)
 
-    waypoint = db_edits.create_waypoint(vm.missionid, vm.name, vm.lat, vm.lon, vm.info)
-
-    if not waypoint:
-        vm.error = 'The waypoint could not be created'
+    if not mission:
+        vm.error = 'The mission could not be created'
         return vm.to_dict()
 
-    audit_message = 'Add Waypoint ' + vm.name + ' to mission ' + str(vm.missionid)
-    vm.message = 'Success! You have added Waypoint ' + vm.name + ' to mission ' + str(vm.missionid)
+    audit_message = 'Add Mission ' + str(vm.missionid) + ' ' + vm.name
+    vm.message = 'Success! You have added ' '<a href="/mission'+str(vm.missionid) + '">' + "Mission " + str(vm.missionid) + "</a>" + ': '+ vm.name
     vm.name = ''
     vm.missionid = ''
-    vm.lat = ''
-    vm.lon = ''
+    vm.start = ''
+    vm.end = ''
     vm.info = ''
     audit_log = audit_entry(vm.user_id, audit_message)
     if audit_log:
         vm.message = vm.message + '. This entry has been logged'
+    vm.message = vm.message + '<br> would you like to <a href="/account/add_target">add a target?</a>'
     return vm.to_dict()
