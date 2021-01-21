@@ -80,6 +80,14 @@ def create_mission(number, name, start, end, info):
     return mission
 
 
+def delete_mission(mission_id):
+    session = create_session()
+    mission = session.query(Missions) \
+        .filter(Missions.Number == mission_id) \
+        .first()
+    session.delete(mission)
+    session.commit()
+    return mission
 
 
 def audit_entry(user_id: int, message: str):

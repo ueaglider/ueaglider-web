@@ -144,6 +144,14 @@ def get_targets() -> Optional[Any]:
     return targets, target_ids
 
 
+def get_missions() -> Optional[Any]:
+    session = create_session()
+    missions = session.query(Missions).order_by(Missions.Number.desc()).all()
+    missions_ids = session.query(Missions.Number).all()
+    session.close()
+    return missions, missions_ids
+
+
 def get_mission_dives(mission_id) -> Optional[Any]:
     if not mission_id:
         return None

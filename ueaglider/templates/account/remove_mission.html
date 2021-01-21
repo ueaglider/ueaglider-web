@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block main_content %}
+        <div class="form-container">
+        <form action="" method="POST" class="account-form">
+            <h1>Remove Mission</h1>
+            Don't forget there's no Ctrl-Z in sql! If in doubt, don't.
+            <input name="mission_id" type="number" placeholder=" Mision number from table below" min="1"  class="form-control" value="{{ mission_id }}" required>
+            <input name="mission_id_confirm" type="number" placeholder=" Confirm Mission number" min="1"  class="form-control" value="{{ mission_id_confirm }}" required>
+            <button type="submit" class="btn btn-danger">Remove Target</button>
+            <div style="clear: both;"></div>
+
+            {% if message %}
+                <div class="success-message">{{ message|safe }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="container pins-list">
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Mission Number</th>
+      <th scope="col">Name</th>
+        <th scope="col">Info</th>
+      <th scope="col">Link</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for p in missions %}
+
+    <tr>
+      <th scope="row">{{  p.Number }}</th>
+      <td>{{  p.Name}}</td>
+      <td>{{  p.Info}}</td>
+      <td><a href="/mission{{ p.Number }}" class="btn btn-primary" role="button">Mission {{ p.Number }}</a></td>
+ {%  endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
+
+{% block additional_css %}
+    <link rel="stylesheet" href="/static/css/edit.css">
+{% endblock %}

@@ -115,3 +115,28 @@ class RemoveTargetViewModel(ViewModelBase):
         self.targets, __ = mission_service.get_targets()
         self.target_id = ''
         self.target_id_confirm = ''
+
+
+class RemoveMissionViewModel(ViewModelBase):
+    def __init__(self):
+        super().__init__()
+        self.missions, mission_ids = mission_service.get_missions()
+        self.all_mission_ids = [y for x in mission_ids for y in x]
+
+        self.mission_id = self.request_dict.mission_id
+        self.mission_id_confirm = self.request_dict.mission_id_confirm
+
+    def validate(self):
+        if not self.mission_id or not self.mission_id_confirm:
+            self.error = 'Please fill in all fields'
+        self.mission_id = int(self.mission_id)
+        self.mission_id_confirm = int(self.mission_id_confirm)
+        if self.mission_id != self.mission_id_confirm:
+            self.error = 'Supplied values do not match'
+        elif self.mission_id not in self.all_mission_ids:
+            self.error = 'Mission Number not found in table'
+
+    def update(self):
+        self.missions, __ = mission_service.get_missions()
+        self.mission_id = ''
+        self.mission_id_confirm = ''
