@@ -53,7 +53,9 @@ class AddMissionViewModel(ViewModelBase):
         missions_nums = mission_service.mission_ids()
         id_list = [y for x in missions_nums for y in x]
         self.missions = id_list
-        self.missionid = int(self.request_dict.missionid)
+        self.missionid = self.request_dict.missionid
+        if self.missionid:
+            self.missionid = int(self.missionid)
         self.name = self.request_dict.name.strip()
         self.start = self.request_dict.start
         self.end = self.request_dict.end
