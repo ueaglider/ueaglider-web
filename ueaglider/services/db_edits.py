@@ -55,6 +55,16 @@ def create_target(missionid, name, lat, lon, radius, goto):
     return target
 
 
+def delete_target(target_id):
+    session = create_session()
+    target = session.query(Targets) \
+        .filter(Targets.TargetsID == target_id) \
+        .first()
+    session.delete(target)
+    session.commit()
+    return target
+
+
 def create_mission(number, name, start, end, info):
 
     mission = Missions()

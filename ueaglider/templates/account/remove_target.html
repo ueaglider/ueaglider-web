@@ -3,10 +3,11 @@
 {% block main_content %}
         <div class="form-container">
         <form action="" method="POST" class="account-form">
-            <h1>Remove Pin</h1>
-            <input name="pin_id" type="number" placeholder=" Pin ID from table below" class="form-control" value="{{ pin_id }}" required>
-            <input name="pin_id_confirm" type="number" placeholder=" Confirm pin ID" class="form-control" value="{{ pin_id_confirm }}" required>
-            <button type="submit" class="btn btn-danger">Remove Pin</button>
+            <h1>Remove Target</h1>
+            Don't forget there's no Ctrl-Z in sql! If in doubt, don't.
+            <input name="target_id" type="number" placeholder=" Target ID from table below" class="form-control" value="{{ target_id }}" required>
+            <input name="target_id_confirm" type="number" placeholder=" Confirm target ID" class="form-control" value="{{ target_id_confirm }}" required>
+            <button type="submit" class="btn btn-danger">Remove Target</button>
             <div style="clear: both;"></div>
 
             {% if message %}
@@ -23,7 +24,7 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">Pin ID</th>
+      <th scope="col">Target ID</th>
       <th scope="col">Name</th>
       <th scope="col">Lat</th>
       <th scope="col">Lon</th>
@@ -31,10 +32,10 @@
     </tr>
   </thead>
   <tbody>
-  {% for p in pins %}
+  {% for p in targets %}
 
     <tr>
-      <th scope="row">{{  p.WaypointsID }}</th>
+      <th scope="row">{{  p.TargetsID }}</th>
       <td>{{  p.Name}}</td>
       <td>{{  p.Latitude}}</td>
       <td>{{  p.Longitude}}</td>

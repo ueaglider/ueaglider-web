@@ -2,9 +2,9 @@ import flask
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth
-from ueaglider.services.db_edits import audit_entry, delete_pin
+from ueaglider.services.db_edits import audit_entry, delete_pin, delete_target
 from ueaglider.viewmodels.account.edit_viewmodel import AddPinViewModel, AddMissionViewModel, AddTargetViewModel, \
-    RemovePinViewModel
+    RemovePinViewModel, RemoveTargetViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
@@ -243,13 +243,48 @@ def remove_pin_post():
         return vm.to_dict()
 
     pin = delete_pin(vm.pin_id)
-    print(pin)
     if not pin:
         vm.error = 'Pin could not be removed'
         return vm.to_dict()
 
     audit_message = 'Removed Pin ' + str(pin.WaypointsID) + ' from Mission ' + str(pin.MissionID)
-    vm.message = 'Success. Removed Pin ' + str(pin.WaypointsID) + ' from Mission ' + str(pin.MissionID)
+    vm.message = 'Success! Removed Pin ' + str(pin.WaypointsID) + ' from Mission ' + str(pin.MissionID)
+    vm.update()
+    audit_log = audit_entry(vm.user_id, audit_message)
+    if audit_log:
+        vm.message = vm.message + '. This entry has been logged'
+    return vm.to_dict()
+
+
+########################## REMOVE TARGET ##########################
+
+
+@blueprint.route('/account/remove_target', methods=['GET'])
+@response(template_file='account/remove_target.html')
+def remove_target_get():
+    vm = RemoveTargetViewModel()
+
+    if not vm.user_id:
+        return flask.redirect('/account/login')
+    return vm.to_dict()
+
+
+@blueprint.route('/account/remove_target', methods=['POST'])
+@response(template_file='account/remove_target.html')
+def remove_target_post():
+    vm = RemoveTargetViewModel()
+    vm.validate()
+
+    if vm.error:
+        return vm.to_dict()
+
+    target = delete_target(vm.target_id)
+    if not target:
+        vm.error = 'Target could not be removed'
+        return vm.to_dict()
+
+    audit_message = 'Removed Target ' + str(target.TargetsID) + ' from Mission ' + str(target.MissionID)
+    vm.message = 'Success! Removed Target ' + str(target.TargetsID) + ' from Mission ' + str(target.MissionID)
     vm.update()
     audit_log = audit_entry(vm.user_id, audit_message)
     if audit_log:

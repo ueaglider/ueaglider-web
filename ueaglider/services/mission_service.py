@@ -136,6 +136,14 @@ def get_pins() -> Optional[Any]:
     return pins, pin_ids
 
 
+def get_targets() -> Optional[Any]:
+    session = create_session()
+    targets = session.query(Targets).order_by(Targets.TargetsID.desc()).all()
+    target_ids = session.query(Targets.TargetsID).all()
+    session.close()
+    return targets, target_ids
+
+
 def get_mission_dives(mission_id) -> Optional[Any]:
     if not mission_id:
         return None
