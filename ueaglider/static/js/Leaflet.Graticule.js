@@ -191,7 +191,7 @@ L.LatLngGraticule = L.Layer.extend({
         if (this.options.latFormatTickLabel) {
             return this.options.latFormatTickLabel(lat);
         }
-
+        lat = Math.round(lat * 100) / 100
         // todo: format type of float
         if (lat < 0) {
             return '' + (lat*-1) + 'S';
@@ -206,7 +206,7 @@ L.LatLngGraticule = L.Layer.extend({
         if (this.options.lngFormatTickLabel) {
             return this.options.lngFormatTickLabel(lng);
         }
-
+        lng = Math.round(lng * 100) / 100
         // todo: format type of float
         if (lng > 180) {
             return '' + (360 - lng) + 'W';
