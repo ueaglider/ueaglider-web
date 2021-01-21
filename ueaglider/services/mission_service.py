@@ -33,6 +33,15 @@ def mission_ids() -> list:
     return missions
 
 
+def glider_nums() -> list:
+    session = create_session()
+    gliders = session.query(Gliders.Number) \
+        .order_by(Gliders.Number.desc()) \
+        .all()
+    session.close()
+    return gliders
+
+
 def get_dive_count(filter_glider=False) -> int:
     session = create_session()
     if filter_glider:
@@ -150,6 +159,9 @@ def get_missions() -> Optional[Any]:
     missions_ids = session.query(Missions.Number).all()
     session.close()
     return missions, missions_ids
+
+
+
 
 
 def get_mission_dives(mission_id) -> Optional[Any]:

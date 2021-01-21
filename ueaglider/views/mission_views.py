@@ -1,6 +1,8 @@
 import os
 import sys
 import flask
+
+from ueaglider.services import mission_service
 from ueaglider.viewmodels.mission.mission_viewmodel import MissionViewModel
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -21,6 +23,11 @@ def missions(mission_id: int):
     targets: targets for this this mission
     target_dict: targets formatted to JSON style dict for JS map
     """
+    missions_nums = mission_service.mission_ids()
+    id_list = [y for x in missions_nums for y in x]
+    if mission_id not in id_list:
+        return flask.redirect('/')
+
     vm = MissionViewModel(mission_id)
     vm.check_dives()
     return vm.to_dict()
