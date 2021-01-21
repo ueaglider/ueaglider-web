@@ -73,8 +73,8 @@ class RemovePinViewModel(ViewModelBase):
         self.pins, pin_ids = mission_service.get_pins()
         self.all_pin_ids = [y for x in pin_ids for y in x]
 
-        self.pin_id = self.request_dict.target_id
-        self.pin_id_confirm = self.request_dict.target_id_confirm
+        self.pin_id = self.request_dict.pin_id
+        self.pin_id_confirm = self.request_dict.pin_id_confirm
 
     def validate(self):
         if not self.pin_id or not self.pin_id_confirm:
