@@ -86,3 +86,8 @@ class RemovePinViewModel(ViewModelBase):
             self.error = 'Supplied values do not match'
         if self.pin_id not in self.all_pin_ids:
             self.error = 'Pin ID not found in table'
+
+    def update(self):
+        self.pins, __ = mission_service.get_pins()
+        self.pin_id = ''
+        self.pin_id_confirm = ''

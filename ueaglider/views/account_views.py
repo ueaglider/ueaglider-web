@@ -250,8 +250,7 @@ def remove_pin_post():
 
     audit_message = 'Removed Pin ' + str(pin.WaypointsID) + ' from Mission ' + str(pin.MissionID)
     vm.message = 'Success. Removed Pin ' + str(pin.WaypointsID) + ' from Mission ' + str(pin.MissionID)
-    vm.pin_id = ''
-    vm.pin_id_confirm = ''
+    vm.update()
     audit_log = audit_entry(vm.user_id, audit_message)
     if audit_log:
         vm.message = vm.message + '. This entry has been logged'
