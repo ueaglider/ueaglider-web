@@ -64,10 +64,6 @@ class AddMissionViewModel(ViewModelBase):
     def validate(self):
         if not self.missionid or not self.name.strip() or not self.end or not self.start or not self.info.strip():
             self.error = 'Please fill in all fields'
-        print(self.missionid)
-        print(self.missions)
-        print(type(self.missionid))
         if self.missionid in self.missions:
-            print('caught')
             self.error = 'Mission ' + str(self.missionid) + ' already exists'
 
