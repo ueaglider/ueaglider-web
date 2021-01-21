@@ -4,6 +4,14 @@
 *  Author: lanwei@cloudybay.com.tw
 */
 
+function toDegreesMinutesAndSeconds(coordinate) {
+    var absolute = Math.abs(coordinate);
+    var degrees = Math.floor(absolute);
+    var minutesNotTruncated = (absolute - degrees) * 60;
+    var minutes = Math.floor(minutesNotTruncated);
+
+    return degrees + "\xB0 " + minutes + "' " ;
+}
 L.LatLngGraticule = L.Layer.extend({
     options: {
         showLabel: true,
@@ -191,15 +199,14 @@ L.LatLngGraticule = L.Layer.extend({
         if (this.options.latFormatTickLabel) {
             return this.options.latFormatTickLabel(lat);
         }
-        lat = Math.round(lat * 100) / 100
         // todo: format type of float
         if (lat < 0) {
-            return '' + (lat*-1) + 'S';
+            return '' +toDegreesMinutesAndSeconds((lat*-1)) + 'S';
         }
         else if (lat > 0) {
-            return '' + lat + 'N';
+            return '' + toDegreesMinutesAndSeconds(lat) + 'N';
         }
-        return '' + lat;
+        return '' + toDegreesMinutesAndSeconds(lat);
     },
 
     __format_lng: function(lng) {
@@ -209,21 +216,21 @@ L.LatLngGraticule = L.Layer.extend({
         lng = Math.round(lng * 100) / 100
         // todo: format type of float
         if (lng > 180) {
-            return '' + (360 - lng) + 'W';
+            return '' + (360 - toDegreesMinutesAndSeconds(lng)) + 'W';
         }
         else if (lng > 0 && lng < 180) {
-            return '' + lng + 'E';
+            return '' + toDegreesMinutesAndSeconds(lng) + 'E';
         }
         else if (lng < 0 && lng > -180) {
-            return '' + (lng*-1) + 'W';
+            return '' + toDegreesMinutesAndSeconds(lng*-1) + 'W';
         }
         else if (lng == -180) {
-            return '' + (lng*-1);
+            return '' + toDegreesMinutesAndSeconds(lng*-1);
         }
         else if (lng < -180) {
-            return '' + (360 + lng) + 'W';
+            return '' + toDegreesMinutesAndSeconds(360 + lng) + 'W';
         }
-        return '' + lng;
+        return '' + toDegreesMinutesAndSecondslng;
     },
 
     __calcInterval: function() {
