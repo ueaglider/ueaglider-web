@@ -2,7 +2,6 @@ from datetime import datetime
 
 from ueaglider.data.db_session import create_session
 from ueaglider.data.gliders import Pins, Audit, Missions, Targets
-from ueaglider.services.mission_service import list_missions
 from ueaglider.services.user_service import find_user_by_id
 
 

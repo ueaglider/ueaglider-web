@@ -33,6 +33,8 @@ def dives_to_json(dives, gliders) -> Tuple:
     features = []
     dive_page_links = []
     coords = []
+    i = 0
+    dive = []
     for i, dive in enumerate(dives):
         coords.append([coord_db_decimal(dive.Longitude), coord_db_decimal(dive.Latitude)])
         dive_page_link = "/mission" + str(dive.MissionID) + "/glider" + str(glider_number_dict[dive.GliderID]) \
@@ -40,7 +42,7 @@ def dives_to_json(dives, gliders) -> Tuple:
         dive_page_links.append(dive_page_link)
         tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
             dive.GliderID] + "<br><a href=" + dive_page_link + ">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " \
-                    + coord_db_to_pretty(dive.Latitude) + "<br>Lon: " + coord_db_to_pretty(dive.Longitude)
+            + coord_db_to_pretty(dive.Latitude) + "<br>Lon: " + coord_db_to_pretty(dive.Longitude)
         dive_item = {
             "geometry": {
                 "type": "Point",
@@ -66,7 +68,7 @@ def dives_to_json(dives, gliders) -> Tuple:
         "type": "FeatureCollection",
         "features": features
     }
-    linedict ={
+    linedict = {
         "type": "FeatureCollection",
         "features": [{
             "geometry": {
@@ -81,29 +83,7 @@ def dives_to_json(dives, gliders) -> Tuple:
         }]
     }
 
-
     return divedict, dive_page_links, linedict
-
-
-def dives_to_json_lines(dives, gliders) -> Tuple:
-    # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
-    gliders_name_dict = {}
-    glider_number_dict = {}
-    for glider in gliders:
-        gliders_name_dict[glider.GliderID] = glider.Name
-        glider_number_dict[glider.GliderID] = glider.Number
-    # Make a sorted dictionary of ascending integers per gliderID for colouring the map dive icons
-    glider_ids = list(glider_number_dict.keys())
-    glider_ids.sort()
-    glider_order_dict = {val: i for i, val in enumerate(glider_ids)}
-    features = []
-    coords = []
-    for i, dive in enumerate(dives):
-        coords.append([coord_db_decimal(dive.Longitude), coord_db_decimal(dive.Latitude)])
-
-    return None
-
-
 
 
 def targets_to_json(targets, mission_tgt=False) -> dict:

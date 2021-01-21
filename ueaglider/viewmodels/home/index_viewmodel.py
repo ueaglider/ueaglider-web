@@ -7,8 +7,8 @@ class IndexViewModel(ViewModelBase):
         self.glider_count = mission_service.get_glider_count()
         self.mission_count = mission_service.get_mission_count()
         self.dive_count = mission_service.get_dive_count()
-        self.mission_list = mission_service.list_missions(mission_ids=[1,2,3])
+        self.mission_list = mission_service.list_missions(mission_id_list=[1, 2, 3])
         self.timespan = int(self.mission_list[0].EndDate.strftime("%Y")) - int(self.mission_list[-1].EndDate.strftime("%Y"))
-        self.mission_loc = mission_service.mission_loc(filter=True)
+        self.mission_loc = mission_service.mission_loc(filter_missions=True)
         self.mission_tgts = json_conversion.targets_to_json(self.mission_loc, mission_tgt=True)
 

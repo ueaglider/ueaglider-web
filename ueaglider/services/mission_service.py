@@ -9,6 +9,7 @@ non_uea_mission_numbers = [1, 2, 16, 24, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45,
 non_uea_gliders = [503, 539, 546, 566, 533, 565, 524, 999, 532, 534, 550, 602, 621, 643, 640]
 not_gliders = [999]
 
+
 def get_glider_count() -> int:
     session = create_session()
     gliders = session.query(Gliders).filter(Gliders.Number.notin_(non_uea_gliders)).count()
@@ -42,17 +43,17 @@ def get_dive_count(filter_glider=False) -> int:
     return dives
 
 
-def list_missions(filter_missions=False, mission_ids=[]) -> dict:
+def list_missions(filter_missions=False, mission_id_list=()) -> dict:
     session = create_session()
     if filter_missions:
         missions = session.query(Missions) \
-            .filter(Missions.Number.in_(mission_ids)) \
+            .filter(Missions.Number.in_(mission_id_list)) \
             .filter(Missions.Number.notin_(non_uea_mission_numbers)) \
             .order_by(Missions.Number.desc()) \
             .all()
     else:
         missions = session.query(Missions) \
-            .filter(Missions.Number.notin_(mission_ids)) \
+            .filter(Missions.Number.notin_(mission_id_list)) \
             .order_by(Missions.Number.desc()).all()
     session.close()
     return missions
@@ -78,13 +79,13 @@ def list_gliders(non_uea=False) -> dict:
 def glider_info(glider_num):
     session = create_session()
     glider_instance = session.query(Gliders).filter(Gliders.Number == glider_num).first()
-    mission_ids = []
+    mission_ids_list = []
     for value in session.query(Dives.MissionID) \
             .filter(Dives.GliderID == glider_instance.GliderID) \
             .distinct():
-        mission_ids.append(value[0])
+        mission_ids_list.append(value[0])
     session.close()
-    return glider_instance, mission_ids
+    return glider_instance, mission_ids_list
 
 
 def get_mission_by_id(mission_id):
@@ -166,9 +167,9 @@ def get_mission_dives(mission_id) -> Optional[Any]:
     return dives, gliders, dives_by_glider, most_recent_dives
 
 
-def mission_loc(filter=False, mission_no=None):
+def mission_loc(filter_missions=False, mission_no=None):
     session = create_session()
-    if filter:
+    if filter_missions:
         missions = session.query(Missions).filter(Missions.MissionID.notin_(non_uea_mission_numbers)).all()
     elif mission_no:
         missions = session.query(Missions).filter(Missions.MissionID == mission_no)
