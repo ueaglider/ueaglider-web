@@ -21,7 +21,8 @@ def global_init(db_name: str):
         raise Exception("You must specify a db name.")
 
     # Using pymysql to talk to db, resolves lack of mypyDB
-    conn_str = 'mysql+pymysql://' + secrets['remote_string'] + secrets['sql_user'] + ':' + secrets['sql_pwd'] + '@localhost/' + db_name.strip()
+    conn_str = 'mysql+pymysql://' + secrets['sql_user'] + ':' + secrets['sql_pwd'] + '@' + secrets['remote_string']\
+               + '/' + db_name.strip()
     print("Connecting to DB with {}".format(conn_str))
 
     # Can switch echo to True for debug, SQL actions print out to terminal
