@@ -13,16 +13,20 @@ def test_int_site_mapped_urls(client):
         u if u else '/'
         for u in urls
     ]
+    urls.append('/mission60/glider637/dive12')
     print('Testing {} urls from sitemap...'.format(len(urls)), flush=True)
-
-    has_tested_projects = False
+    # Hit a single representative page each of mission and glider. Will catch 99 % of b0rks.
+    has_tested_gliders = False
+    has_tested_missions = False
     for url in urls:
-        if '/project/' in url and has_tested_projects:
+        if '/gliders/' in url and has_tested_gliders:
             continue
-
-        if '/project/' in url:
-            has_tested_projects = True
-
+        if '/gliders/' in url:
+            has_tested_gliders = True
+        if '/mission' in url and has_tested_missions and 'dive' not in url:
+            continue
+        if '/mission' in url:
+            has_tested_missions = True
         print('Testing url at ' + url)
         resp: Response = client.get(url)
         assert resp.status_code == 200
