@@ -222,15 +222,15 @@ L.LatLngGraticule = L.Layer.extend({
             return '' + toDegreesMinutesAndSeconds(lng) + 'E';
         }
         else if (lng < 0 && lng > -180) {
-            return '' + toDegreesMinutesAndSeconds(lng*-1) + 'W';
+            return '' + toDegreesMinutesAndSeconds((lng*-1)) + 'W';
         }
         else if (lng == -180) {
-            return '' + toDegreesMinutesAndSeconds(lng*-1);
+            return '' + toDegreesMinutesAndSeconds((lng*-1));
         }
         else if (lng < -180) {
-            return '' + toDegreesMinutesAndSeconds(360 + lng) + 'W';
+            return '' + toDegreesMinutesAndSeconds((360 + lng)) + 'W';
         }
-        return '' + toDegreesMinutesAndSecondslng;
+        return '' + toDegreesMinutesAndSeconds(lng);
     },
 
     __calcInterval: function() {
