@@ -1,10 +1,11 @@
+import ueaglider.services.glider_service
 from ueaglider.services import mission_service, json_conversion
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 
 class IndexViewModel(ViewModelBase):
     def __init__(self):
         super().__init__()
-        self.glider_count = mission_service.get_glider_count()
+        self.glider_count = ueaglider.services.glider_service.get_glider_count()
         self.mission_count = mission_service.get_mission_count()
         self.dive_count = mission_service.get_dive_count()
         self.mission_list = mission_service.list_missions(mission_id_list=[1, 2, 3])

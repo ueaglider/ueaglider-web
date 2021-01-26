@@ -1,4 +1,6 @@
 import flask
+
+import ueaglider.services.glider_service
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import mission_service
 from ueaglider.viewmodels.glider.glider_viewmodel import GliderListViewModel, GliderViewModel
@@ -26,7 +28,7 @@ def gliders(glider_num: int):
     :return:
     info on the glider and its missions
     """
-    missions_nums = mission_service.glider_nums()
+    missions_nums = ueaglider.services.glider_service.glider_nums()
     id_list = [y for x in missions_nums for y in x]
     if glider_num not in id_list:
         return flask.redirect('/gliders')
