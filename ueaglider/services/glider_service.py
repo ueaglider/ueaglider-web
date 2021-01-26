@@ -21,7 +21,7 @@ def glider_nums() -> list:
     return gliders
 
 
-def list_gliders(non_uea=False) -> dict:
+def list_gliders(non_uea=False) -> list:
     session = create_session()
     if non_uea:
         gliders = session.query(Gliders) \

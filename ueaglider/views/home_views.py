@@ -1,6 +1,7 @@
 import flask
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.viewmodels.home.index_viewmodel import IndexViewModel
+from ueaglider.viewmodels.home.sitemap_viewmodel import SiteMapViewModel
 
 blueprint = flask.Blueprint('home', __name__, template_folder='templates')
 
@@ -14,3 +15,16 @@ def index():
     """
     vm = IndexViewModel()
     return vm.to_dict()
+
+
+@blueprint.route('/sitemap.xml')
+@response(mimetype='application/xml', template_file='home/sitemap.html')
+def sitemap():
+    vm = SiteMapViewModel()
+    return vm.to_dict()
+
+
+@blueprint.route('/robots.txt')
+@response(mimetype='text/plain', template_file='home/robots.txt')
+def robots():
+    return {}
