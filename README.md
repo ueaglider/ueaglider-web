@@ -14,9 +14,9 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   - [x] Science page
   - [x] login to add missions and waypoints
   
-- [ ] Show all legacy data
+- [x] Show all legacy data
   - [x] Waypoints on map
-  - [ ] All figures showing on site
+  - [x] All figures showing on site
 
 - [ ] Improve the map
   - [x] No more blue markers
@@ -69,4 +69,4 @@ Other glider sites to check out
 - flask for the main web app
 - bootstrap for pretty front end stuff
 - sqlalchemy to talk to the database
-- leaflet for maps
+- leaflet (javascript) for maps
