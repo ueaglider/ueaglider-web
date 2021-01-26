@@ -7,7 +7,7 @@ blueprint = flask.Blueprint('glider', __name__, template_folder='templates')
 
 
 @blueprint.route('/gliders')
-@response(template_file='missions/gliders_list.html')
+@response(template_file='glider/gliders_list.html')
 def gliders_list():
     """
     :return:
@@ -19,7 +19,7 @@ def gliders_list():
 
 
 @blueprint.route('/gliders/SG<int:glider_num>')
-@response(template_file='missions/glider.html')
+@response(template_file='glider/glider.html')
 def gliders(glider_num: int):
     """
     :param glider_num: the glider number e.g. SG637
