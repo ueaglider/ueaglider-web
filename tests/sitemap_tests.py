@@ -13,9 +13,10 @@ def test_int_site_mapped_urls(client):
         u if u else '/'
         for u in urls
     ]
+    # Arbitrarily selected dive as thy're not currenlty in the site map
     urls.append('/mission60/glider637/dive12')
     print('Testing {} urls from sitemap...'.format(len(urls)), flush=True)
-    # Hit a single representative page each of mission and glider. Will catch 99 % of b0rks.
+    # Hit a single representative page each of mission, glider adn dive. Will catch 99 % of b0rks.
     has_tested_gliders = False
     has_tested_missions = False
     for url in urls:
