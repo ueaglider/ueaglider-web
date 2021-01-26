@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from ueaglider.data.db_session import create_session
-from ueaglider.data.gliders import Pins, Audit, Missions, Targets
+from ueaglider.data.db_classes import Pins, Audit, Missions, Targets
 from ueaglider.services.user_service import find_user_by_id
 
 

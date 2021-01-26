@@ -1,5 +1,5 @@
 from ueaglider.data.db_session import create_session
-from ueaglider.data.gliders import Gliders, Dives
+from ueaglider.data.db_classes import Gliders, Dives
 
 non_uea_gliders = [503, 539, 546, 566, 533, 565, 524, 999, 532, 534, 550, 602, 621, 643, 640]
 not_gliders = [999]

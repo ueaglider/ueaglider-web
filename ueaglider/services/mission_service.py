@@ -1,7 +1,7 @@
 from typing import Optional, Any
 
 from ueaglider.data.db_session import create_session
-from ueaglider.data.gliders import Gliders, Missions, Dives, Targets, Pins
+from ueaglider.data.db_classes import Gliders, Missions, Dives, Targets, Pins
 
 degree_sign = u'\N{DEGREE SIGN}'
 # Add more non-UEA assets and missions here so they don't inflate our front page statistics

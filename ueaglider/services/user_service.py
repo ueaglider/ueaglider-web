@@ -5,7 +5,7 @@ from typing import Optional
 from passlib.hash import pbkdf2_sha256 as crypto
 
 from ueaglider.data import db_session
-from ueaglider.data.gliders import User
+from ueaglider.data.db_classes import User
 
 
 def hash_text(text: str) -> str:
