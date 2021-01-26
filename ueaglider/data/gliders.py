@@ -1,8 +1,6 @@
 from typing import List
-
 import sqlalchemy
 from sqlalchemy import orm
-
 from ueaglider.data.modelbase import SqlAlchemyBase
 
 
@@ -34,7 +32,6 @@ class Pins(SqlAlchemyBase):
     __tablename__ = 'Waypoints'
     __table_args__ = {'extend_existing': True}
     WaypointsID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
-    MissionID = sqlalchemy.Column(sqlalchemy.INT)
     Name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
@@ -49,7 +46,6 @@ class Dives(SqlAlchemyBase):
     __table_args__ = {'extend_existing': True}
     DiveInfoID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
     GliderID = sqlalchemy.Column(sqlalchemy.INT)
-    MissionID = sqlalchemy.Column(sqlalchemy.INT)
     DiveNo = sqlalchemy.Column(sqlalchemy.INT)
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
