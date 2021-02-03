@@ -11,3 +11,6 @@ sys.path.insert(0, container_folder)
 from sitemap_tests import *
 # noinspection PyUnresolvedReferences
 from home_tests import *
+# noinspection PyUnresolvedReferences
+from glider_tests import *
+
