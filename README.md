@@ -50,11 +50,16 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   - [x] sql injection vulns
   - [ ] XSS vulns
 
-- [ ] include ~~sitemap~~ and robots
+- [x] include sitemap and robots
 
 - [ ] Documentation
 
 - [ ] Tests
+  - [x] Sitemap url requests
+  - [ ] Home tests
+  - [ ] Glider tests
+  - [ ] Dive tests
+  - [ ] Account tests
 
 ### Inspiration
 
