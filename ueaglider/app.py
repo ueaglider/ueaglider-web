@@ -19,7 +19,7 @@ def configure():
     register_blueprints()
     print("Registered blueprints")
 
-    global_init('seaglider')
+    global_init()
     print("DB setup completed.")
     print("", flush=True)
 
