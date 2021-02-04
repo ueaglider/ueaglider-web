@@ -56,7 +56,7 @@ def old_php():
     """
     glider_num = request.args.get('gliderNo')
     mission_id = request.args.get('missionNo')
-    dive_num = request.args.get('gliderNo')
+    dive_num = request.args.get('diveNo')
     vm = DiveViewModel(mission_id, glider_num, dive_num)
     return vm.to_dict()
 

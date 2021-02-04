@@ -7,10 +7,16 @@
         <title>Mission {{ mission_num }} {{ dive_num }}</title>
 {% endblock %}
 {% block main_content %}
-    <h1> Looking for the old UEA glider site?</h1>
-    <h2> It is gone, but lives forever in our hearts</h2>
-    I divine that you are attempting to access dive {{ dive_num }} by glider SG{{ glider_num }} on mission {{ mission_num }}
-    If this is correct (and that dive was once performed) you will find the relevant figures
-    <a href="/mission{{ mission_num }}/glider{{ glider_num }}/dive{{ dive_num }}">here</a>
-
+    <div class="oldphp">
+    <h1> Attention! You are entering a PHP-free zone</h1>
+    <h3> Looking for the old UEA glider site?</h3>
+         <img src="/static/img/old-website-images/dive-page-banner.png" width="1200" alt="Old site dive page banner">
+        <p>Those were the days </p>
+        <p><h4>The old site is gone, but lives forever in our hearts</h4>
+        &#9829; Bastien's PHP monstrosity 2010 - 2021 &#9829;</p>
+    I divine that you are attempting to access dive {{ dive_num }} by glider SG{{ glider_num }} on mission {{ mission_num }}. <br>
+    If this is correct (and that dive was once performed) you can
+    <a href="/mission{{ mission_num }}/glider{{ glider_num }}/dive{{ dive_num }}" class="btn btn-primary" role="button">click here</a>
+    for a redirect
+    </div>
 {% endblock %}

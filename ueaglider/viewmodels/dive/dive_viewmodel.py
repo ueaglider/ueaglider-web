@@ -9,6 +9,8 @@ sys.path.insert(0, folder)
 class ScienceViewModel(ViewModelBase):
     def __init__(self, mission_id, glider_num):
         super().__init__()
+        self.mission_num = mission_id
+        self.glider_num = glider_num
         folder_path = Path(folder)
         # Find the absolute path to the figures
         path_add = 'static/img/dives/Mission' + str(mission_id) + '/' + str(glider_num) + '/Science'
@@ -33,6 +35,8 @@ class ScienceViewModel(ViewModelBase):
 class StatusViewModel(ViewModelBase):
     def __init__(self, mission_id, glider_num):
         super().__init__()
+        self.mission_num = mission_id
+        self.glider_num = glider_num
         folder_path = Path(folder)
         # Find the absolute path to the figures
         path_add = 'static/img/dives/Mission' + str(mission_id) + '/' + str(glider_num) + '/Monitor'
@@ -52,7 +56,6 @@ class StatusViewModel(ViewModelBase):
         if not dive_plot_paths:
             dive_plot_paths = ['/static/img/dives/hedge.png']
         self.dive_plots = dive_plot_paths
-
 
 
 class DiveViewModel(ViewModelBase):
