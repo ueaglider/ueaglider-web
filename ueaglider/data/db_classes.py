@@ -1,9 +1,12 @@
 from typing import List
-
 import sqlalchemy
 from sqlalchemy import orm
-
 from ueaglider.data.modelbase import SqlAlchemyBase
+""" Each of the classes maps to a database table
+Mission relationships link the tables to each other by MissionID
+On the front end, we use Mission Number rather than MissionID, as MissionID autoincrements, so deleting the mission
+and starting a new one will change MissionID but not Mission Number
+"""
 
 
 class Gliders(SqlAlchemyBase):
@@ -34,7 +37,6 @@ class Pins(SqlAlchemyBase):
     __tablename__ = 'Waypoints'
     __table_args__ = {'extend_existing': True}
     WaypointsID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
-    MissionID = sqlalchemy.Column(sqlalchemy.INT)
     Name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
@@ -49,7 +51,6 @@ class Dives(SqlAlchemyBase):
     __table_args__ = {'extend_existing': True}
     DiveInfoID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
     GliderID = sqlalchemy.Column(sqlalchemy.INT)
-    MissionID = sqlalchemy.Column(sqlalchemy.INT)
     DiveNo = sqlalchemy.Column(sqlalchemy.INT)
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
@@ -67,7 +68,7 @@ class Missions(SqlAlchemyBase):
     StartDate = sqlalchemy.Column(sqlalchemy.DATETIME)
     EndDate = sqlalchemy.Column(sqlalchemy.DATETIME)
     Info = sqlalchemy.Column(sqlalchemy.TEXT)
-    # Targets relationship
+    # Pins relationship
     targets: List[Targets] = orm.relation("Targets", order_by=[
         Targets.TargetsID.asc(),
     ], back_populates='mission')

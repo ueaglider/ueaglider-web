@@ -1,4 +1,6 @@
 import flask
+
+import ueaglider.services.glider_service
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import mission_service
 from ueaglider.viewmodels.glider.glider_viewmodel import GliderListViewModel, GliderViewModel
@@ -7,7 +9,7 @@ blueprint = flask.Blueprint('glider', __name__, template_folder='templates')
 
 
 @blueprint.route('/gliders')
-@response(template_file='missions/gliders_list.html')
+@response(template_file='glider/gliders_list.html')
 def gliders_list():
     """
     :return:
@@ -19,14 +21,14 @@ def gliders_list():
 
 
 @blueprint.route('/gliders/SG<int:glider_num>')
-@response(template_file='missions/glider.html')
+@response(template_file='glider/glider.html')
 def gliders(glider_num: int):
     """
     :param glider_num: the glider number e.g. SG637
     :return:
     info on the glider and its missions
     """
-    missions_nums = mission_service.glider_nums()
+    missions_nums = ueaglider.services.glider_service.glider_nums()
     id_list = [y for x in missions_nums for y in x]
     if glider_num not in id_list:
         return flask.redirect('/gliders')

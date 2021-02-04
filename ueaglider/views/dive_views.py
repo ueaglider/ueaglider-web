@@ -10,7 +10,7 @@ blueprint = flask.Blueprint('dives', __name__, template_folder='templates')
 
 
 @blueprint.route('/mission<int:mission_id>/glider<int:glider_num>/science')
-@response(template_file='missions/dive.html')
+@response(template_file='dive/dive.html')
 def science(mission_id: int, glider_num: int):
     """
     Science page method,
@@ -23,7 +23,7 @@ def science(mission_id: int, glider_num: int):
 
 
 @blueprint.route('/mission<int:mission_id>/glider<int:glider_num>/status')
-@response(template_file='missions/dive.html')
+@response(template_file='dive/dive.html')
 def status(mission_id: int, glider_num: int):
     """
     Science page method,
@@ -35,7 +35,7 @@ def status(mission_id: int, glider_num: int):
 
 
 @blueprint.route('/mission<int:mission_id>/glider<int:glider_num>/dive<int:dive_num>')
-@response(template_file='missions/dive.html')
+@response(template_file='dive/dive.html')
 def dive(mission_id: int, glider_num: int, dive_num: int):
     """
     Dives page method,
