@@ -1,4 +1,6 @@
 import flask
+from flask import request
+
 from ueaglider.infrastructure.view_modifiers import response
 
 from ueaglider.viewmodels.dive.dive_viewmodel import DiveViewModel, StatusViewModel, ScienceViewModel
@@ -40,6 +42,21 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
     :returns:
     dive_plots: list of paths to images associated with the dive
     """
+    vm = DiveViewModel(mission_id, glider_num, dive_num)
+    return vm.to_dict()
+
+
+@blueprint.route('/DIVES/pilotting.php')
+@response(template_file='missions/old_dive.html')
+def old_php():
+    """
+    Dives page method,
+    :returns:
+    dive_plots: list of paths to images associated with the dive
+    """
+    glider_num = request.args.get('gliderNo')
+    mission_id = request.args.get('missionNo')
+    dive_num = request.args.get('gliderNo')
     vm = DiveViewModel(mission_id, glider_num, dive_num)
     return vm.to_dict()
 

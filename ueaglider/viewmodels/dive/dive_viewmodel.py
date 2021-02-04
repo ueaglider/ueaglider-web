@@ -65,17 +65,20 @@ class DiveViewModel(ViewModelBase):
         dive_path = folder_path / path_add
         figure_paths = sorted(dive_path.glob('*'))
         dive_plot_paths = []
+        self.mission_num = mission_id
+        self.glider_num = glider_num
+        self.dive_num = dive_num
         for path in figure_paths:
             path_str = str(path)
             # Cut the path to each figure so it starts from 'static' directory in app's home directory
             rel_path = path_str[path_str.find('/static'):]
             dive_plot_paths.append(rel_path)
         self.links_dict = {
-            'prev dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num - 1),
+            'prev dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(int(dive_num) - 1),
             'glider status': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status",
             'science': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science",
             'mission page': "/mission" + str(mission_id),
-            'next dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(dive_num + 1),
+            'next dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(int(dive_num) + 1),
         }
         if not dive_plot_paths:
             dive_plot_paths = ['/static/img/dives/hedge.png']
