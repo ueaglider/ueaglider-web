@@ -11,7 +11,7 @@ def test_int_homepage(client):
     assert b'UEA glider group' in r.data
 
 
-def test_homepage_directly():
+def test_homepage_missions():
     # Check that the mission list has at least one item in it
     with flask_app.test_request_context(path='/'):
         r: Response = home_views.index()

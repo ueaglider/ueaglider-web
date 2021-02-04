@@ -13,7 +13,7 @@ def test_int_site_mapped_urls(client):
         u if u else '/'
         for u in urls
     ]
-    # Arbitrarily selected dive as thy're not currenlty in the site map
+    # Arbitrarily selected dive as they're not in the site map
     urls.append('/mission60/glider637/dive12')
     print('Testing {} urls from sitemap...'.format(len(urls)), flush=True)
     # Hit a single representative page each of mission, glider adn dive. Will catch 99 % of b0rks.
@@ -34,16 +34,6 @@ def test_int_site_mapped_urls(client):
 
 
 def get_sitemap_text(client):
-    # <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    #     <url>
-    #         <loc>http://talkpython.fm/episodes/show/37/python-cybersecurity-and-penetration-testing</loc>
-    #         <lastmod>2015-12-08</lastmod>
-    #         <changefreq>weekly</changefreq>
-    #         <priority>1.0</priority>
-    #     </url>
-    #     <url>
-    #         ...
-    #     </url>
     res: Response = client.get("/sitemap.xml")
     text = res.data.decode("utf-8")
     text = text.replace('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"', '')
