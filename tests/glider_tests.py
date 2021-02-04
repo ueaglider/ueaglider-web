@@ -1,37 +1,19 @@
-import datetime
-import unittest.mock
 from flask import Response
-from tests.test_client import flask_app
+from tests.test_client import  flask_app
 
 
-def test_package_details_success():
-    # Arrange
+def test_glider():
+    # This test will break if SG510 is ever permanently retired from the fleet
     from ueaglider.views.glider_views import gliders
-    from ueaglider.data.db_classes import Gliders
-
-    test_glider = Gliders()
-    test_glider.Number = '123'
-    test_glider.Name = 'TestyMcTestFace'
-    test_glider.Info = 'For test purposes only, do not submerge'
-    test_glider.MissionID = 10
-
-    # Act
-    with unittest.mock.patch('ueaglider.services.glider_service.glider_info',
-                             return_value=test_glider):
-        with flask_app.test_request_context(path='/gliders/SG' + test_glider.Number):
-            resp: Response = gliders(test_glider.Number)
-
-    # Assert
-    assert b'omura' in resp.data
+    with flask_app.test_request_context(path='/gliders/SG510'):
+        resp: Response = gliders(510)
+    assert resp.status_code == 200
+    assert b'Orca' in resp.data
 
 
-def test_package_details_404(client):
-    # Arrange
-    bad_package_url = 'Iamnotaglider'
-
-    # Act
-    with unittest.mock.patch('ueaglider.services.glider_service.glider_info',
-                             return_value=None):
-        resp: Response = client.get(bad_package_url)
-
-    assert resp.status_code == 404
+def test_non_existent_glider():
+    from ueaglider.views.glider_views import gliders
+    with flask_app.test_request_context(path='/gliders/SG123'):
+        resp: Response = gliders(123)
+    # Should redirect to gliders page, so we expect a 302
+    assert resp.status_code == 302
