@@ -2,7 +2,8 @@ import sqlalchemy as sa
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
 from ueaglider.data.db_classes import Dives, Gliders
-
+import re
+import datetime
 import json
 import os
 folder = os.path.abspath(os.path.dirname(__file__))
@@ -10,12 +11,9 @@ folder = os.path.abspath(os.path.dirname(__file__))
 with open(folder+'/ueaglider/secrets.txt') as json_file:
     secrets = json.load(json_file)
 
-#from ueaglider.data.db_session import create_session
-
 conn_str = 'mysql+pymysql://' + secrets['sql_user'] + ':' + secrets['sql_pwd'] + '@' + secrets['remote_string'] \
            + '/' + secrets['db_name']
 
-# Can switch echo to True for debug, SQL actions print out to terminal
 engine = sa.create_engine(conn_str, echo=False)
 
 __factory = orm.sessionmaker(bind=engine)
@@ -35,4 +33,27 @@ def add_dive(mission_num, glider_num, dive_no, lon, lat):
     session.close()
 
 
-add_dive(60,637,1,30,30)
+#########   GET DIVE DATA ###################
+
+def get_dive_data(glider_num):
+    glider_dir = "/home/sg" + str(637)
+    comm_log = glider_dir + '/p' + glider_num + '.log'
+
+    with open(comm_log) as origin_file:
+        for line in origin_file:
+            sel_line = re.findall(r'GPS', line)
+            if sel_line:
+                gps_line = line
+        gps_list = gps_line.split(',')
+        status_str = gps_list[0]
+        date = gps_list[1]
+        time = gps_list[2]
+        dive_datetime = datetime.datetime.strptime(date+time, "%y%m%d%H%M%S")
+        lat = float(gps_list[3]) / 100
+        lon = float(gps_list[4]) / 100
+        status = status_str.split(' ')[0]
+        status_identities = ['dive num', 'call cycle', 'calls made', 'no-comm count', 'internal mission number',
+                             'reboot count', 'error code', 'AD pitch', 'AD roll', 'AD VBD', 'Pitch', 'Depth',
+                             '10 V voltage', '24 V voltage', 'internal pressure', 'internal RH']
+    return dive_datetime, lat, lon, status
+
