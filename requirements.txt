@@ -2,3 +2,9 @@ flask
 sqlalchemy
 pymysql
 passlib
+geopandas
+shapely
+netcdf4
+xarray
+numpy
+matplotlib
