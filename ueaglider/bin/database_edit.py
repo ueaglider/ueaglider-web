@@ -18,7 +18,7 @@ engine = sqlalchemy.create_engine(conn_str, echo=False)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-def add_dive(mission_num, glider_num, dive_no, lon, lat):
+def add_dive(mission_num, glider_num, dive_no, lon, lat, status_str):
     dive = Dives()
     glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
     dive.MissionID = mission_num
@@ -26,6 +26,7 @@ def add_dive(mission_num, glider_num, dive_no, lon, lat):
     dive.Longitude = lon
     dive.Latitude = lat
     dive.DiveNo = dive_no
+    dive.Status = status_str
     session.add(dive)
     session.commit()
     session.close()
