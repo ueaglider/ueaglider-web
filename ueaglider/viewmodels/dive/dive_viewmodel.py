@@ -1,3 +1,4 @@
+from ueaglider.services.mission_service import get_dive
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 import os
 import sys
@@ -71,6 +72,7 @@ class DiveViewModel(ViewModelBase):
         self.mission_num = mission_id
         self.glider_num = glider_num
         self.dive_num = dive_num
+        self.dive = get_dive(glider_num, dive_num)
         for path in figure_paths:
             path_str = str(path)
             # Cut the path to each figure so it starts from 'static' directory in app's home directory
