@@ -12,6 +12,7 @@ sys.path.insert(0, folder)
 from ueaglider.data.db_classes import Dives, Gliders, Missions
 
 # Store credentials in a external file that is never added to git or shared over insecure channels
+#folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
 with open(folder + '/ueaglider/secrets.txt') as json_file:
     secrets = json.load(json_file)
 
@@ -26,8 +27,8 @@ Session = sessionmaker(bind=engine)
 def main():
     # get glider num from bash script. Gliders are linux users named sgXXX where XXX is the glider number
     glider_num = sys.argv[1][2:]
-    print(glider_num)
-    #add_dive(glider_num)
+    add_dive(glider_num)
+    #add_depths()
 
 
 def add_dive(glider_num):
@@ -75,6 +76,16 @@ def get_dive_data(glider_num):
                              '10 V voltage', '24 V voltage', 'internal pressure', 'internal RH']
         dive_num = int(status.split(':')[0])
     return dive_num, dive_datetime, lat, lon, status
+
+
+def add_depths():
+    session = Session()
+    dives = session.query(Dives)
+    for dive in dives:
+        print(dive.DiveInfoID)
+        dive.Elevation = gebco_depth(dive.Latitude, dive.Longitude)
+    session.commit()
+    session.close()
 
 
 def gebco_depth(lat_in, lon_in):

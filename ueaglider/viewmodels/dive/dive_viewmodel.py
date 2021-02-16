@@ -73,6 +73,11 @@ class DiveViewModel(ViewModelBase):
         self.glider_num = glider_num
         self.dive_num = dive_num
         self.dive = get_dive(glider_num, dive_num)
+        if self.dive.Status:
+            self.status = self.dive.Status.split(':')
+            self.status_names = ['dive num', 'call cycle', 'calls made', 'no-comm count', 'internal mission number',
+                             'reboot count', 'error code', 'AD pitch', 'AD roll', 'AD VBD', 'Pitch', 'Depth',
+                             '10 V voltage', '24 V voltage', 'internal pressure', 'internal RH']
         for path in figure_paths:
             path_str = str(path)
             # Cut the path to each figure so it starts from 'static' directory in app's home directory
