@@ -5,6 +5,7 @@ import re
 import datetime
 import json
 import os
+import xarray as xr
 folder = os.path.abspath(os.path.dirname(__file__))
 # Store credentials in a external file that is never added to git or shared over insecure channels
 with open(folder+'/ueaglider/secrets.txt') as json_file:
@@ -61,4 +62,11 @@ def get_dive_data(glider_num):
                              '10 V voltage', '24 V voltage', 'internal pressure', 'internal RH']
         dive_num = int(status.split(':')[0])
     return dive_num, dive_datetime, lat, lon, status
+
+
+def gebco_depth(lat, lon):
+    gebco_path = secrets['gebco_path']
+    gebco = xr.open_dataset(gebco_path)
+    gebco_elevation = float(gebco.sel(lon=lon, lat=lat, method='nearest').elevation)
+    return gebco_elevation
 
