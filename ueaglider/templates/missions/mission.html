@@ -86,25 +86,71 @@
     let depth1000 = JSON.parse('{{ isobath_dict["depth_1000_m"] | tojson | safe}}');
     let map = L.map('map')
 
-    // Gebco base layer, we add it to map so it will always be the background
-
-
-    // A series of optional map layers
+    // A series of optional map layers. ortho has addTo(map) so is on by default
     let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
         layers: 'GEBCO_2019_Grid',
         attribution: 'GEBCO Compilation Group (2020)'})
     let watercolor = L.tileLayer.provider('Stamen.Watercolor')
     let orthofr = L.tileLayer.provider('GeoportailFrance.orthos').addTo(map);
 
+    // Graticule for lon and lat lines on map
+
+    let graticule = L.latlngGraticule({
+        showLabel: true,
+        weight: 0.8,
+        fontColor: 'white',
+        zoomInterval: [
+            {start: 3, end: 4, interval: 30},
+            {start: 5, end: 5, interval: 10},
+            {start: 6, end: 6, interval: 5},
+            {start: 7, end: 8, interval: 3},
+            {start: 9, end: 9, interval: 1},
+            {start: 9, end: 10, interval: 0.5},
+            {start: 11, end: 11, interval: 0.25},
+            {start: 12, end: 13, interval: 1/12},
+        ]
+    }).addTo(map);
+
+    // Optional high lat graticule with finer graduations in lat
+    let graticuleHighLat = L.latlngGraticule({
+        showLabel: true,
+        weight: 0.8,
+        fontColor: 'white',
+        zoomInterval:
+            { latitude: [
+                    {start: 3, end: 4, interval: 10},
+                    {start: 5, end: 5, interval: 3},
+                    {start: 6, end: 6, interval: 2},
+                    {start: 7, end: 8, interval: 1},
+                    {start: 9, end: 9, interval: 0.25},
+                    {start: 9, end: 10, interval: 0.25},
+                    {start: 11, end: 11, interval: 1/12},
+                    {start: 12, end: 13, interval: 1/30},
+
+    ],
+        longitude: [
+            {start: 3, end: 4, interval: 30},
+            {start: 5, end: 5, interval: 10},
+            {start: 6, end: 6, interval: 5},
+            {start: 7, end: 8, interval: 3},
+            {start: 9, end: 9, interval: 1},
+            {start: 9, end: 10, interval: 0.5},
+            {start: 11, end: 11, interval: 0.25},
+            {start: 12, end: 13, interval: 1/12},
+
+    ]}
+
+    })
+
+    // Add basemap layers to mao
     let basemaps = {
         Ortho: orthofr,
         GEBCO: gebco,
         watercolor: watercolor,
     };
 
-
-    let isobaths = {
-
+    // Optional layers that plot on top of the basemap
+    let mapLayers = {
 
         EEZ: L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
             layers: 'eez_boundaries,eez', //'eez,eez_12nm,eez_24nm,eez_archipelagic_waters,eez_boundaries',
@@ -122,8 +168,6 @@
             attribution: "Polar View (ESA)"
         }),
 
-
-
 	    "AMSR (sea ice)" : L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
 		layers: 'polarview:antarctic_AMSR2.3031,polarview:arctic_AMSR2.3413',
 		opacity: 0.5,
@@ -131,8 +175,6 @@
         attribution: "Polar View (ESA)",
 		transparent: true
 		}),
-
-
 
 	Icebergs : L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
 		layers: 'polarview:icebergs_s_current',
@@ -165,6 +207,7 @@
          attribution:"Copernicus CMEMS",
 		transparent: true
 		}),
+
 	CMEMS_UO : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
 		layers: 'uo', // thetao, uo, vo, zos
 		opacity: 0.9,
@@ -172,6 +215,7 @@
         attribution:"Copernicus CMEMS",
 		transparent: true
 		}),
+
 	CMEMS_VO : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
 		layers: 'vo', // thetao, uo, vo, zos
 		opacity: 0.9,
@@ -180,24 +224,29 @@
 		transparent: true
 		}),
 
-
         "<span style='color: red'>GEBCO 50 m</span>": L.geoJSON(depth50, {
             attribution: "GEBCO & C Rollo",
             color:'red',
         }),
+
          "<span style='color: #99CCFF'>GEBCO 200 m</span>": L.geoJSON(depth200, {
             attribution: "GEBCO & C Rollo",
              color:'#99CCFF',
         }),
+
         "<span style='color: blue'>GEBCO 500 m</span>": L.geoJSON(depth500, {
             attribution: "GEBCO & C Rollo",
             color:'blue',
         }),
+
          "<span style='color: gray'>GEBCO 1000 m</span>": L.geoJSON(depth1000, {
              attribution: "GEBCO & C Rollo",
              color:'gray',
         }),
 
+        Graticule: graticule,
+
+        "Graticule (high lat)": graticuleHighLat
 
     };
     // Add the targets and seaglider icons
@@ -228,9 +277,6 @@
 		layer.bindPopup(feature.properties.popupContent);
 	}
 
-
-
-
     // Use the target icon on each target and add popup content
 	let targetsLayer = L.geoJSON(targetDict, {
 		pointToLayer: function (feature, latlng) {
@@ -247,7 +293,6 @@
 
     // Adding all dive connecting lines to map. Fillcolor by glider number
 
-
     function style(feature) {
         return {
             weight: 1,
@@ -256,10 +301,9 @@
     }
     L.geoJson(linesDict, {style: style}).addTo(map);
 
-
 	// setting color from geojson. We have enough unique colors for 8 gliders. After that they'll all be white
-        function getColor(stype) {
-          switch (stype) {
+        function getColor(style) {
+          switch (style) {
             case 0:
               return "#ff7f0e" ;
             case 1:
@@ -292,8 +336,6 @@
         }).addTo(map);
 
 
-
-
     // Use the seaglider icon on most recent dive by each glider and add popup content
 	let seagliderLayer = L.geoJSON(latestDivesDict, {
 		pointToLayer: function (feature, latlng) {
@@ -302,24 +344,8 @@
 		onEachFeature: popupText
 	}).addTo(map);
 
-	// Graticule for on and lat lines on map
-    L.latlngGraticule({
-        showLabel: true,
-        weight: 0.8,
-        fontColor: 'white',
-        zoomInterval: [
-            {start: 3, end: 4, interval: 30},
-            {start: 5, end: 5, interval: 10},
-            {start: 6, end: 6, interval: 5},
-            {start: 7, end: 8, interval: 3},
-            {start: 9, end: 9, interval: 1},
-            {start: 9, end: 10, interval: 0.5},
-            {start: 11, end: 11, interval: 0.25},
-            {start: 12, end: 13, interval: 1/12},
-        ]
-    }).addTo(map);
 
-
+    // Setting map bounds. If dives exist, use them. If not, use passed lon and lat from target or waypoint
     let err = {{ zoom |tojson }}
     if(err.length <8){
         map.fitBounds(divesLayer.getBounds())
@@ -332,11 +358,9 @@
     }
 
     // Controls for the map
-    L.control.layers(basemaps, isobaths).addTo(map);
-    // Length scale with mad width in pixels
+    L.control.layers(basemaps, mapLayers).addTo(map);
+    // Length scale with max width in pixels
     L.control.scale({maxWidth: 200}).addTo(map)
-    // Fit map to targets
-
     </script>
     </div>
 
