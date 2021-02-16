@@ -1,6 +1,5 @@
-import sqlalchemy as sa
-import sqlalchemy.orm as orm
-from sqlalchemy.orm import Session
+import sqlalchemy
+from sqlalchemy.orm import sessionmaker
 from ueaglider.data.db_classes import Dives, Gliders
 import re
 import datetime
@@ -14,11 +13,10 @@ with open(folder+'/ueaglider/secrets.txt') as json_file:
 conn_str = 'mysql+pymysql://' + secrets['sql_user'] + ':' + secrets['sql_pwd'] + '@' + secrets['remote_string'] \
            + '/' + secrets['db_name']
 
-engine = sa.create_engine(conn_str, echo=False)
-
-__factory = orm.sessionmaker(bind=engine)
-session: Session = __factory()
-session.expire_on_commit = False
+# Can switch echo to True for debug, SQL actions print out to terminal
+engine = sqlalchemy.create_engine(conn_str, echo=False)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 def add_dive(mission_num, glider_num, dive_no, lon, lat):
     dive = Dives()
@@ -36,13 +34,15 @@ def add_dive(mission_num, glider_num, dive_no, lon, lat):
 #########   GET DIVE DATA ###################
 
 def get_dive_data(glider_num):
-    glider_dir = "/home/sg" + str(637)
-    comm_log = glider_dir + '/p' + glider_num + '.log'
+    glider_dir = "/home/sg" + str(glider_num)
+    comm_log = glider_dir + '/p' + str(glider_num) + '.log'
 
     with open(comm_log) as origin_file:
+        # Go through comm log looking for GPS lines
         for line in origin_file:
             sel_line = re.findall(r'GPS', line)
             if sel_line:
+                # Keep only most recent GPS line
                 gps_line = line
         gps_list = gps_line.split(',')
         status_str = gps_list[0]
