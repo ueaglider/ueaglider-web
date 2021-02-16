@@ -55,6 +55,7 @@ class Dives(SqlAlchemyBase):
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Status: str = sqlalchemy.Column(sqlalchemy.TEXT, nullable=True)
+    ReceivedDate = sqlalchemy.Column(sqlalchemy.DATETIME, nullable=True)
     # Mission relationship
     MissionID: str = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey("Missions.Number"))
     mission = orm.relation('Missions')
