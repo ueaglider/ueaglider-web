@@ -7,6 +7,15 @@
         <title>SG{{glider_num }} Dive {{ dive_num}} Mission {{ mission_num }}</title>
 {% endblock %}
 {% block main_content %}
+    <div class="dive-info">
+        <h3>Dive <span class="red">{{ dive.DiveNo }}</span> by glider  <span class="red">SG{{glider_num }}</span></h3>
+        {% if dive.DiveNo %}
+            Status: {{ dive.status }}
+        {% endif %}
+        {% if dive.Elevation %}
+        Topography under post dive surfacing: <span class="red">{{ dive.Elevation }}</span>
+        {% endif %}
+    </div>
     {% for plot in dive_plots %}
         <a data-bs-toggle="modal" data-bs-target={{ '#'+plot[-8:-4] }}>
          <img src={{ plot }} width="400" alt="Piloting image thumbnail">
