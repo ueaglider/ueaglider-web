@@ -18,3 +18,4 @@ class GliderViewModel(ViewModelBase):
         self.glider_data, mission_ids = ueaglider.services.glider_service.glider_info(glider_num)
         self.dives_count = mission_service.get_dive_count(filter_glider=self.glider_data.GliderID)
         self.mission_list = mission_service.list_missions(filter_missions=True, mission_id_list=mission_ids)
+        self.img_loc = "/static/img/dives/gliders/SG" + str(self.glider_data.Number) + ".jpg"
