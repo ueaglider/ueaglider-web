@@ -40,8 +40,8 @@ def add_dive(glider_num):
     mission_num = session.query(Missions.Number).filter(Missions.MissionID == glider.MissionID).first()
     dive.MissionID = mission_num[0]
     dive.GliderID = glider.GliderID
-    dive.Longitude = lon
-    dive.Latitude = lat
+    dive.Longitude = coord_db_decimal(lon)
+    dive.Latitude = coord_db_decimal(lat)
     dive.DiveNo = dive_num
     dive.Status = status_str
     dive.ReceivedDate = dive_datetime
@@ -100,7 +100,7 @@ def gebco_depth(lat_in, lon_in):
 
 
 def coord_db_decimal(coord_in):
-    # convert from kongsberg style degree-mins in table to decimal degrees
+    # convert from kongsberg style degree-mins to decimal degrees
     deg = int(coord_in)
     minutes = coord_in - deg
     decimal_degrees = deg + minutes / 0.6
