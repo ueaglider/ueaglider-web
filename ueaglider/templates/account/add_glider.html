@@ -4,6 +4,7 @@
         <div class="form-container">
         <form action="" method="POST" class="account-form">
             <h1>Add Glider</h1>
+            <input name="overwrite_check" type="checkbox" ><label for="overwrite_check"> Overwrite existing glider? DANGER data loss</label>
             <input name="glider_num" type="number" placeholder="Glider number, do not include SG" min="1" class="form-control" value="{{ glider_num }}" required>
             <input name="name" type="text" maxlength="15" placeholder=" Glider name (max 15 characters)" class="form-control" value="{{ name}}" required>
             <input name="info" type="text" placeholder=" Info" class="form-control" value="{{ info }}" required>

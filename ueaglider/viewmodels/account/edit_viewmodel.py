@@ -77,16 +77,24 @@ class AddGliderViewModel(ViewModelBase):
         if self.missionid:
             self.missionid = int(self.missionid)
         self.name = self.request_dict.name.strip()
-        self.glider_num = int(self.request_dict.glider_num)
+        self.glider_num = self.request_dict.glider_num
+        if self.glider_num:
+            self.glider_num = int(self.glider_num)
         self.info = self.request_dict.info.strip()
         self.ueaglider = self.request_dict.ueaglider
+        self.overwrite_check = self.request_dict.overwrite_check
 
     def validate(self):
         if not self.name.strip() or not self.glider_num or not self.info.strip():
             self.error = 'Please fill in all fields'
 
         if self.glider_num in self.glider_nums:
-            self.error = 'Glider SG' + str(self.glider_num) + ' already exists'
+            # Error if the glider already exists
+            if 'overwrite_check' in self.request_dict:
+                # Unless user opted to overwrite it
+                self.overwrite_check = True
+            else:
+                self.error = 'Glider SG' + str(self.glider_num) + ' already exists'
         if 'ueaglider_check' in self.request_dict:
             self.ueaglider = True
         else:

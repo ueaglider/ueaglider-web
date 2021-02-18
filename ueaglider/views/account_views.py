@@ -2,7 +2,7 @@ import flask
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth
-from ueaglider.services.db_edits import audit_entry, delete_pin, delete_target, delete_mission
+from ueaglider.services.db_edits import audit_entry, delete_pin, delete_target, delete_mission, delete_glider
 from ueaglider.viewmodels.account.edit_viewmodel import AddPinViewModel, AddMissionViewModel, AddTargetViewModel, \
     RemovePinViewModel, RemoveTargetViewModel, RemoveMissionViewModel, AddGliderViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
@@ -10,6 +10,7 @@ from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
 
 blueprint = flask.Blueprint('account', __name__, template_folder='templates')
+
 
 ########################## INDEX ##########################
 
@@ -83,7 +84,6 @@ def login_post():
     return resp
 
 
-
 @blueprint.route('/account/logout')
 def logout():
     resp = flask.redirect('/')
@@ -124,7 +124,7 @@ def addpin_post():
 
     audit_message = 'Add Pin ' + vm.name + ' to mission ' + str(vm.missionid)
     vm.message = 'Success! You have added pin <b>' + vm.name + '</b> to ' + \
-                 '<a href="/mission'+str(vm.missionid) + '">' + "Mission " + str(vm.missionid) + "</a>"
+                 '<a href="/mission' + str(vm.missionid) + '">' + "Mission " + str(vm.missionid) + "</a>"
     vm.name = ''
     vm.missionid = ''
     vm.lat = ''
@@ -166,7 +166,7 @@ def addtarget_post():
 
     audit_message = 'Add Target ' + vm.name + ' to mission ' + str(vm.missionid)
     vm.message = 'Success! You have added target <b>' + vm.name + '</b> to ' + \
-                 '<a href="/mission'+str(vm.missionid) + '">' + "Mission " + str(vm.missionid) + "</a>"
+                 '<a href="/mission' + str(vm.missionid) + '">' + "Mission " + str(vm.missionid) + "</a>"
     vm.name = ''
     vm.missionid = ''
     vm.lat = ''
@@ -177,6 +177,7 @@ def addtarget_post():
     if audit_log:
         vm.message = vm.message + '. This entry has been logged'
     return vm.to_dict()
+
 
 ########################## ADD MISSION ##########################
 
@@ -196,7 +197,6 @@ def addmission_get():
 def addmission_post():
     vm = AddMissionViewModel()
     vm.validate()
-    print(vm.error)
 
     if vm.error:
         return vm.to_dict()
@@ -207,7 +207,8 @@ def addmission_post():
         return vm.to_dict()
 
     audit_message = 'Add Mission ' + str(vm.missionid) + ' ' + vm.name
-    vm.message = 'Success! You have added ' '<a href="/mission'+str(vm.missionid) + '">' + "Mission " + str(vm.missionid) + "</a>" + ': '+ vm.name
+    vm.message = 'Success! You have added ' '<a href="/mission' + str(vm.missionid) + '">' + "Mission " + str(
+        vm.missionid) + "</a>" + ': ' + vm.name
     vm.name = ''
     vm.missionid = ''
     vm.start = ''
@@ -218,6 +219,7 @@ def addmission_post():
         vm.message = vm.message + '. This entry has been logged'
     vm.message = vm.message + '<br> would you like to <a href="/account/add_target">add a target?</a>'
     return vm.to_dict()
+
 
 ########################## ADD GLIDER ##########################
 
@@ -237,18 +239,20 @@ def addglider_get():
 def addglider_post():
     vm = AddGliderViewModel()
     vm.validate()
-    print(vm.error)
 
     if vm.error:
+        print(vm.overwrite_check)
         return vm.to_dict()
+    if vm.overwrite_check:
+        delete_glider(vm.glider_num)
     glider = db_edits.create_glider(vm.glider_num, vm.name, vm.info, vm.missionid, vm.ueaglider)
-    print(vm.ueaglider)
     if not glider:
         vm.error = 'The glider could not be created'
         return vm.to_dict()
 
     audit_message = 'Add glider SG' + str(vm.glider_num) + ' ' + vm.name
-    vm.message = 'Success! You have added glider ' '<a href="/gliders/SG'+str(vm.glider_num) + '">' + "SG" + str(vm.glider_num) + "</a>" + ': '+ vm.name
+    vm.message = 'Success! You have added glider ' '<a href="/gliders/SG' + str(vm.glider_num) + '">' + "SG" + str(
+        vm.glider_num) + "</a>" + ': ' + vm.name
     vm.glider_num = ''
     vm.name = ''
     vm.missionid = ''
@@ -257,6 +261,7 @@ def addglider_post():
     if audit_log:
         vm.message = vm.message + '. This entry has been logged'
     return vm.to_dict()
+
 
 ########################## REMOVE PIN ##########################
 
@@ -328,7 +333,6 @@ def remove_target_post():
     if audit_log:
         vm.message = vm.message + '. This entry has been logged'
     return vm.to_dict()
-
 
 
 ########################## REMOVE MISSION ##########################

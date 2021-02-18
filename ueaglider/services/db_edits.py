@@ -37,6 +37,7 @@ def delete_pin(pin_id):
         .first()
     session.delete(pin)
     session.commit()
+    session.close()
     return pin
 
 
@@ -62,8 +63,19 @@ def delete_target(target_id):
         .first()
     session.delete(target)
     session.commit()
+    session.close()
     return target
 
+
+def delete_glider(glider_num):
+    session = create_session()
+    target = session.query(Gliders) \
+        .filter(Gliders.Number == glider_num) \
+        .first()
+    session.delete(target)
+    session.commit()
+    session.close()
+    return
 
 def create_mission(number, name, start, end, info):
 
