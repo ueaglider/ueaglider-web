@@ -3,22 +3,14 @@ from typing import Tuple
 from ueaglider.services.mission_service import degree_sign
 
 
-def coord_db_decimal(coord_in):
-    # convert from kongsberg style degree-mins in table to decimal degrees
+def coord_dec_to_pretty(coord_in):
+    # convert from decimal degrees to pretty formatted string for popup text
     deg = int(coord_in)
-    minutes = coord_in - deg
-    decimal_degrees = deg + minutes / 0.6
-    return decimal_degrees
-
-
-def coord_db_to_pretty(coord_in):
-    # convert from db record to pretty formatted string for popup text
-    deg = int(coord_in)
-    minutes = abs(coord_in - deg) * 100
+    minutes = abs(coord_in - deg) * 60
     coord_str = str(deg) + degree_sign + " " + str(round(minutes, 2)) + "'"
     return coord_str
-
-
+    
+    
 def dives_to_json(dives, gliders) -> Tuple:
     # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
     gliders_name_dict = {}
@@ -36,20 +28,20 @@ def dives_to_json(dives, gliders) -> Tuple:
     i = 0
     dive = []
     for i, dive in enumerate(dives):
-        coords.append([coord_db_decimal(dive.Longitude), coord_db_decimal(dive.Latitude)])
+        coords.append([dive.Longitude, dive.Latitude])
         dive_page_link = "/mission" + str(dive.MissionID) + "/glider" + str(glider_number_dict[dive.GliderID]) \
                          + "/dive" + str(dive.DiveNo).zfill(4)
         dive_page_links.append(dive_page_link)
         tgt_popup = 'SG ' + str(glider_number_dict[dive.GliderID]) + ' ' + gliders_name_dict[
             dive.GliderID] + "<br><a href=" + dive_page_link + ">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " \
-            + coord_db_to_pretty(dive.Latitude) + "<br>Lon: " + coord_db_to_pretty(dive.Longitude)
+            + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(dive.Longitude)
         dive_item = {
             "geometry": {
                 "type": "Point",
                 "coordinates": [
                     # convert from kongsberg style degree-mins in table to decimal degrees
-                    coord_db_decimal(dive.Longitude),
-                    coord_db_decimal(dive.Latitude)
+                    dive.Longitude,
+                    dive.Latitude
                 ]
             },
             "type": "Feature",
@@ -93,16 +85,16 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
             tgt_popup = "Mission " + str(target.MissionID) + "<br><a href=/mission" + str(
                 target.MissionID) + ">" + str(target.Name)
         else:
-            tgt_popup = "Target: " + str(target.Name) + "<br>Lat: " + coord_db_to_pretty(
-                target.Latitude) + "<br>Lon: " + coord_db_to_pretty(
+            tgt_popup = "Target: " + str(target.Name) + "<br>Lat: " + coord_dec_to_pretty(
+                target.Latitude) + "<br>Lon: " + coord_dec_to_pretty(
                 target.Longitude) + "<br>GOTO: " + str(target.Goto) + "<br>Radius: " + str(target.Radius) + ' m'
         target_item = {
             "geometry": {
                 "type": "Point",
                 "coordinates": [
                     # convert from kongsberg style degree-mins in table to decimal degrees
-                    coord_db_decimal(target.Longitude),
-                    coord_db_decimal(target.Latitude)
+                    target.Longitude,
+                    target.Latitude
                 ]
             },
             "type": "Feature",
@@ -123,15 +115,15 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
 def pins_to_json(waypoints) -> dict:
     features = []
     for i, waypoint in enumerate(waypoints):
-        tgt_popup = "<b>" + waypoint.Name + "</b>" + "<br>Lat: " + str(waypoint.Latitude) + "<br>Lon: " + str(
-            waypoint.Longitude) + "<br>" + str(waypoint.Info)
+        tgt_popup = "Target: " + str(waypoint.Name) + "<br>Lat: " + coord_dec_to_pretty(
+            waypoint.Latitude) + "<br>Lon: " + coord_dec_to_pretty(waypoint.Longitude) + "<br>" + str(waypoint.Info)
         target_item = {
             "geometry": {
                 "type": "Point",
                 "coordinates": [
                     # convert from kongsberg style degree-mins in table to decimal degrees
-                    coord_db_decimal(waypoint.Longitude),
-                    coord_db_decimal(waypoint.Latitude)
+                    waypoint.Longitude,
+                    waypoint.Latitude
                 ]
             },
             "type": "Feature",

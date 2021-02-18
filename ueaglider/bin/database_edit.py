@@ -9,7 +9,7 @@ import xarray as xr
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
-from ueaglider.data.db_classes import Dives, Gliders, Missions
+from ueaglider.data.db_classes import Dives, Gliders, Missions, Targets, Pins
 
 # Store credentials in a external file that is never added to git or shared over insecure channels
 #folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
@@ -105,6 +105,48 @@ def coord_db_decimal(coord_in):
     minutes = coord_in - deg
     decimal_degrees = deg + minutes / 0.6
     return decimal_degrees
+
+
+def convert_dives(overwrite_db=False):
+    # WARNING! This will overwrite data in the db in place. Only run once and be sure what you're doing
+    if not overwrite_db:
+        return
+    session = Session()
+    dives = session.query(Dives)
+    for dive in dives:
+        print(dive.DiveInfoID)
+        dive.Latitude = coord_db_decimal(dive.Latitude)
+        dive.Longitude = coord_db_decimal(dive.Longitude)
+    session.commit()
+    session.close()
+
+
+def convert_targets(overwrite_db=False):
+    # WARNING! This will overwrite data in the db in place. Only run once and be sure what you're doing
+    if not overwrite_db:
+        return
+    session = Session()
+    targets = session.query(Targets)
+    for target in targets:
+        print(target.TargetsID)
+        target.Latitude = coord_db_decimal(target.Latitude)
+        target.Longitude = coord_db_decimal(target.Longitude)
+    session.commit()
+    session.close()
+
+
+def convert_pins(overwrite_db=False):
+    # WARNING! This will overwrite data in the db in place. Only run once and be sure what you're doing
+    if not overwrite_db:
+        return
+    session = Session()
+    pins = session.query(Pins)
+    for pin in pins:
+        print(pin.WaypointsID)
+        pin.Latitude = coord_db_decimal(pin.Latitude)
+        pin.Longitude = coord_db_decimal(pin.Longitude)
+    session.commit()
+    session.close()
 
 
 if __name__ == '__main__':
