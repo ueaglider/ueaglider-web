@@ -27,7 +27,7 @@ def mission_ids() -> list:
 def get_dive(glider_num, dive_num, mission_num):
     session = create_session()
     glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
-    glider_id = glider.GliderID
+    glider_id = glider.Number
     dive = session.query(Dives)\
         .filter(Dives.GliderID == glider_id)\
         .filter(Dives.DiveNo == dive_num)\
@@ -144,7 +144,7 @@ def get_mission_dives(mission_id) -> Optional[Any]:
             .filter(Dives.MissionID == mission_id) \
             .distinct():
         glider_ids.append(value[0])
-    query = session.query(Gliders).filter(Gliders.GliderID.in_(glider_ids))
+    query = session.query(Gliders).filter(Gliders.Number.in_(glider_ids))
     gliders = query.all()
     # Get most recent dive from each glider
     most_recent_dives = []

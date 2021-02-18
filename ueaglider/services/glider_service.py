@@ -43,7 +43,7 @@ def glider_info(glider_num):
     glider_instance = session.query(Gliders).filter(Gliders.Number == glider_num).first()
     mission_ids_list = []
     for value in session.query(Dives.MissionID) \
-            .filter(Dives.GliderID == glider_instance.GliderID) \
+            .filter(Dives.GliderID == glider_instance.Number) \
             .distinct():
         mission_ids_list.append(value[0])
     session.close()

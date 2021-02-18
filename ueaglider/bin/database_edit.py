@@ -12,7 +12,7 @@ sys.path.insert(0, folder)
 from ueaglider.data.db_classes import Dives, Gliders, Missions, Targets, Pins
 
 # Store credentials in a external file that is never added to git or shared over insecure channels
-#folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
 with open(folder + '/ueaglider/secrets.txt') as json_file:
     secrets = json.load(json_file)
 
@@ -147,6 +147,28 @@ def convert_pins(overwrite_db=False):
         pin.Longitude = coord_db_decimal(pin.Longitude)
     session.commit()
     session.close()
+
+
+def gliderid_to_num():
+    session = Session()
+    id_to_num = {1: 502, 2: 507, 3: 510, 4: 503, 5: 522, 6: 539, 7: 537, 8: 546, 12: 566, 13: 533, 15: 565, 14: 579, 17: 524, 16: 999, 18: 613, 19: 619, 20: 620, 21: 532, 22: 534, 23: 641, 24: 637, 25: 558, 26: 550, 27: 602, 28: 621, 29: 643, 30: 640, 31: 673}
+    dives = session.query(Dives)
+    for dive in dives:
+        foo = id_to_num[dive.GliderID]
+        dive.GliderID = foo
+    session.commit()
+    session.close()
+    return
+gliderid_to_num()
+
+def gliderid_get_relation():
+    session = Session()
+    gliders = session.query(Gliders)
+    id_to_num = {}
+    for glider in gliders:
+        id_to_num[glider.GliderID] = glider.Number
+    return id_to_num
+
 
 
 if __name__ == '__main__':
