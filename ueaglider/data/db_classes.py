@@ -17,6 +17,7 @@ class Gliders(SqlAlchemyBase):
     Name = sqlalchemy.Column(sqlalchemy.VARCHAR)
     Number = sqlalchemy.Column(sqlalchemy.INT)
     Info = sqlalchemy.Column(sqlalchemy.TEXT)
+    UEAGlider = sqlalchemy.Column(sqlalchemy.BOOLEAN, default=True)
 
 
 class Targets(SqlAlchemyBase):
