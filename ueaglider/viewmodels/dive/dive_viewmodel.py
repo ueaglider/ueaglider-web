@@ -72,7 +72,7 @@ class DiveViewModel(ViewModelBase):
         self.mission_num = mission_id
         self.glider_num = glider_num
         self.dive_num = dive_num
-        self.dive = get_dive(glider_num, dive_num)
+        self.dive = get_dive(glider_num, dive_num, mission_id)
         if self.dive.Status:
             self.status = self.dive.Status.split(':')
             self.status_names = ['dive num', 'call cycle', 'calls made', 'no-comm count', 'internal mission number',

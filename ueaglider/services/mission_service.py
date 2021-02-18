@@ -24,13 +24,14 @@ def mission_ids() -> list:
     return missions
 
 
-def get_dive(glider_num, dive_num):
+def get_dive(glider_num, dive_num, mission_num):
     session = create_session()
     glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
     glider_id = glider.GliderID
     dive = session.query(Dives)\
         .filter(Dives.GliderID == glider_id)\
         .filter(Dives.DiveNo == dive_num)\
+        .filter(Dives.MissionID == mission_num)\
         .first()
     session.close()
     return dive

@@ -9,8 +9,8 @@
 {% block main_content %}
     <div class="dive-info">
         <h3>Dive <span class="red">{{ dive.DiveNo }}</span> by glider  <span class="red">SG{{glider_num }}</span></h3>
-        {% if dive.DiveNo %}
-            Status: {{ dive.status }}
+        {% if dive.Status %}
+            Status: {{ dive.status }}<br>
         {% endif %}
         {% if dive.Elevation %}
         Topography under post dive surfacing: <span class="red">{{ dive.Elevation }}</span>
