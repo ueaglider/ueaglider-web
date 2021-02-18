@@ -92,7 +92,7 @@ def gebco_depth(lat_in, lon_in):
     # Find the GEBCO water depth underneath where the glider surfaced
     gebco_path = secrets['gebco_path']
     gebco = xr.open_dataset(gebco_path)
-    gebco_elevation = float(gebco.sel(lon=lon_in, lat=lat_in, method='nearest').elevation)
+    gebco_elevation = int(gebco.sel(lon=lon_in, lat=lat_in, method='nearest').elevation)
     return gebco_elevation
 
 
@@ -102,6 +102,9 @@ def coord_db_decimal(coord_in):
     minutes = coord_in - deg
     decimal_degrees = deg + minutes / 0.6
     return decimal_degrees
+
+
+############# One time functions to transform database ###################
 
 
 def convert_dives(overwrite_db=False):
