@@ -92,10 +92,7 @@ def gebco_depth(lat_in, lon_in):
     # Find the GEBCO water depth underneath where the glider surfaced
     gebco_path = secrets['gebco_path']
     gebco = xr.open_dataset(gebco_path)
-    # Convert from kongsberg format to decimal degrees
-    lat = coord_db_decimal(lat_in)
-    lon = coord_db_decimal(lon_in)
-    gebco_elevation = float(gebco.sel(lon=lon, lat=lat, method='nearest').elevation)
+    gebco_elevation = float(gebco.sel(lon=lon_in, lat=lat_in, method='nearest').elevation)
     return gebco_elevation
 
 
