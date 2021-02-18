@@ -1,4 +1,4 @@
-from ueaglider.services import mission_service
+from ueaglider.services import mission_service, glider_service
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 
 
@@ -65,6 +65,32 @@ class AddMissionViewModel(ViewModelBase):
             self.error = 'Please fill in all fields'
         if self.missionid in self.missions:
             self.error = 'Mission ' + str(self.missionid) + ' already exists'
+
+
+class AddGliderViewModel(ViewModelBase):
+    def __init__(self):
+        super().__init__()
+        glider_nums = glider_service.glider_nums()
+        id_list = [y for x in glider_nums for y in x]
+        self.glider_nums = id_list
+        self.missionid = self.request_dict.missionid
+        if self.missionid:
+            self.missionid = int(self.missionid)
+        self.name = self.request_dict.name.strip()
+        self.glider_num = int(self.request_dict.glider_num)
+        self.info = self.request_dict.info.strip()
+        self.ueaglider = self.request_dict.ueaglider
+
+    def validate(self):
+        if not self.name.strip() or not self.glider_num or not self.info.strip():
+            self.error = 'Please fill in all fields'
+
+        if self.glider_num in self.glider_nums:
+            self.error = 'Glider SG' + str(self.glider_num) + ' already exists'
+        if 'ueaglider_check' in self.request_dict:
+            self.ueaglider = True
+        else:
+            self.ueaglider = False
 
 
 class RemovePinViewModel(ViewModelBase):

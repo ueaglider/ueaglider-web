@@ -4,7 +4,7 @@ from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth
 from ueaglider.services.db_edits import audit_entry, delete_pin, delete_target, delete_mission
 from ueaglider.viewmodels.account.edit_viewmodel import AddPinViewModel, AddMissionViewModel, AddTargetViewModel, \
-    RemovePinViewModel, RemoveTargetViewModel, RemoveMissionViewModel
+    RemovePinViewModel, RemoveTargetViewModel, RemoveMissionViewModel, AddGliderViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
@@ -219,6 +219,44 @@ def addmission_post():
     vm.message = vm.message + '<br> would you like to <a href="/account/add_target">add a target?</a>'
     return vm.to_dict()
 
+########################## ADD GLIDER ##########################
+
+
+@blueprint.route('/account/add_glider', methods=['GET'])
+@response(template_file='account/add_glider.html')
+def addglider_get():
+    vm = AddGliderViewModel()
+
+    if not vm.user_id:
+        return flask.redirect('/account/login')
+    return vm.to_dict()
+
+
+@blueprint.route('/account/add_glider', methods=['POST'])
+@response(template_file='account/add_glider.html')
+def addglider_post():
+    vm = AddGliderViewModel()
+    vm.validate()
+    print(vm.error)
+
+    if vm.error:
+        return vm.to_dict()
+    glider = db_edits.create_glider(vm.glider_num, vm.name, vm.info, vm.missionid, vm.ueaglider)
+    print(vm.ueaglider)
+    if not glider:
+        vm.error = 'The glider could not be created'
+        return vm.to_dict()
+
+    audit_message = 'Add glider SG' + str(vm.glider_num) + ' ' + vm.name
+    vm.message = 'Success! You have added glider ' '<a href="/gliders/SG'+str(vm.glider_num) + '">' + "SG" + str(vm.glider_num) + "</a>" + ': '+ vm.name
+    vm.glider_num = ''
+    vm.name = ''
+    vm.missionid = ''
+    vm.info = ''
+    audit_log = audit_entry(vm.user_id, audit_message)
+    if audit_log:
+        vm.message = vm.message + '. This entry has been logged'
+    return vm.to_dict()
 
 ########################## REMOVE PIN ##########################
 
