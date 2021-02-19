@@ -12,7 +12,7 @@ sys.path.insert(0, folder)
 from ueaglider.data.db_classes import Dives, Gliders, Missions, Targets, Pins
 
 # Store credentials in a external file that is never added to git or shared over insecure channels
-folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
+#folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
 with open(folder + '/ueaglider/secrets.txt') as json_file:
     secrets = json.load(json_file)
 
@@ -158,7 +158,6 @@ def gliderid_to_num():
     session.commit()
     session.close()
     return
-gliderid_to_num()
 
 def gliderid_get_relation():
     session = Session()
