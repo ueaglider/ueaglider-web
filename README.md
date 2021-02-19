@@ -36,7 +36,7 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   - [ ] Add more mission long plots for e.g. suggested pitch center
   - [ ] Better pcolor plots, using cmocean
   - [ ] Overview of the critical issues - batteries, and when the next call is due (Karen)
-  - [ ] Gebco bathymetric depth at the location of the last surfacing (Rob)
+  - [x] Gebco bathymetric depth at the location of the last surfacing (Rob)
   - [x] page for each glider showing most recent mission etc (Gareth)
   
 - [ ] Extra pages

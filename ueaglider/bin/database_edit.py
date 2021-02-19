@@ -28,7 +28,6 @@ def main():
     # get glider num from bash script. Gliders are linux users named sgXXX where XXX is the glider number
     glider_num = sys.argv[1][2:]
     add_dive(glider_num)
-    #add_depths()
 
 
 def add_dive(glider_num):
@@ -39,7 +38,7 @@ def add_dive(glider_num):
     glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
     mission_num = session.query(Missions.Number).filter(Missions.MissionID == glider.MissionID).first()
     dive.MissionID = mission_num[0]
-    dive.GliderID = glider.GliderID
+    dive.GliderID = glider_num
     dive.Longitude = coord_db_decimal(lon)
     dive.Latitude = coord_db_decimal(lat)
     dive.DiveNo = dive_num
