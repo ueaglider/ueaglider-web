@@ -1,3 +1,4 @@
+from ueaglider.bin.database_edit import coord_db_decimal
 from ueaglider.services import mission_service, glider_service
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 
@@ -10,6 +11,9 @@ class AddPinViewModel(ViewModelBase):
         self.lon = self.request_dict.lon
         self.lat = self.request_dict.lat
         self.info = self.request_dict.info.strip()
+        self.format = str(self.request_dict.format.strip())
+        print('format is ')
+        print(self.format)
 
     def validate(self):
         if not self.missionid or not self.name.strip() or not self.lon or not self.lat or not self.info:
@@ -19,8 +23,17 @@ class AddPinViewModel(ViewModelBase):
         self.missionid = int(self.missionid)
         if self.missionid not in id_list:
             self.error = 'Mission ' + str(self.missionid) + ' does not exist'
-        self.lat = float(self.lat)
-        self.lon = float(self.lon)
+        if self.format == 'dec_degree':
+            self.lat = float(self.lat)
+            self.lon = float(self.lon)
+        elif self.format == 'deg_min':
+            self.lat = coord_db_decimal(float(self.lat))
+            self.lon = coord_db_decimal(float(self.lon))
+        elif self.format == 'seaglider':
+            self.lat = coord_db_decimal(float(self.lat), kongsberg=True)
+            self.lon = coord_db_decimal(float(self.lon), kongsberg=True)
+        else:
+            self.error = 'coordinate format not recognised'
 
 
 class AddTargetViewModel(ViewModelBase):

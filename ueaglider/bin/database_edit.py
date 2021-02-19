@@ -95,12 +95,15 @@ def gebco_depth(lat_in, lon_in):
     return gebco_elevation
 
 
-def coord_db_decimal(coord_in):
-    # convert from kongsberg style degree-mins to decimal degrees
+def coord_db_decimal(coord_in, kongsberg=False):
+    # convert from database style DD.MM or kongsberg DDMM.mm to decimal degrees DD.dd
+    if kongsberg:
+        coord_in = coord_in / 100
     deg = int(coord_in)
     minutes = coord_in - deg
     decimal_degrees = deg + minutes / 0.6
     return decimal_degrees
+
 
 
 ############# One time functions to transform database ###################
