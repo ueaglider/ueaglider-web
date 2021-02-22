@@ -9,7 +9,7 @@ import xarray as xr
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
-from ueaglider.data.db_classes import Dives, Gliders, Missions, Targets, Pins
+from ueaglider.data.db_classes import Dives, Gliders, Missions, Targets, Pins, coord_db_decimal
 
 # Store credentials in a external file that is never added to git or shared over insecure channels
 #folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
@@ -95,17 +95,6 @@ def gebco_depth(lat_in, lon_in):
     return gebco_elevation
 
 
-def coord_db_decimal(coord_in, kongsberg=False):
-    # convert from database style DD.MM or kongsberg DDMM.mm to decimal degrees DD.dd
-    if kongsberg:
-        coord_in = coord_in / 100
-    deg = int(coord_in)
-    minutes = coord_in - deg
-    decimal_degrees = deg + minutes / 0.6
-    return decimal_degrees
-
-
-
 ############# One time functions to transform database ###################
 
 
@@ -161,6 +150,7 @@ def gliderid_to_num():
     session.commit()
     session.close()
     return
+
 
 def gliderid_get_relation():
     session = Session()

@@ -9,6 +9,16 @@ and starting a new one will change MissionID but not Mission Number
 """
 
 
+def coord_db_decimal(coord_in, kongsberg=False):
+    # convert from database style DD.MM or kongsberg DDMM.mm to decimal degrees DD.dd
+    if kongsberg:
+        coord_in = coord_in / 100
+    deg = int(coord_in)
+    minutes = coord_in - deg
+    decimal_degrees = deg + minutes / 0.6
+    return decimal_degrees
+
+
 class Gliders(SqlAlchemyBase):
     __tablename__ = 'Gliders'
     __table_args__ = {'extend_existing': True}
