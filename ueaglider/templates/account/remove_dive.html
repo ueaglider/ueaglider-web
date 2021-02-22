@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block main_content %}
+        <div class="form-container">
+        <form action="" method="POST" class="account-form">
+            <h1>Remove Target</h1>
+            Don't forget there's no Ctrl-Z in sql! If in doubt, don't.
+            <input name="dive_id" type="number" placeholder=" Dive ID from table below" min="1"  class="form-control" value="{{ dive_id }}" required>
+            <input name="dive_id_confirm" type="number" placeholder=" Confirm dive ID" min="1"  class="form-control" value="{{ dive_id_confirm }}" required>
+            <button type="submit" class="btn btn-danger">Remove Dive</button>
+            <div style="clear: both;"></div>
+
+            {% if message %}
+                <div class="success-message">{{ message|safe }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="container pins-list">
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Dive ID</th>
+      <th scope="col">Glider</th>
+      <th scope="col">Dive number</th>
+      <th scope="col">Lon</th>
+      <th scope="col">Lat</th>
+      <th scope="col">Mission</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for p in dives %}
+
+    <tr>
+      <th scope="row">{{  p.DiveInfoID }}</th>
+      <td>SG{{  p.GliderID}}</td>
+      <td>{{  p.DiveNo}}</td>
+      <td>{{  p.Latitude}}</td>
+      <td>{{  p.Longitude}}</td>
+      <td><a href="/mission{{ p.MissionID }}" class="btn btn-primary" role="button">Mission {{ p.MissionID }}</a></td>
+ {%  endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
+
+{% block additional_css %}
+    <link rel="stylesheet" href="/static/css/edit.css">
+{% endblock %}

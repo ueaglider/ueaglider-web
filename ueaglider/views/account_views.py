@@ -2,9 +2,10 @@ import flask
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth
-from ueaglider.services.db_edits import audit_entry, delete_pin, delete_target, delete_mission, delete_glider
+from ueaglider.services.db_edits import audit_entry, delete_pin, delete_target, delete_mission, delete_glider, \
+    delete_dive
 from ueaglider.viewmodels.account.edit_viewmodel import AddPinViewModel, AddMissionViewModel, AddTargetViewModel, \
-    RemovePinViewModel, RemoveTargetViewModel, RemoveMissionViewModel, AddGliderViewModel
+    RemovePinViewModel, RemoveTargetViewModel, RemoveMissionViewModel, AddGliderViewModel, RemoveDiveViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
@@ -364,6 +365,42 @@ def remove_mission_post():
 
     audit_message = 'Removed Mission ' + str(mission.Number)
     vm.message = 'Success! Removed Mission ' + str(mission.Number)
+    vm.update()
+    audit_log = audit_entry(vm.user_id, audit_message)
+    if audit_log:
+        vm.message = vm.message + '. This entry has been logged'
+    return vm.to_dict()
+
+
+########################## REMOVE MISSION ##########################
+
+
+@blueprint.route('/account/remove_dive', methods=['GET'])
+@response(template_file='account/remove_dive.html')
+def remove_dive_get():
+    vm = RemoveDiveViewModel()
+
+    if not vm.user_id:
+        return flask.redirect('/account/login')
+    return vm.to_dict()
+
+
+@blueprint.route('/account/remove_dive', methods=['POST'])
+@response(template_file='account/remove_dive.html')
+def remove_dive_post():
+    vm = RemoveDiveViewModel()
+    vm.validate()
+
+    if vm.error:
+        return vm.to_dict()
+
+    dive = delete_dive(vm.dive_id)
+    if not dive:
+        vm.error = 'Mission could not be removed'
+        return vm.to_dict()
+
+    audit_message = 'Removed dive' + str(dive.DiveInfoID)
+    vm.message = 'Success! Removed dive ' + str(dive.DiveInfoID)
     vm.update()
     audit_log = audit_entry(vm.user_id, audit_message)
     if audit_log:

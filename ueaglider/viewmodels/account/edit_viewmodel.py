@@ -199,3 +199,28 @@ class RemoveMissionViewModel(ViewModelBase):
         self.missions, __ = mission_service.get_missions()
         self.mission_id = ''
         self.mission_id_confirm = ''
+
+
+class RemoveDiveViewModel(ViewModelBase):
+    def __init__(self):
+        super().__init__()
+        self.dives, dive_ids = mission_service.get_dives()
+        self.all_dive_ids = [y for x in dive_ids for y in x]
+
+        self.dive_id = self.request_dict.dive_id
+        self.dive_id_confirm = self.request_dict.dive_id_confirm
+
+    def validate(self):
+        if not self.dive_id or not self.dive_id_confirm:
+            self.error = 'Please fill in all fields'
+        self.dive_id = int(self.dive_id)
+        self.dive_id_confirm = int(self.dive_id_confirm)
+        if self.dive_id != self.dive_id_confirm:
+            self.error = 'Supplied values do not match'
+        elif self.dive_id not in self.all_dive_ids:
+            self.error = 'Dive ID not found in table'
+
+    def update(self):
+        self.dives, __ = mission_service.get_dives()
+        self.dive_id = ''
+        self.dive_id_confirm = ''

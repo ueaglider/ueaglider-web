@@ -127,6 +127,13 @@ def get_missions() -> Optional[Any]:
     return missions, missions_ids
 
 
+def get_dives() -> Optional[Any]:
+    session = create_session()
+    dives = session.query(Dives).order_by(Dives.DiveInfoID.desc()).all()[:100]
+    dive_ids = session.query(Dives.DiveInfoID).all()
+    session.close()
+    return dives, dive_ids
+
 def get_mission_dives(mission_id) -> Optional[Any]:
     if not mission_id:
         return None

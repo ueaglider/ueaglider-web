@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from ueaglider.data.db_session import create_session
-from ueaglider.data.db_classes import Pins, Audit, Missions, Targets, Gliders
+from ueaglider.data.db_classes import Pins, Audit, Missions, Targets, Gliders, Dives
 from ueaglider.services.user_service import find_user_by_id
 
 
@@ -100,6 +100,16 @@ def delete_mission(mission_id):
     session.delete(mission)
     session.commit()
     return mission
+
+
+def delete_dive(dive_id):
+    session = create_session()
+    dive = session.query(Dives) \
+        .filter(Dives.DiveInfoID == dive_id) \
+        .first()
+    session.delete(dive)
+    session.commit()
+    return dive
 
 
 def create_glider(number, name, info, mission_id, ueaglider):
