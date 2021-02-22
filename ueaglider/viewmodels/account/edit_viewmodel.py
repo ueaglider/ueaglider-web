@@ -12,8 +12,6 @@ class AddPinViewModel(ViewModelBase):
         self.lat = self.request_dict.lat
         self.info = self.request_dict.info.strip()
         self.format = str(self.request_dict.format.strip())
-        print('format is ')
-        print(self.format)
 
     def validate(self):
         if not self.missionid or not self.name.strip() or not self.lon or not self.lat or not self.info:
@@ -34,6 +32,8 @@ class AddPinViewModel(ViewModelBase):
             self.lon = coord_db_decimal(float(self.lon), kongsberg=True)
         else:
             self.error = 'coordinate format not recognised'
+        if abs(self.lat) > 90 or abs(self.lon) > 180:
+            self.error = 'coordinates out of bounds'
 
 
 class AddTargetViewModel(ViewModelBase):
@@ -45,6 +45,7 @@ class AddTargetViewModel(ViewModelBase):
         self.lat = self.request_dict.lat
         self.radius = self.request_dict.radius
         self.goto = self.request_dict.goto
+        self.format = str(self.request_dict.format.strip())
 
     def validate(self):
         if not self.missionid or not self.name.strip() or not self.lon or not self.lat or not self.radius or not self.goto:
@@ -54,8 +55,19 @@ class AddTargetViewModel(ViewModelBase):
         self.missionid = int(self.missionid)
         if self.missionid not in id_list:
             self.error = 'Mission ' + str(self.missionid) + ' does not exist'
-        self.lat = float(self.lat)
-        self.lon = float(self.lon)
+        if self.format == 'dec_degree':
+            self.lat = float(self.lat)
+            self.lon = float(self.lon)
+        elif self.format == 'deg_min':
+            self.lat = coord_db_decimal(float(self.lat))
+            self.lon = coord_db_decimal(float(self.lon))
+        elif self.format == 'seaglider':
+            self.lat = coord_db_decimal(float(self.lat), kongsberg=True)
+            self.lon = coord_db_decimal(float(self.lon), kongsberg=True)
+        else:
+            self.error = 'coordinate format not recognised'
+        if abs(self.lat) > 90 or abs(self.lon) > 180:
+            self.error = 'coordinates out of bounds'
         self.radius = int(self.radius)
 
 
