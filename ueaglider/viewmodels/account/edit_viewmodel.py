@@ -1,4 +1,4 @@
-from ueaglider.bin.database_edit import coord_db_decimal
+from ueaglider.data.db_classes import coord_db_decimal
 from ueaglider.services import mission_service, glider_service
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 
