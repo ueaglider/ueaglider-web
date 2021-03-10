@@ -14,6 +14,7 @@
                 <th scope="col">Glider </th>
                 <th scope="col">Name</th>
                 <th scope="col">Info</th>
+                <th scope="col">Current Mission</th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -24,6 +25,7 @@
                 <th scope="row">SG{{  g.Number }}</th>
                 <td>{{  g.Name}}</td>
                 <td>{{  g.Info|safe}}</td>
+                <td>{{  g.MissionID}}</td>
                 <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">Select Glider</a></td>
             {%  endfor %}
             </tbody>
@@ -40,6 +42,7 @@
                 <th scope="col">Glider </th>
                 <th scope="col">Name</th>
                 <th scope="col">Info</th>
+                <th scope="col">Current Mission</th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -50,6 +53,7 @@
                 <th scope="row">SG{{  g.Number }}</th>
                 <td>{{  g.Name}}</td>
                 <td>{{  g.Info|safe}}</td>
+                <td>{{  g.MissionID}}</td>
                 <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">Select Glider</a></td>
             {%  endfor %}
             </tbody>
