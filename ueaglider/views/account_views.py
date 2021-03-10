@@ -3,9 +3,10 @@ from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth
 from ueaglider.services.db_edits import audit_entry, delete_pin, delete_target, delete_mission, delete_glider, \
-    delete_dive
+    delete_dive, assign_glider
 from ueaglider.viewmodels.account.edit_viewmodel import AddPinViewModel, AddMissionViewModel, AddTargetViewModel, \
-    RemovePinViewModel, RemoveTargetViewModel, RemoveMissionViewModel, AddGliderViewModel, RemoveDiveViewModel
+    RemovePinViewModel, RemoveTargetViewModel, RemoveMissionViewModel, AddGliderViewModel, RemoveDiveViewModel, \
+    AssignGliderViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
@@ -242,7 +243,6 @@ def addglider_post():
     vm.validate()
 
     if vm.error:
-        print(vm.overwrite_check)
         return vm.to_dict()
     if vm.overwrite_check:
         delete_glider(vm.glider_num)
@@ -372,7 +372,7 @@ def remove_mission_post():
     return vm.to_dict()
 
 
-########################## REMOVE MISSION ##########################
+########################## REMOVE DIVE ##########################
 
 
 @blueprint.route('/account/remove_dive', methods=['GET'])
@@ -402,6 +402,43 @@ def remove_dive_post():
     audit_message = 'Removed dive' + str(dive.DiveInfoID)
     vm.message = 'Success! Removed dive ' + str(dive.DiveInfoID)
     vm.update()
+    audit_log = audit_entry(vm.user_id, audit_message)
+    if audit_log:
+        vm.message = vm.message + '. This entry has been logged'
+    return vm.to_dict()
+
+
+########################## ASSIGN GLIDER ##########################
+
+
+@blueprint.route('/account/assign_glider', methods=['GET'])
+@response(template_file='account/assign_glider.html')
+def assignglider_get():
+    vm = AssignGliderViewModel()
+
+    if not vm.user_id:
+        return flask.redirect('/account/login')
+    return vm.to_dict()
+
+
+@blueprint.route('/account/assign_glider', methods=['POST'])
+@response(template_file='account/assign_glider.html')
+def assignglider_post():
+    vm = AssignGliderViewModel()
+    vm.validate()
+
+    if vm.error:
+        return vm.to_dict()
+    glider = assign_glider(vm.glider_num, vm.missionid)
+    if not glider:
+        vm.error = 'The glider could not be assigned to the mission'
+        return vm.to_dict()
+
+    audit_message = 'Assign glider SG' + str(vm.glider_num) + ' to mission' + str(vm.missionid)
+    vm.message = 'Success! You have assigned glider ' '<a href="/gliders/SG' + str(vm.glider_num) + '">' + "SG" + str(
+        vm.glider_num) + "</a>"  ' to ' + '<a href="/mission' + str(vm.missionid) + '">' + "mission " + str(vm.missionid) + "</a>"
+    vm.glider_num = ''
+    vm.missionid = ''
     audit_log = audit_entry(vm.user_id, audit_message)
     if audit_log:
         vm.message = vm.message + '. This entry has been logged'

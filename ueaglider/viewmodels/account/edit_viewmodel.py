@@ -224,3 +224,30 @@ class RemoveDiveViewModel(ViewModelBase):
         self.dives, __ = mission_service.get_dives()
         self.dive_id = ''
         self.dive_id_confirm = ''
+
+
+class AssignGliderViewModel(ViewModelBase):
+    def __init__(self):
+        super().__init__()
+        glider_nums = glider_service.glider_nums()
+        id_list = [y for x in glider_nums for y in x]
+        self.missions, mission_ids = mission_service.get_missions()
+        self.all_mission_ids = [y for x in mission_ids for y in x]
+        self.glider_nums = id_list
+        self.missionid = self.request_dict.missionid
+        if self.missionid:
+            self.missionid = int(self.missionid)
+        self.glider_num = self.request_dict.glider_num
+        if self.glider_num:
+            self.glider_num = int(self.glider_num)
+
+    def validate(self):
+        if not self.missionid or not self.glider_num:
+            self.error = 'Please fill in all fields'
+
+        if self.glider_num not in self.glider_nums:
+            # Error if the glider already exists
+            self.error = 'Glider SG' + str(self.glider_num) + ' does not exist'
+
+        if self.missionid not in self.all_mission_ids:
+            self.error = 'Mission ' + str(self.missionid) + ' does not exist'

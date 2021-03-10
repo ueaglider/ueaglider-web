@@ -2,6 +2,7 @@ from datetime import datetime
 
 from ueaglider.data.db_session import create_session
 from ueaglider.data.db_classes import Pins, Audit, Missions, Targets, Gliders, Dives
+from ueaglider.services.glider_service import glider_info
 from ueaglider.services.user_service import find_user_by_id
 
 
@@ -119,6 +120,16 @@ def create_glider(number, name, info, mission_id, ueaglider):
     glider.Info = info
     glider.MissionID = mission_id
     glider.UEAGlider = ueaglider
+    session = create_session()
+    session.add(glider)
+    session.commit()
+    session.close()
+    return glider
+
+
+def assign_glider(number, mission_id):
+    glider, __ = glider_info(number)
+    glider.MissionID = mission_id
     session = create_session()
     session.add(glider)
     session.commit()
