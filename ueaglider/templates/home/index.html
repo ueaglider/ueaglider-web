@@ -30,10 +30,11 @@
 {% block main_content %}
 
     <div class="totals">
-    <h3>
+        <img src="/static/img/icons/uea_sg_logo.jpg" width="200px" class="img-thumbnail" alt="UEA glider group logo">
+        <span id="timeline" class="heading-text">
     During {{ timespan }} years of operation, UEA glider group has carried out {{ "{:,}".format(mission_count) }}
         missions.<br>Our {{ "{:,}".format(glider_count) }}
-        gliders have conducted a total of {{ "{:,}".format(dive_count) }} dives.</h3>
+        gliders have conducted a total of {{ "{:,}".format(dive_count) }} dives.</span>
     </div>
     <div class="mapbox">
      <!-- Create a map div -->

@@ -38,3 +38,16 @@ footer {
 .oldphp h1 {
     color: red;
 }
+
+
+.img-thumbnail{
+    border:0;
+}
+
+.heading-text{
+    margin-left:10px;
+    font-size:28px;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align:bottom;
+}
