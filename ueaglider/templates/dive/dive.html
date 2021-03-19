@@ -19,12 +19,12 @@
     {% endif %}
     </div>
     {% for plot in dive_plots %}
-        <a data-bs-toggle="modal" data-bs-target={{ '#'+plot[-12:-4] }}>
+        <a data-bs-toggle="modal" data-bs-target={{ '#'+plot.split('.')[0].split('/')[-1] }}>
          <img src={{ plot }} width="400" alt="Piloting image thumbnail">
         </a>
 
         <!-- Modal -->
-        <div class="modal fade" id={{ plot[-12:-4] }} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id={{ plot.split('.')[0].split('/')[-1] }} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
