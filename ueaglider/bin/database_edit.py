@@ -10,9 +10,9 @@ import xarray as xr
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
 from ueaglider.data.db_classes import Dives, Gliders, Missions, Targets, Pins, coord_db_decimal
+from ueaglider.services.mission_service import get_dive
 
 # Store credentials in a external file that is never added to git or shared over insecure channels
-#folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ''))
 with open(folder + '/ueaglider/secrets.txt') as json_file:
     secrets = json.load(json_file)
 
@@ -34,9 +34,13 @@ def add_dive(glider_num):
     session = Session()
     dive_num, dive_datetime, lat, lon, status_str = get_dive_data(glider_num)
     elevation = gebco_depth(lat, lon)
-    dive = Dives()
     glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
     mission_num = session.query(Missions.Number).filter(Missions.MissionID == glider.MissionID).first()
+    dive_exists = get_dive(glider_num, dive_num, mission_num)
+    # stop if dive already exists
+    if dive_exists:
+        return
+    dive = Dives()
     dive.MissionID = mission_num[0]
     dive.GliderID = glider_num
     dive.Longitude = coord_db_decimal(lon)
@@ -70,9 +74,6 @@ def get_dive_data(glider_num):
         lat = float(gps_list[3]) / 100
         lon = float(gps_list[4]) / 100
         status = status_str.split(' ')[0]
-        status_identities = ['dive num', 'call cycle', 'calls made', 'no-comm count', 'internal mission number',
-                             'reboot count', 'error code', 'AD pitch', 'AD roll', 'AD VBD', 'Pitch', 'Depth',
-                             '10 V voltage', '24 V voltage', 'internal pressure', 'internal RH']
         dive_num = int(status.split(':')[0])
     return dive_num, dive_datetime, lat, lon, status
 
@@ -142,7 +143,9 @@ def convert_pins(overwrite_db=False):
 
 def gliderid_to_num():
     session = Session()
-    id_to_num = {1: 502, 2: 507, 3: 510, 4: 503, 5: 522, 6: 539, 7: 537, 8: 546, 12: 566, 13: 533, 15: 565, 14: 579, 17: 524, 16: 999, 18: 613, 19: 619, 20: 620, 21: 532, 22: 534, 23: 641, 24: 637, 25: 558, 26: 550, 27: 602, 28: 621, 29: 643, 30: 640, 31: 673}
+    id_to_num = {1: 502, 2: 507, 3: 510, 4: 503, 5: 522, 6: 539, 7: 537, 8: 546, 12: 566, 13: 533, 15: 565, 14: 579,
+                 17: 524, 16: 999, 18: 613, 19: 619, 20: 620, 21: 532, 22: 534, 23: 641, 24: 637, 25: 558, 26: 550,
+                 27: 602, 28: 621, 29: 643, 30: 640, 31: 673}
     dives = session.query(Dives)
     for dive in dives:
         foo = id_to_num[dive.GliderID]
@@ -159,7 +162,6 @@ def gliderid_get_relation():
     for glider in gliders:
         id_to_num[glider.GliderID] = glider.Number
     return id_to_num
-
 
 
 if __name__ == '__main__':
