@@ -10,7 +10,6 @@ import xarray as xr
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
 from ueaglider.data.db_classes import Dives, Gliders, Missions, Targets, Pins, coord_db_decimal
-from ueaglider.services.mission_service import get_dive
 
 # Store credentials in a external file that is never added to git or shared over insecure channels
 with open(folder + '/ueaglider/secrets.txt') as json_file:
@@ -36,7 +35,11 @@ def add_dive(glider_num):
     elevation = gebco_depth(lat, lon)
     glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
     mission_num = session.query(Missions.Number).filter(Missions.MissionID == glider.MissionID).first()
-    dive_exists = get_dive(glider_num, dive_num, mission_num)
+    dive_exists = session.query(Dives)\
+        .filter(Dives.GliderID == int(glider_num))\
+        .filter(Dives.DiveNo == dive_num)\
+        .filter(Dives.MissionID == mission_num)\
+        .first()
     # stop if dive already exists
     if dive_exists:
         return
