@@ -57,7 +57,7 @@ def add_dive(glider_num):
 #########   GET DIVE DATA ###################
 
 def get_dive_data(glider_num):
-    glider_dir = "/home/sg" + str(int(glider_num))
+    glider_dir = "/home/sg" + str(int(glider_num)).zfill(3)
     comm_log = glider_dir + '/comm.log'
     with open(comm_log) as origin_file:
         # Go through comm log looking for GPS lines
