@@ -44,7 +44,13 @@ def get_dive_count(filter_glider=False) -> int:
             .filter(Dives.GliderID == filter_glider) \
             .filter(Dives.MissionID.notin_(non_uea_mission_numbers)).count()
     else:
-        dives = session.query(Dives).filter(Dives.MissionID.notin_(non_uea_mission_numbers)).count()
+        non_uea_gliders_list = session.query(Gliders.Number)\
+            .filter(Gliders.UEAGlider == 0) \
+            .all()
+        non_uea_gliders = [y for x in non_uea_gliders_list for y in x]
+        dives = session.query(Dives)\
+            .filter(Dives.GliderID.notin_(non_uea_gliders)) \
+            .filter(Dives.MissionID.notin_(non_uea_mission_numbers)).count()
     session.close()
     return dives
 
