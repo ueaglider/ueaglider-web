@@ -5,7 +5,7 @@ from ueaglider.data.db_classes import Gliders, Dives
 def get_glider_count() -> int:
     session = create_session()
     gliders = session.query(Gliders)\
-        .filter(Gliders.UEAGlider == 0)\
+        .filter(Gliders.UEAGlider == 1)\
         .count()
     session.close()
     return gliders
