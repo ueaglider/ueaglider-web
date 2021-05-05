@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% block additional_css %}
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-{{nonce}}' *.jsdelivr.net *.bootstrapcdn.com unpkg.com; img-src *;">
 
      <!-- Link to leaflet CSS and javascript for maps-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -40,7 +41,7 @@
      <!-- Create a map div -->
     <div id="map" style="height: 800px; "></div>
     <!-- Script to create a leaflet map-->
-    <script>
+    <script nonce='{{nonce}}'>
 
     <!-- Map centered at setVew([lat, lon], zoom-level) -->
     let map = L.map('map')

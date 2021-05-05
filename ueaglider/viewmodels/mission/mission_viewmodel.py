@@ -2,10 +2,10 @@ import os
 import subprocess
 import sys
 import json
+import uuid
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
-
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 import ueaglider.services.json_conversion as json_conversion
 import ueaglider.services.mission_service as mission_service
@@ -19,6 +19,7 @@ class MissionViewModel(ViewModelBase):
         super().__init__()
         self.mission_id = mission_id
         self.mission_list = mission_service.list_missions()
+        self.nonce = uuid.uuid4().hex
         self.mission = mission_service.get_mission_by_id(mission_id)
         self.targets = mission_service.get_mission_targets(mission_id)
         if not self.targets:

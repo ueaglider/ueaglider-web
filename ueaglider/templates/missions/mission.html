@@ -2,6 +2,7 @@
 
 {% block additional_css %}
 
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-{{nonce}}' *.jsdelivr.net *.bootstrapcdn.com unpkg.com; img-src *;">
      <!-- Link to leaflet CSS and javascript for maps-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -69,7 +70,7 @@
      <!-- Create a map div -->
     <div id="map" style="height: 800px; "></div>
     <!-- Script to create a leaflet map-->
-    <script>
+    <script nonce='{{nonce}}'>
 
 
 

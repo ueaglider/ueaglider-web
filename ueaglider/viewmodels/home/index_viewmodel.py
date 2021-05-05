@@ -1,6 +1,7 @@
 import ueaglider.services.glider_service
 from ueaglider.services import mission_service, json_conversion
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
+import uuid
 
 class IndexViewModel(ViewModelBase):
     def __init__(self):
@@ -12,4 +13,5 @@ class IndexViewModel(ViewModelBase):
         self.timespan = int(self.mission_list[0].EndDate.strftime("%Y")) - int(self.mission_list[-1].EndDate.strftime("%Y"))
         self.mission_loc = mission_service.mission_loc(filter_missions=True)
         self.mission_tgts = json_conversion.targets_to_json(self.mission_loc, mission_tgt=True)
+        self.nonce = uuid.uuid4().hex
 
