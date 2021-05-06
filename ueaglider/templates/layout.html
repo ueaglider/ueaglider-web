@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
 
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-{{nonce}}' *.jsdelivr.net *.bootstrapcdn.com unpkg.com; img-src *;">
     <!-- CSS and javascript for bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
           rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
@@ -62,7 +63,7 @@
         Under development!<br>
         Will eventually replace the <a href="http://ueaglider.uea.ac.uk"> current UEA glider site</a>
         <br>
-        Copyright &copy; 2021 - <script>document.write( new Date().getFullYear() );</script> <a href="https://github.com/callumrollo">Callum Rollo</a>.
+        Copyright &copy; 2021 - {{ year }} <a href="https://github.com/callumrollo">Callum Rollo</a>.
     </div>
 </footer>
 
