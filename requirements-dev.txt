@@ -4,3 +4,4 @@ alembic
 Werkzeug
 pytest
 pytest-cov
+pre-commit
