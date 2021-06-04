@@ -1,0 +1,35 @@
+.container {
+  margin-bottom: 1em;
+  display: grid;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}
+
+
+.ltr {
+  direction: ltr;
+}
+
+.rtl {
+  direction: rtl;
+}
+
+.dir {
+  text-align: left;
+}
+
+label {
+  margin-right: 1.3em;
+  padding: 8px;
+}
+
+.item {
+  text-align: left;
+  font-size: 2.2em;
+  margin: 4px;
+  font-weight: bold;
+  line-height: 1.4;
+}
