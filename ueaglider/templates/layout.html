@@ -22,55 +22,14 @@
 </head>
 <body>
 
-
-<!-- Nav elements link to other pages -->
-
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-        <ul class="navbar-nav me-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Left</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="//codeply.com">Codeply</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-        </ul>
-    </div>
-    <div class="mx-auto order-0">
-        <a class="navbar-brand mx-auto" href="#">Navbar 2</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-        <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="#">Right</a>
-            </li>
-            <li class="nav-item">
-<img height="70px" src="/static/img/icons/uea_sg_logo.jpg"style="position:relative;top:-0px">            </li>
-        </ul>
-    </div>
-</nav>
-
-
 <!-- Nav elements link to other pages -->
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
+  <div class="collapse navbar-collapse w-100 order-3 dual-collapse2" id="navbarNavDropdown">
+    <ul class="navbar-nav me-auto">
       <li class="nav-item active">
         <a class="nav-link" href="/">Home </a>
       </li>
@@ -78,16 +37,24 @@
         <a class="nav-link" href="/gliders">Gliders</a>
       </li>
         {% block extra_nav %}{% endblock %}
-    {% if user_id %}
-      <li class="nav-item"><a class="nav-link" href="/account">Make changes</a>
-        <li class="nav-item"><a class="nav-link" href="/account/logout">Logout</a>
-    {% else %}
-      <li class="nav-item"><a class="nav-link" href="/account/register">Register</a>
-      <li class="nav-item"><a class="nav-link" href="/account/login">Login</a>
-    {% endif %}
+
 
     </ul>
   </div>
+    <div class="collapse navbar-collapse w-100 order-3 dual-collapse2" id="navbarNavDropdown">
+        <ul class="navbar-nav ms-auto">
+            {% if user_id %}
+                <li class="nav-item"><a class="nav-link" href="/account">Make changes</a>
+                <li class="nav-item"><a class="nav-link" href="/account/logout">Logout</a>
+                    {% else %}
+                <li class="nav-item"><a class="nav-link" href="/account/register">Register</a>
+                <li class="nav-item"><a class="nav-link" href="/account/login">Login    </a>
+            {% endif %}
+
+
+        </ul>
+    </div>
+
 </nav>
 
 <!-- This block is for the main page content -->
