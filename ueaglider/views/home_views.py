@@ -28,3 +28,17 @@ def sitemap():
 @response(mimetype='text/plain', template_file='home/robots.txt')
 def robots():
     return {}
+
+
+@blueprint.route('/<string:nonsense>.php')
+@response(template_file='home/old_home.html')
+def old_php_index(nonsense:str):
+    vm = IndexViewModel()
+    return vm.to_dict()
+
+
+@blueprint.route('/DIVES/<string:nonsense>.php')
+@response(template_file='home/old_home.html')
+def old_php_dives_index(nonsense:str):
+    vm = IndexViewModel()
+    return vm.to_dict()
