@@ -64,11 +64,14 @@ def get_dive_data(glider_num):
     comm_log = glider_dir + '/comm.log'
     with open(comm_log) as origin_file:
         # Go through comm log looking for GPS lines
+        gps_line = None
         for line in origin_file:
             sel_line = re.findall(r'GPS', line)
             if sel_line:
                 # Keep only most recent GPS line
                 gps_line = line
+        if not gps_line:
+            return 0, datetime.datetime.now(), 0, 0, ''
         gps_list = gps_line.split(',')
         status_str = gps_list[0]
         date = gps_list[1]
@@ -79,6 +82,7 @@ def get_dive_data(glider_num):
         status = status_str.split(' ')[0]
         dive_num = int(status.split(':')[0])
     return dive_num, dive_datetime, lat, lon, status
+
 
 
 def add_depths():
