@@ -30,15 +30,27 @@
 {% block main_content %}
 
     <div class="container">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+    <div class="item">6</div>
+    <div class="item">7</div>
+    <div class="item">8</div>
+    </div>
+
+
+    <div class="container">
     <h2>During {{ timespan }} years of operation, UEA glider group has carried out {{ "{:,}".format(mission_count) }}
         missions.<br>Our {{ "{:,}".format(glider_count) }}
         gliders have conducted a total of {{ "{:,}".format(dive_count) }} dives.</h2>
     <div class="item"><img src="/static/img/icons/uea_sg_logo.jpg" width="120" class="img-thumbnail" alt="UEA glider group logo"></div>
     </div>
-
+<div class="container">
     <div class="mapbox">
      <!-- Create a map div -->
-    <div id="map" style="height: 800px; "></div>
+    <div id="map" style="height: 800px; width: 800px;"></div>
     <!-- Script to create a leaflet map-->
     <script nonce="{{ nonce }}">
 
@@ -80,6 +92,8 @@
     L.control.scale({maxWidth: 200}).addTo(map)
     map.fitBounds(targetsLayer.getBounds());
     </script>
+        <div class="item"><img src="/static/img/icons/uea_sg_logo.jpg" width="120" class="img-thumbnail" alt="UEA glider group logo"></div>
+    </div>
     </div>
 <div class="container mission-list">
 

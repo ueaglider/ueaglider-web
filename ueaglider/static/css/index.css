@@ -35,3 +35,44 @@ label {
   font-weight: bold;
   line-height: 1.4;
 }
+
+
+.container {
+  border: solid 2px;
+  background: #f8ddf0;
+  margin-bottom: 1em;
+  display: grid;
+}
+
+.gridrowscols {
+  grid-template-rows: 120px 120px;
+  grid-template-columns: 400px 100px 100px 194px;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+.rtl {
+  direction: rtl;
+}
+
+.dir {
+  text-align: center;
+}
+
+label {
+  margin-right: 1.3em;
+  padding: 8px;
+}
+
+.item {
+  background: #c565a8;
+  border: solid 2px #305077;
+  text-align: center;
+  font-size: 2.2em;
+  color: white;
+  margin: 4px;
+  font-weight: bold;
+  line-height: 1.4;
+}
