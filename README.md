@@ -1,8 +1,6 @@
 # ueaglider-web
 
-A new website to replace the venerable PHP job by Bastien at http://ueaglider.uea.ac.uk/
-
-The development version is now live at https://demo-ueaglider.hopto.org/
+The UEA glider group piloting website at [ueaglider.uea.ac.uk](https://ueaglider.uea.ac.uk/)
 
 # Aims
 
@@ -35,7 +33,7 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   - [ ] Experiment with bokeh for interactivity
   - [ ] Add more mission long plots for e.g. suggested pitch center
   - [ ] Better pcolor plots, using cmocean
-  - [ ] Overview of the critical issues - batteries, and when the next call is due (Karen)
+  - [x] Overview of the critical issues - batteries, and when the next call is due (Karen)
   - [x] Gebco bathymetric depth at the location of the last surfacing (Rob)
   - [x] page for each glider showing most recent mission etc (Gareth)
   
@@ -48,7 +46,7 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   - [x] secure with SSL
   - [x] Make sure you can't delete stuff from the website
   - [x] sql injection vulns
-  - [ ] XSS vulns
+  - [x] XSS vulns
 
 - [x] include sitemap and robots
 
