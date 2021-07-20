@@ -1,5 +1,12 @@
+import os
+import sys
+import json
 from ueaglider.services import user_service
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+sys.path.insert(0, folder)
+with open(folder + '/ueaglider/secrets.txt') as json_file:
+    secrets = json.load(json_file)
 
 
 class RegisterViewModel(ViewModelBase):
@@ -16,7 +23,7 @@ class RegisterViewModel(ViewModelBase):
             self.error = 'You must specify a name.'
         elif not self.email or not self.email.strip():
             self.error = 'You must specify a email.'
-        elif self.secret != 'apinchofsalt':
+        elif self.secret != secrets['magic_word']:
             self.error = "You didn't say the magic word"
         elif not self.password:
             self.error = 'You must specify a password.'

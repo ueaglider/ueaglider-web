@@ -1,4 +1,11 @@
 import flask
+import os
+import sys
+import json
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, folder)
+with open(folder + '/ueaglider/secrets.txt') as json_file:
+    secrets = json.load(json_file)
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth
@@ -32,6 +39,8 @@ def index():
 @blueprint.route('/account/register', methods=['GET'])
 @response(template_file='account/register.html')
 def register_get():
+    if not secrets['accept_new_members']:
+        return flask.redirect('/account/login')
     vm = RegisterViewModel()
     return vm.to_dict()
 
