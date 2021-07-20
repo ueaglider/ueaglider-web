@@ -1,7 +1,7 @@
 import flask
-import ueaglider.services.json_conversion as json_conversion
 from ueaglider.infrastructure.view_modifiers import response
-import ueaglider.services.mission_service as mission_service
+from ueaglider.viewmodels.home.index_viewmodel import IndexViewModel
+from ueaglider.viewmodels.home.sitemap_viewmodel import SiteMapViewModel
 
 blueprint = flask.Blueprint('home', __name__, template_folder='templates')
 
@@ -13,17 +13,32 @@ def index():
     Home page method,
     :returns: counts of total missions, unique gliders and dives completed
     """
+    vm = IndexViewModel()
+    return vm.to_dict()
 
-    glider_count = mission_service.get_glider_count()
-    mission_count = mission_service.get_mission_count()
-    dive_count = mission_service.get_dive_count()
-    missions_list = mission_service.list_missions()
-    timespan = int(missions_list[0].EndDate.strftime("%Y")) - int(missions_list[-1].EndDate.strftime("%Y"))
-    mission_target_list = mission_service.mission_av_loc()
-    mission_targets = json_conversion.targets_to_json(mission_target_list, mission_tgt=True)
-    return {'glider_count': glider_count,
-            'mission_count': mission_count,
-            'dive_count': dive_count,
-            'mission_list': missions_list,
-            'mission_tgts': mission_targets,
-            'timespan': timespan}
+
+@blueprint.route('/sitemap.xml')
+@response(mimetype='application/xml', template_file='home/sitemap.html')
+def sitemap():
+    vm = SiteMapViewModel()
+    return vm.to_dict()
+
+
+@blueprint.route('/robots.txt')
+@response(mimetype='text/plain', template_file='home/robots.txt')
+def robots():
+    return {}
+
+
+@blueprint.route('/<string:nonsense>.php')
+@response(template_file='home/old_home.html')
+def old_php_index(nonsense:str):
+    vm = IndexViewModel()
+    return vm.to_dict()
+
+
+@blueprint.route('/DIVES/<string:nonsense>.php')
+@response(template_file='home/old_home.html')
+def old_php_dives_index(nonsense:str):
+    vm = IndexViewModel()
+    return vm.to_dict()

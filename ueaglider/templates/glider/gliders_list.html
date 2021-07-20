@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block additional_css %}
+    <title>Glider Summary</title>
+{% endblock %}
+{% block main_content %}
+
+    <div class="container glider-list">
+
+        <h2>Our gliders</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Glider </th>
+                <th scope="col">Name</th>
+                <th scope="col">Info</th>
+                <th scope="col">Current Mission</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for g in glider_list %}
+
+                <tr>
+                <th scope="row">SG{{  g.Number }}</th>
+                <td>{{  g.Name}}</td>
+                <td>{{  g.Info|safe}}</td>
+                <td>{{  g.MissionID}}</td>
+                <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">Select Glider</a></td>
+            {%  endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="container glider-list">
+        <h2>Friends of UEA glider</h2>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Glider </th>
+                <th scope="col">Name</th>
+                <th scope="col">Info</th>
+                <th scope="col">Current Mission</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for g in other_glider_list %}
+
+                <tr>
+                <th scope="row">SG{{  g.Number }}</th>
+                <td>{{  g.Name}}</td>
+                <td>{{  g.Info|safe}}</td>
+                <td>{{  g.MissionID}}</td>
+                <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">Select Glider</a></td>
+            {%  endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+

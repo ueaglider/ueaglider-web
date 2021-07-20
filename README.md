@@ -1,29 +1,30 @@
 # ueaglider-web
 
-A new website to replace the venerable PHP job by Bastien at http://ueaglider.uea.ac.uk/
-
-The development version is now live at https://demo-ueaglider.hopto.org/
+The UEA glider group piloting website at [ueaglider.uea.ac.uk](https://ueaglider.uea.ac.uk/)
 
 # Aims
 
-- [ ] Emulate funcionality of old website
+- [x] Emulate funcionality of old website
   - [x] Map with dive locations and optional layers
   - [x] Menu of glider dives
   - [x] Page of dive plots
   - [x] Glider status page
   - [x] Science page
-  - [ ] login to add missions and waypoints
+  - [x] login to add missions and waypoints
   
-- [ ] Show all legacy data
+- [x] Show all legacy data
   - [x] Waypoints on map
-  - [ ] All figures showing on site
+  - [x] All figures showing on site
 
 - [ ] Improve the map
   - [x] No more blue markers
-  - [ ] GEBCO 1000 m contour
+  - [x] GEBCO 1000 m contour
   - [ ] Add Caravela location
   - [ ] Add ships location (Rob)
   - [x] Click on a particular dive on the map to get the plots up (Karen)
+  - [x] Add graticule (Adrian and Gareth)
+  - [x] Add 500m isobath (Karen and Gillian)
+  - [x] Add all overlays from old site (Gillian)
 
 - [ ] Improve the dive plots
   - [ ] Add/remove lines on main dive plot (Gareth)
@@ -32,26 +33,31 @@ The development version is now live at https://demo-ueaglider.hopto.org/
   - [ ] Experiment with bokeh for interactivity
   - [ ] Add more mission long plots for e.g. suggested pitch center
   - [ ] Better pcolor plots, using cmocean
-  - [ ] Overview of the critical issues - batteries, and when the next call is due (Karen)
-  - [ ] Gebco bathymetric depth at the location of the last surfacing (Rob)
-  - [ ] page for each glider showing most recent mission etc (Gareth)
+  - [x] Overview of the critical issues - batteries, and when the next call is due (Karen)
+  - [x] Gebco bathymetric depth at the location of the last surfacing (Rob)
+  - [x] page for each glider showing most recent mission etc (Gareth)
   
 - [ ] Extra pages
-  - [ ] Summary of each glider
-  - [ ] Summary of each mission
+  - [x] Summary of each glider
+  - [x] Summary of each mission
 
 - [ ] Security
   - [ ] install bootstrap locally with npm
   - [x] secure with SSL
-  - [ ] Make sure you can't delete stuff from the website
-  - [ ] sql injection vulns
-  - [ ] XSS vulns
+  - [x] Make sure you can't delete stuff from the website
+  - [x] sql injection vulns
+  - [x] XSS vulns
 
-- [ ] include ~~sitemap~~ and robots
+- [x] include sitemap and robots
 
 - [ ] Documentation
 
 - [ ] Tests
+  - [x] Sitemap url requests
+  - [ ] Home tests
+  - [ ] Glider tests
+  - [ ] Dive tests
+  - [ ] Account tests
 
 ### Inspiration
 
@@ -66,4 +72,4 @@ Other glider sites to check out
 - flask for the main web app
 - bootstrap for pretty front end stuff
 - sqlalchemy to talk to the database
-- leaflet for maps
+- leaflet (javascript) for maps

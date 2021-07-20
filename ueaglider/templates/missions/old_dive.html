@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block additional_css %}
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/static/css/dive.css"/>
+        <title>Mission {{ mission_num }} {{ dive_num }}</title>
+{% endblock %}
+{% block main_content %}
+    <div class="oldphp">
+    <h1> Attention! You are entering a PHP-free zone</h1>
+    <h3> Looking for the old UEA glider site?</h3>
+         <img src="/static/img/old-website-images/dive-page-banner.png" width="1200" alt="Old site dive page banner">
+        <p>Those were the days </p>
+        <p><h4>The old site is gone, but lives forever in our hearts</h4>
+        &#9829; Bastien's PHP monstrosity 2010 - 2021 &#9829;</p>
+    I divine that you are attempting to access dive {{ dive_num }} by glider SG{{ glider_num }} on mission {{ mission_num }}. <br>
+    If this is correct (and that dive was once performed) you can
+    <a href="/mission{{ mission_num }}/glider{{ glider_num }}/dive{{ dive_num }}" class="btn btn-primary" role="button">click here</a>
+    for a redirect
+    </div>
+{% endblock %}

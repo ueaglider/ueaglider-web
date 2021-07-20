@@ -6,12 +6,14 @@
 {% block main_content %}
     <div class="headline">
 
+        <h1> SG{{ glider_data.Number }} {{ glider_data.Name }}</h1>
+        <h3>{{ glider_data.Info|safe }} </h3><br>
+        Total dives: {{dives_count}}<br>
+        <img src={{img_loc}} width="500" alt="No photo for this glider :("><br>
     </div>
-<div class="container mission-list">
-<h1> SG{{ glider_data.Number }} {{ glider_data.Name }}</h1>
- {{ glider_data.Info }} <br>
- Total dives: {{dives_count}}
-<h3>Missions Completed</h3>
+<div class="container glider-list">
+
+<h2>Missions Completed</h2>
 <table class="table">
   <thead>
     <tr>
@@ -31,7 +33,7 @@
       <td>{{  m.Name}}</td>
       <td>{{  m.StartDate.strftime("%Y-%m-%d")}}</td>
       <td>{{  m.EndDate.strftime("%Y-%m-%d")}}</td>
-      <td>{{  m.Info}}</td>
+      <td>{{  m.Info|safe}}</td>
       <td><a href="/mission{{ m.MissionID }}" class="btn btn-primary" role="button">Select Mission</a></td>
  {%  endfor %}
   </tbody>

@@ -1,0 +1,15 @@
+
+form.account-form {
+    margin-top: 40px;
+    margin-left: 40px;
+    margin-right: auto;
+    max-width: 600px;
+    background-color: #90e0e0;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+form.account-form button{
+    float: right;
+}

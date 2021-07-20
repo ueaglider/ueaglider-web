@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
 
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-{{nonce}}' *.jsdelivr.net *.bootstrapcdn.com unpkg.com; img-src *;">
     <!-- CSS and javascript for bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
           rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
@@ -17,6 +18,7 @@
     <!-- CSS from our static folder-->
     <link rel="stylesheet" href="/static/css/site.css"/>
     {% block additional_css %}{% endblock %}
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
 
@@ -38,7 +40,13 @@
         <a class="nav-link" href="/gliders">Gliders</a>
       </li>
         {% block extra_nav %}{% endblock %}
-
+    {% if user_id %}
+      <li class="nav-item"><a class="nav-link" href="/account">Make changes</a>
+        <li class="nav-item"><a class="nav-link" href="/account/logout">Logout</a>
+    {% else %}
+      <li class="nav-item"><a class="nav-link" href="/account/register">Register</a>
+      <li class="nav-item"><a class="nav-link" href="/account/login">Login</a>
+    {% endif %}
 
     </ul>
   </div>
@@ -52,10 +60,14 @@
 <footer>
     <!-- Copyright statement with a script to print the current year -->
     <div class="copyright">
-        Under development!<br>
-        Will eventually replace the <a href="http://ueaglider.uea.ac.uk"> current UEA glider site</a>
+        Built by <a href="https://github.com/callumrollo">Callum Rollo</a>
         <br>
-        Copyright &copy; 2021 - <script>document.write( new Date().getFullYear() );</script> <a href="https://github.com/callumrollo">Callum Rollo</a>.
+        Copyright &copy; UEA. All rights reserved. University of East Anglia, Norwich Research Park, Norwich, Norfolk, NR4 7TJ, UK | +44 (0) 1603 456161  <br> 
+        <a href="https://www.uea.ac.uk/about/university-information/statutory-and-legal/website">Accessibility </a>|
+        <a href="https://www.uea.ac.uk/about/university-information/statutory-legal-policies">Legal Statements </a>|
+        <a href="https://www.uea.ac.uk/about/university-information/statutory-legal-policies/modern-slavery-statement"> Statement on Modern Slavery</a>|
+        <a href="https://www.uea.ac.uk/about/university-information/statutory-and-legal/website">Cookie Policy </a>|
+        <a href="https://www.uea.ac.uk/about/university-information/statutory-and-legal/data-protection">Data Protection</a>
     </div>
 </footer>
 

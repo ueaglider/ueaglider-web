@@ -9,7 +9,13 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
-    <title>Mission {{ mission.MissionID }}</title>
+    <!-- Link to providers CSS and javascript for leaflet provider extension-->
+    <script src="http://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+    <script src="static/js/leaflet-providers.js"></script>
+    <!-- Link to graticle extension-->
+    <script src="static/js/Leaflet.Graticule.js"></script>
+
+    <title>Mission {{ mission.Number }}</title>
 {% endblock %}
 
 {% block extra_nav %}
@@ -24,7 +30,7 @@
         {% endfor %}
     </div>
 </li>
-    {% for glider_dives_list in dives_by_glider_json %}
+    {% for glider_dives_list in dives_by_glider_json_dupe %}
 <li class="nav-item dropdown">
 
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -44,10 +50,10 @@
 
     <div class="totals">
         <h3>
-            Mission {{ mission.MissionID }} {{ mission.Name }}
-        </h3><br>
+            Mission {{ mission.Number}} {{ mission.Name }}
+        </h3>
+        {{ mission.Info|safe}} <br>
         Start {{ mission.StartDate.strftime("%Y-%m-%d") }}<br> End {{ mission.EndDate.strftime("%Y-%m-%d") }}
-        <BR> TODO add mission summary here
     </div>
 
     <div class="quicklinks">
@@ -63,37 +69,186 @@
      <!-- Create a map div -->
     <div id="map" style="height: 800px; "></div>
     <!-- Script to create a leaflet map-->
-    <script>
+    <script nonce="{{ nonce }}">
 
+
+
+
+    // geojson layers passed from view method
+    let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
+    let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
+    let divesDict = JSON.parse('{{ dives_by_glider_json| tojson | safe}}');
+    let linesDict = JSON.parse('{{ lines_by_glider_json| tojson | safe}}');
+    let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
+    let depth50 = JSON.parse('{{ isobath_dict["depth_50_m"] | tojson | safe}}');
+    let depth200 = JSON.parse('{{ isobath_dict["depth_200_m"] | tojson | safe}}');
+    let depth500 = JSON.parse('{{ isobath_dict["depth_500_m"] | tojson | safe}}');
+    let depth1000 = JSON.parse('{{ isobath_dict["depth_1000_m"] | tojson | safe}}');
     let map = L.map('map')
 
-    // Gebco base layer, we add it to map so it will always be the background
-
+    // A series of optional map layers. ortho has addTo(map) so is on by default
     let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
         layers: 'GEBCO_2019_Grid',
-        attribution: 'GEBCO Compilation Group (2020)'}).addTo(map);
-    // A series of optional map layers
-    let basemaps = {
+        attribution: 'GEBCO Compilation Group (2020)'})
+    let watercolor = L.tileLayer.provider('Stamen.Watercolor')
+    let orthofr = L.tileLayer.provider('GeoportailFrance.orthos').addTo(map);
 
-        Ice: L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
-            layers: 'polarview:antarctic_icechart_nic',
-           	opacity: 0.5,
-    		format: 'image/png',
-    		transparent: true,
-            attribution: "Polar View (ESA)"
-        }),
+    // Graticule for lon and lat lines on map
+
+    let graticule = L.latlngGraticule({
+        showLabel: true,
+        weight: 0.8,
+        fontColor: 'white',
+        zoomInterval: [
+            {start: 3, end: 4, interval: 30},
+            {start: 5, end: 5, interval: 10},
+            {start: 6, end: 6, interval: 5},
+            {start: 7, end: 8, interval: 3},
+            {start: 9, end: 9, interval: 1},
+            {start: 9, end: 10, interval: 0.5},
+            {start: 11, end: 11, interval: 0.25},
+            {start: 12, end: 13, interval: 1/12},
+        ]
+    }).addTo(map);
+
+    // Optional high lat graticule with finer graduations in lat
+    let graticuleHighLat = L.latlngGraticule({
+        showLabel: true,
+        weight: 0.8,
+        fontColor: 'white',
+        zoomInterval:
+            { latitude: [
+                    {start: 3, end: 4, interval: 10},
+                    {start: 5, end: 5, interval: 3},
+                    {start: 6, end: 6, interval: 2},
+                    {start: 7, end: 8, interval: 1},
+                    {start: 9, end: 9, interval: 0.25},
+                    {start: 9, end: 10, interval: 0.25},
+                    {start: 11, end: 11, interval: 1/12},
+                    {start: 12, end: 13, interval: 1/30},
+
+    ],
+        longitude: [
+            {start: 3, end: 4, interval: 30},
+            {start: 5, end: 5, interval: 10},
+            {start: 6, end: 6, interval: 5},
+            {start: 7, end: 8, interval: 3},
+            {start: 9, end: 9, interval: 1},
+            {start: 9, end: 10, interval: 0.5},
+            {start: 11, end: 11, interval: 0.25},
+            {start: 12, end: 13, interval: 1/12},
+
+    ]}
+
+    })
+
+    // Add basemap layers to mao
+    let basemaps = {
+        Ortho: orthofr,
+        GEBCO: gebco,
+        watercolor: watercolor,
+    };
+
+    // Optional layers that plot on top of the basemap
+    let mapLayers = {
 
         EEZ: L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
-    		layers: 'eez_boundaries,eez', //'eez,eez_12nm,eez_24nm,eez_archipelagic_waters,eez_boundaries',
-    		opacity: 0.5,
-    		format: 'image/png',
-    		transparent: true,
+            layers: 'eez_boundaries,eez', //'eez,eez_12nm,eez_24nm,eez_archipelagic_waters,eez_boundaries',
+            opacity: 0.5,
+            format: 'image/png',
+            transparent: true,
             attribution:"Flanders Marine Institute (VLIZ)"
         }),
 
+        Ice: L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
+            layers: 'polarview:antarctic_icechart_nic',
+            opacity: 0.5,
+            format: 'image/png',
+            transparent: true,
+            attribution: "Polar View (ESA)"
+        }),
+
+	    "AMSR (sea ice)" : L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
+		layers: 'polarview:antarctic_AMSR2.3031,polarview:arctic_AMSR2.3413',
+		opacity: 0.5,
+		format: 'image/png',
+        attribution: "Polar View (ESA)",
+		transparent: true
+		}),
+
+	Icebergs : L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
+		layers: 'polarview:icebergs_s_current',
+		opacity: 0.8,
+		format: 'image/png',
+        attribution: "Polar View (ESA)",
+		transparent: true
+		}),
+
+	"FAO fishing areas" : L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
+		layers: 'fao',
+		opacity: 0.5,
+		format: 'image/png',
+        attribution:"Flanders Marine Institute (VLIZ)",
+		transparent: true
+		}),
+
+	 CMEMS_SST : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
+		layers: 'thetao', // thetao, uo, vo, zos
+		opacity: 0.9,
+		format: 'image/png',
+        attribution:"Copernicus CMEMS",
+		transparent: true
+		}),
+
+	 CMEMS_SSH : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
+		layers: 'zos', // thetao, uo, vo, zos
+		opacity: 0.9,
+		format: 'image/png',
+         attribution:"Copernicus CMEMS",
+		transparent: true
+		}),
+
+	CMEMS_UO : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
+		layers: 'uo', // thetao, uo, vo, zos
+		opacity: 0.9,
+		format: 'image/png',
+        attribution:"Copernicus CMEMS",
+		transparent: true
+		}),
+
+	CMEMS_VO : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
+		layers: 'vo', // thetao, uo, vo, zos
+		opacity: 0.9,
+		format: 'image/png',
+        attribution:"Copernicus CMEMS",
+		transparent: true
+		}),
+
+        "<span style='color: red'>GEBCO 50 m</span>": L.geoJSON(depth50, {
+            attribution: "GEBCO & C Rollo",
+            color:'red',
+        }),
+
+         "<span style='color: #99CCFF'>GEBCO 200 m</span>": L.geoJSON(depth200, {
+            attribution: "GEBCO & C Rollo",
+             color:'#99CCFF',
+        }),
+
+        "<span style='color: blue'>GEBCO 500 m</span>": L.geoJSON(depth500, {
+            attribution: "GEBCO & C Rollo",
+            color:'blue',
+        }),
+
+         "<span style='color: gray'>GEBCO 1000 m</span>": L.geoJSON(depth1000, {
+             attribution: "GEBCO & C Rollo",
+             color:'gray',
+        }),
+
+        Graticule: graticule,
+
+        "Graticule (high lat)": graticuleHighLat
+
     };
-
-
     // Add the targets and seaglider icons
 
 	let targetIcon = L.icon({
@@ -116,11 +271,6 @@
 		popupAnchor:  [3, -30] // point from which the popup should open relative to the iconAnchor
 	});
 
-    // geojson layers passed from view method
-    let targetDict = JSON.parse('{{ targetdict| tojson | safe}}');
-    let waypointDict = JSON.parse('{{ waypointdict| tojson | safe}}');
-    let divesDict = JSON.parse('{{ divesdict| tojson | safe}}');
-    let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
 
     // Function adds popup content to markers
 	function popupText(feature, layer) {
@@ -135,15 +285,25 @@
 		onEachFeature: popupText
 	}).addTo(map);
 
-	let waypointLayer = L.geoJSON(waypointDict, {
 
+	let waypointLayer = L.geoJSON(waypointDict, {
 		onEachFeature: popupText
 	}).addTo(map);
 
 
+    // Adding all dive connecting lines to map. Fillcolor by glider number
+
+    function style(feature) {
+        return {
+            weight: 1,
+            color: getColor(feature.properties.gliderOrder),
+        };
+    }
+    L.geoJson(linesDict, {style: style}).addTo(map);
+
 	// setting color from geojson. We have enough unique colors for 8 gliders. After that they'll all be white
-        function getColor(stype) {
-          switch (stype) {
+        function getColor(style) {
+          switch (style) {
             case 0:
               return "#ff7f0e" ;
             case 1:
@@ -167,7 +327,7 @@
         let divesLayer = L.geoJson(divesDict, {
             pointToLayer: function (feature, latlng) {
             return new L.CircleMarker(latlng, {radius: 5,
-                                                fillOpacity: 1,
+                                                fillOpacity: 0.8,
                                                 color: 'black',
                                                 fillColor: getColor(feature.properties.gliderOrder),
                                                 weight: 1,});
@@ -184,22 +344,30 @@
 		onEachFeature: popupText
 	}).addTo(map);
 
-    // Controls for the map
-    L.control.layers(basemaps).addTo(map);
-    // Length scale with mad width in pixels
-    L.control.scale({maxWidth: 200}).addTo(map)
 
-    // Fit map to targets
-    map.fitBounds(divesLayer.getBounds());
+    // Setting map bounds. If dives exist, use them. If not, use passed lon and lat from target or waypoint
+    let err = {{ zoom |tojson }}
+    if(err.length <8){
+        map.fitBounds(divesLayer.getBounds())
+    }
+    else {
+        let lon = {{ lon|tojson|safe }};
+        let lat = {{ lat|tojson|safe }};
+        map.setView([lat, lon], zoom = 8);
+
+    }
+
+    // Controls for the map
+    L.control.layers(basemaps, mapLayers).addTo(map);
+    // Length scale with max width in pixels
+    L.control.scale({maxWidth: 200}).addTo(map)
     </script>
     </div>
 
     <div class="images">
-    <h3> TODO generic mission plots here</h3><br>
         {% for plot in missionplots %}
-        <img src={{ plot }} alt="mission plot"><br>
+        <img src={{ plot }} ><br>
         {% endfor %}
-
     </div>
 
 

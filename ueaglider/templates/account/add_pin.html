@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block main_content %}
+        <div class="form-container">
+        <form action="" method="POST" class="account-form">
+            <h1>Add pin to a mission</h1>
+            <input name="missionid" type="number" placeholder=" Mission ID (e.g. 60 for Eurec4a)" class="form-control" value="{{ missionid }}" required>
+            <input name="name" type="text" placeholder=" Pin name (max 30 characters)"maxlength="30" class="form-control" value="{{ name}}" required>
+            <label for="format">coordinate format (50 deg 36 min):</label>
+            <select name="format" class="selectpicker form-control">
+            <option value="dec_degree">Decimal degree (50.6)</option>
+            <option value="deg_min">Degree.minute (50.36)</option>
+            <option value="seaglider">Seaglider target (5036.0)</option>
+            </select>
+            <input name="lat" type="number" step="0.0001"  placeholder=" lat" class="form-control" value="{{ lat }}" required>
+            <input name="lon" type="number" step="0.0001"  placeholder=" lon" class="form-control" value="{{ lon}}" required>
+            <b>protip:</b> add a link in info with: &lt;a href=https://other-site.com&gt;site name&lt;/a&gt;
+            <input name="info" type="text" placeholder=" Info" class="form-control" value="{{ info }}" required>
+            <button type="submit" class="btn btn-danger">Add Pin</button>
+            <div style="clear: both;"></div>
+
+            {% if message %}
+                <div class="success-message">{{ message|safe }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block additional_css %}
+    <link rel="stylesheet" href="/static/css/edit.css">
+{% endblock %}

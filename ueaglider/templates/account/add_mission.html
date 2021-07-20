@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block main_content %}
+        <div class="form-container">
+        <form action="" method="POST" class="account-form">
+            <h1>Add Mission </h1>
+            Most recent mission: {{ missions[0] }}
+            <input name="missionid" type="number" placeholder="Mission number. Should be most recent mission +1" min="1" class="form-control" value="{{ missionid }}" required>
+            <input name="name" type="text" maxlength="15" placeholder=" Mission name (max 15 characters)" class="form-control" value="{{ name}}" required>
+            <label for="start">Start date:</label>
+            <input name="start" type="date" placeholder=" Start date" class="form-control" value="{{ start }}" required>
+            <label for="end">End date:</label>
+            <input name="end" type="date" placeholder=" End date " class="form-control" value="{{ end}}" required>
+            <b>protip:</b> add a link in info with: &lt;a href=https://other-site.com&gt;site name&lt;/a&gt;
+            <input name="info" type="text" placeholder=" Info" class="form-control" value="{{ info }}" required>
+            <button type="submit" class="btn btn-danger">Add Mission</button>
+            <div style="clear: both;"></div>
+
+            {% if message %}
+                <div class="success-message">{{ message|safe }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block additional_css %}
+    <link rel="stylesheet" href="/static/css/edit.css">
+{% endblock %}

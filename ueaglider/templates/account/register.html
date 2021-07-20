@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block main_content %}
+        <div class="form-container">
+        <form action="" method="POST" class="account-form">
+            <h1>Registration for UEA glider group members</h1>
+            <input name="name" type="text" placeholder=" Your name" class="form-control" value="{{ name }}" required>
+            <input name="email" type="text" placeholder=" Your email address" class="form-control" value="{{ email}}" required>
+            <input name="secret" type="text" placeholder=" The secret phrase" class="form-control" value="{{ secret}}" required>
+            <input name="password" type="password" placeholder=" Your password" class="form-control" value="{{ password }}" required>
+            Already registered? <a href="/account/login">log in</a>
+            <button type="submit" class="btn btn-danger">Register</button>
+            <div style="clear: both;"></div>
+
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block additional_css %}
+    <link rel="stylesheet" href="/static/css/account.css">
+{% endblock %}

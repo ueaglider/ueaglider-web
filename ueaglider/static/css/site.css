@@ -7,6 +7,7 @@ body {
 }
 
 
+
 .totals {
     margin-bottom: 20px;
 }
@@ -18,4 +19,35 @@ footer {
     margin-top: 30px;
     text-align: center;
 
+}
+
+.error-message {
+    color: #a00d0d;
+    text-align: center;
+}
+
+.welcome {
+    margin-bottom: 20px;
+}
+
+.glider-list {
+    margin-bottom: 50px;
+    margin-top: 50px;
+
+}
+.oldphp h1 {
+    color: red;
+}
+
+
+.img-thumbnail{
+    border:0;
+}
+
+.heading-text{
+    margin-left:10px;
+    font-size:28px;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align:bottom;
 }

@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 
 {% block additional_css %}
-
      <!-- Link to leaflet CSS and javascript for maps-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -30,45 +29,27 @@
 {% block main_content %}
 
     <div class="totals">
-    <h3>
+        <img src="/static/img/icons/uea_sg_logo.jpg" width="200px" class="img-thumbnail" alt="UEA glider group logo">
+        <span id="timeline" class="heading-text">
     During {{ timespan }} years of operation, UEA glider group has carried out {{ "{:,}".format(mission_count) }}
-        missions. Our {{ "{:,}".format(glider_count) }}
-        gliders have conducted a total of {{ "{:,}".format(dive_count) }} dives.</h3>
+        missions.<br>Our {{ "{:,}".format(glider_count) }}
+        gliders have conducted a total of {{ "{:,}".format(dive_count) }} dives.</span>
     </div>
     <div class="mapbox">
      <!-- Create a map div -->
     <div id="map" style="height: 800px; "></div>
     <!-- Script to create a leaflet map-->
-    <script>
+    <script nonce="{{ nonce }}">
 
     <!-- Map centered at setVew([lat, lon], zoom-level) -->
-    let map = L.map('map').setView([-50, -40], 5)
+    let map = L.map('map')
 
     // Gebco base layer, we add it to map so it will always be the background
 
     let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
         layers: 'GEBCO_2019_Grid',
         attribution: 'GEBCO Compilation Group (2020)'}).addTo(map);
-    // A series of optional map layers
-    let basemaps = {
 
-        Ice: L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
-            layers: 'polarview:antarctic_icechart_nic',
-           	opacity: 0.5,
-    		format: 'image/png',
-    		transparent: true,
-            attribution: "Polar View (ESA)"
-        }),
-
-        EEZ: L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
-    		layers: 'eez_boundaries,eez', //'eez,eez_12nm,eez_24nm,eez_archipelagic_waters,eez_boundaries',
-    		opacity: 0.5,
-    		format: 'image/png',
-    		transparent: true,
-            attribution:"Flanders Marine Institute (VLIZ)"
-        }),
-
-    };
 	let targetIcon = L.icon({
 		iconUrl: '/static/img/icons/target.png',
 		shadowUrl: '/static/img/icons/targetshadow.png',
@@ -93,8 +74,7 @@
 		onEachFeature: popupText
 	}).addTo(map);
 
-    // Controls for the map
-    L.control.layers(basemaps).addTo(map);
+
     // Length scale with mad width in pixels
     L.control.scale({maxWidth: 200}).addTo(map)
     map.fitBounds(targetsLayer.getBounds());
@@ -117,12 +97,12 @@
   {% for m in mission_list %}
 
     <tr>
-      <th scope="row">{{  m.MissionID }}</th>
+      <th scope="row">{{  m.Number}}</th>
       <td>{{  m.Name}}</td>
       <td>{{  m.StartDate.strftime("%Y-%m-%d")}}</td>
       <td>{{  m.EndDate.strftime("%Y-%m-%d")}}</td>
-      <td>{{  m.Info}}</td>
-      <td><a href="/mission{{ m.MissionID }}" class="btn btn-primary" role="button">Select</a></td>
+      <td>{{  m.Info|safe}}</td>
+      <td><a href="/mission{{ m.Number }}" class="btn btn-primary" role="button">Select</a></td>
  {%  endfor %}
   </tbody>
 </table>

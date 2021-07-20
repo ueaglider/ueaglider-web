@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block main_content %}
+        <div class="form-container">
+        <form action="" method="POST" class="account-form">
+            <h1>Add Glider</h1>
+            <input name="overwrite_check" type="checkbox" ><label for="overwrite_check"> Overwrite existing glider? DANGER data loss</label>
+            <input name="glider_num" type="number" placeholder="Glider number, do not include SG" min="1" class="form-control" value="{{ glider_num }}" required>
+            <input name="name" type="text" maxlength="15" placeholder=" Glider name (max 15 characters)" class="form-control" value="{{ name}}" required>
+            <input name="info" type="text" placeholder=" Info" class="form-control" value="{{ info }}" required>
+            <input name="missionid" type="number" placeholder="Mission number" min="0" class="form-control" value="{{ missionid }}" required>
+            <input name="ueaglider_check" type="checkbox"  checked="checked"><label for="ueaglider_check"> UEA owned glider?</label>
+            <button type="submit" class="btn btn-danger">Add Glider</button>
+            <div style="clear: both;"></div>
+
+            {% if message %}
+                <div class="success-message">{{ message|safe }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block additional_css %}
+    <link rel="stylesheet" href="/static/css/edit.css">
+{% endblock %}
