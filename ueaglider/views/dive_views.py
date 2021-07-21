@@ -43,6 +43,8 @@ def dive(mission_id: int, glider_num: int, dive_num: int):
     dive_plots: list of paths to images associated with the dive
     """
     vm = DiveViewModel(mission_id, glider_num, dive_num)
+    if not vm.dive:
+        return flask.redirect(f'/mission{str(mission_id)}')
     return vm.to_dict()
 
 

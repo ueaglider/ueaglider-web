@@ -34,6 +34,8 @@ def get_dive(glider_num, dive_num, mission_num):
         .filter(Dives.MissionID == mission_num)\
         .first()
     session.close()
+    if not dive:
+        return None
     return dive
 
 

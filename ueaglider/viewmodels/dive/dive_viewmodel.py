@@ -1,5 +1,6 @@
 from ueaglider.services.mission_service import get_dive
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
+import flask
 import os
 import sys
 from pathlib import Path
@@ -73,6 +74,8 @@ class DiveViewModel(ViewModelBase):
         self.glider_num = glider_num
         self.dive_num = dive_num
         self.dive = get_dive(glider_num, dive_num, mission_id)
+        if not self.dive:
+            return
         if self.dive.Status:
             status = self.dive.Status.split(':')
             names = ['dive num', 'call cycle', 'calls made', 'no-comm count', 'internal mission number',
@@ -87,13 +90,16 @@ class DiveViewModel(ViewModelBase):
             # Cut the path to each figure so it starts from 'static' directory in app's home directory
             rel_path = path_str[path_str.find('/static'):]
             dive_plot_paths.append(rel_path)
-        self.links_dict = {
-            'prev dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(int(dive_num) - 1),
-            'glider status': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status",
-            'science': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science",
-            'mission page': "/mission" + str(mission_id),
-            'next dive': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(int(dive_num) + 1),
-        }
+        self.links_dict = {}
+        if get_dive(glider_num, dive_num-1, mission_id):
+            self.links_dict['prev dive'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(int(dive_num) - 1)
+
+        self.links_dict['glider status'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status"
+        self.links_dict['science'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science"
+        self.links_dict['mission page'] = "/mission" + str(mission_id)
+        if get_dive(glider_num, dive_num+1, mission_id):
+            self.links_dict['next dive'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(int(dive_num) + 1)
+
         if not dive_plot_paths:
             dive_plot_paths = ['/static/img/dives/hedge.png']
         self.dive_plots = dive_plot_paths
