@@ -27,6 +27,8 @@ def mission_ids() -> list:
 def get_dive(glider_num, dive_num, mission_num):
     session = create_session()
     glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
+    if not glider:
+        return None
     glider_id = glider.Number
     dive = session.query(Dives)\
         .filter(Dives.GliderID == glider_id)\
