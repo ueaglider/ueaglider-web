@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional, Any
 
 from ueaglider.data.db_session import create_session
@@ -178,6 +179,17 @@ def get_mission_dives(mission_id) -> Optional[Any]:
 
     session.close()
     return dives, gliders, dives_by_glider, most_recent_dives
+
+
+def get_recent_dives(hours=24) -> Optional[Any]:
+    session = create_session()
+    dives = session.query(Dives) \
+        .filter(Dives.ReceivedDate > datetime.datetime.now() - datetime.timedelta(hours=hours)) \
+        .order_by(Dives.GliderID.asc()) \
+        .all()
+    if not dives:
+        return None
+    return dives
 
 
 def mission_loc(filter_missions=False, mission_no=None):

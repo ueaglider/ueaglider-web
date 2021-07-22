@@ -13,3 +13,9 @@ class IndexViewModel(ViewModelBase):
         self.mission_loc = mission_service.mission_loc(filter_missions=True)
         self.mission_tgts = json_conversion.targets_to_json(self.mission_loc, mission_tgt=True)
 
+    def check_dives(self):
+        dives = mission_service.get_recent_dives(hours=16000)
+        if not dives:
+            self.recentdives = []
+        else:
+            self.recentdives = dives[-5:]

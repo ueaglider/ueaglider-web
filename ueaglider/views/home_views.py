@@ -14,6 +14,7 @@ def index():
     :returns: counts of total missions, unique gliders and dives completed
     """
     vm = IndexViewModel()
+    vm.check_dives()
     return vm.to_dict()
 
 

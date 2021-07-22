@@ -35,6 +35,15 @@
         missions.<br>Our {{ "{:,}".format(glider_count) }}
         gliders have conducted a total of {{ "{:,}".format(dive_count) }} dives.</span>
     </div>
+    <div class="recents">
+    {{ recentdives[0].DiveNo }}
+
+            {% for g in recentdives%}
+
+            <a href="{{ "/" }}" class="btn btn-primary" role="button">SG{{ g.GliderID }} Dive {{ g.DiveNo }}</a>
+        {% endfor %}
+
+    </div>
     <div class="mapbox">
      <!-- Create a map div -->
     <div id="map" style="height: 800px; "></div>
