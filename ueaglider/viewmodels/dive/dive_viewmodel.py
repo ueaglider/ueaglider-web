@@ -82,9 +82,12 @@ class DiveViewModel(ViewModelBase):
             names = ['dive num', 'call cycle', 'calls made', 'no-comm count', 'internal mission number',
                      'reboot count', 'error code', 'AD pitch', 'AD roll', 'AD VBD', 'Pitch', 'Depth',
                      '10 V voltage', '24 V voltage', 'internal pressure', 'internal RH']
+            print_fields = ['call cycle', 'calls made', 'no-comm count', 'error code',
+                            '10 V voltage', '24 V voltage', 'internal pressure', 'internal RH']
             status_str = ''
             for name, stat in zip(names, status):
-                status_str = '| ' + status_str + name + ': ' + str(stat)
+                if name in print_fields:
+                    status_str = status_str + '| ' + name + ': ' + '<b>' + str(stat) + '</b>'
             self.status_str = status_str
         for path in figure_paths:
             path_str = str(path)
