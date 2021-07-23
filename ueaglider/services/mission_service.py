@@ -184,7 +184,6 @@ def get_mission_dives(mission_id) -> Optional[Any]:
 def get_recent_dives(hours=24) -> Optional[Any]:
     session = create_session()
     dives = session.query(Dives) \
-        .filter(Dives.ReceivedDate > datetime.datetime.now() - datetime.timedelta(hours=hours)) \
         .order_by(Dives.GliderID.asc()) \
         .all()
     if not dives:

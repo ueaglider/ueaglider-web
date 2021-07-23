@@ -18,4 +18,4 @@ class IndexViewModel(ViewModelBase):
         if not dives:
             self.recentdives = []
         else:
-            self.recentdives = dives[-5:]
+            self.recentdives = dives[:3]
