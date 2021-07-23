@@ -8,6 +8,7 @@ from pathlib import Path
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
 
+
 class ScienceViewModel(ViewModelBase):
     def __init__(self, mission_id, glider_num):
         super().__init__()
@@ -79,11 +80,11 @@ class DiveViewModel(ViewModelBase):
         if self.dive.Status:
             status = self.dive.Status.split(':')
             names = ['dive num', 'call cycle', 'calls made', 'no-comm count', 'internal mission number',
-                             'reboot count', 'error code', 'AD pitch', 'AD roll', 'AD VBD', 'Pitch', 'Depth',
-                             '10 V voltage', '24 V voltage', 'internal pressure', 'internal RH']
+                     'reboot count', 'error code', 'AD pitch', 'AD roll', 'AD VBD', 'Pitch', 'Depth',
+                     '10 V voltage', '24 V voltage', 'internal pressure', 'internal RH']
             status_str = ''
             for name, stat in zip(names, status):
-                 status_str = status_str + name + ': ' + str(stat) + '<br>'
+                status_str = '| ' + status_str + name + ': ' + str(stat)
             self.status_str = status_str
         for path in figure_paths:
             path_str = str(path)
@@ -91,14 +92,16 @@ class DiveViewModel(ViewModelBase):
             rel_path = path_str[path_str.find('/static'):]
             dive_plot_paths.append(rel_path)
         self.links_dict = {}
-        if get_dive(glider_num, dive_num-1, mission_id):
-            self.links_dict['prev dive'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(int(dive_num) - 1)
+        if get_dive(glider_num, dive_num - 1, mission_id):
+            self.links_dict['prev dive'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(
+                int(dive_num) - 1)
 
         self.links_dict['glider status'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status"
         self.links_dict['science'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science"
         self.links_dict['mission page'] = "/mission" + str(mission_id)
-        if get_dive(glider_num, dive_num+1, mission_id):
-            self.links_dict['next dive'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(int(dive_num) + 1)
+        if get_dive(glider_num, dive_num + 1, mission_id):
+            self.links_dict['next dive'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(
+                int(dive_num) + 1)
 
         if not dive_plot_paths:
             dive_plot_paths = ['/static/img/dives/hedge.png']
