@@ -87,7 +87,7 @@ class DiveViewModel(ViewModelBase):
             status_str = ''
             for name, stat in zip(names, status):
                 if name in print_fields:
-                    status_str = status_str + '| ' + name + ': ' + '<b>' + str(stat) + '</b>'
+                    status_str = status_str + name + ': ' + '<b>' + str(stat) + '</b>' + ' | '
             self.status_str = status_str
         for path in figure_paths:
             path_str = str(path)

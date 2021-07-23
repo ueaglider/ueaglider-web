@@ -11,10 +11,10 @@
     {% if  dive %}
         <h3>Dive <span class="red">{{ dive.DiveNo }}</span> by <span class="red">SG{{glider_num }}</span></h3>
         {% if status_str%}
-            Status:<br> {{ status_str|safe }}<br>
+            {{ status_str|safe }}<br>
         {% endif %}
         {% if dive.Elevation %}
-        Bathymetry at post dive surfacing: <span class="red">{{ dive.Elevation }} m</span>
+        Bathymetry at post dive location: <span class="red">{{ dive.Elevation }} m</span>
         {% endif %}
     {% endif %}
     </div>
