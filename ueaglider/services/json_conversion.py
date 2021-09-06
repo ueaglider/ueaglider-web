@@ -115,7 +115,7 @@ def targets_to_json(targets, mission_tgt=False) -> dict:
 def pins_to_json(waypoints) -> dict:
     features = []
     for i, waypoint in enumerate(waypoints):
-        tgt_popup = "Target: " + str(waypoint.Name) + "<br>Lat: " + coord_dec_to_pretty(
+        tgt_popup = "Pin: " + str(waypoint.Name) + "<br>Lat: " + coord_dec_to_pretty(
             waypoint.Latitude) + "<br>Lon: " + coord_dec_to_pretty(waypoint.Longitude) + "<br>" + str(waypoint.Info)
         target_item = {
             "geometry": {
