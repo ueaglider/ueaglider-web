@@ -32,19 +32,22 @@ def main():
 def add_dive(glider_num):
     session = Session()
     dive_num, dive_datetime, lat, lon, status_str = get_dive_data(glider_num)
+    # If it is a self test dive num will be 0, abort
+    if dive_num == 0:
+        return
     elevation = gebco_depth(lat, lon)
     glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
-    mission_num = session.query(Missions.Number).filter(Missions.MissionID == glider.MissionID).first()
-    dive_exists = session.query(Dives)\
-        .filter(Dives.GliderID == int(glider_num))\
-        .filter(Dives.DiveNo == dive_num)\
-        .filter(Dives.MissionID == mission_num)\
+    mission_num = session.query(Missions).filter(Missions.Number == glider.MissionID).first().Number
+    dive_exists = session.query(Dives) \
+        .filter(Dives.GliderID == int(glider_num)) \
+        .filter(Dives.DiveNo == dive_num) \
+        .filter(Dives.MissionID == mission_num) \
         .first()
     # stop if dive already exists
     if dive_exists:
         return
     dive = Dives()
-    dive.MissionID = mission_num[0]
+    dive.MissionID = mission_num
     dive.GliderID = glider_num
     dive.Longitude = coord_db_decimal(lon)
     dive.Latitude = coord_db_decimal(lat)
@@ -82,7 +85,6 @@ def get_dive_data(glider_num):
         status = status_str.split(' ')[0]
         dive_num = int(status.split(':')[0])
     return dive_num, dive_datetime, lat, lon, status
-
 
 
 def add_depths():
