@@ -121,9 +121,9 @@ class ArgosLocations(SqlAlchemyBase):
     Number = sqlalchemy.Column(sqlalchemy.INT)
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
+    Altitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Date = sqlalchemy.Column(sqlalchemy.DATETIME)
     Quality = sqlalchemy.Column(sqlalchemy.VARCHAR)
-    Info = sqlalchemy.Column(sqlalchemy.TEXT)
 
 
 class ArgosTags(SqlAlchemyBase):
