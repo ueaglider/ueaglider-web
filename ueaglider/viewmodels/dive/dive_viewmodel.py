@@ -1,4 +1,4 @@
-from ueaglider.services.mission_service import get_dive
+from ueaglider.services import mission_service, json_conversion
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 import flask
 import os
@@ -72,9 +72,18 @@ class DiveViewModel(ViewModelBase):
         figure_paths = sorted(dive_path.glob('*'))
         dive_plot_paths = []
         self.mission_num = mission_id
+        self.mission_list = mission_service.list_missions()
         self.glider_num = glider_num
         self.dive_num = dive_num
-        self.dive = get_dive(glider_num, dive_num, mission_id)
+        self.dive = mission_service.get_dive(glider_num, dive_num, mission_id)
+        dives, mission_gliders, dives_by_glider, most_recent_dives = mission_service.get_mission_dives(self.mission_num)
+        dives_by_glider_json = []
+        for dives_list in dives_by_glider:
+            dives_json, dive_page_links, line_json = json_conversion.dives_to_json(dives_list, mission_gliders)
+            dives_by_glider_json.append(dives_json)
+        self.dives_by_glider_json = dives_by_glider_json
+        self.dives = mission_service.get_dive_nums(self.glider_num, self.mission_num)
+
         if not self.dive:
             return
         if self.dive.Status:
@@ -95,16 +104,15 @@ class DiveViewModel(ViewModelBase):
             rel_path = path_str[path_str.find('/static'):]
             dive_plot_paths.append(rel_path)
         self.links_dict = {}
-        if get_dive(glider_num, dive_num - 1, mission_id):
-            self.links_dict['prev dive'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(
-                int(dive_num) - 1)
+        prev_dive, next_dive = mission_service.adjacent_dives(self.glider_num, self.dive_num, self.mission_num)
+        if prev_dive:
+            self.links_dict['prev dive'] = f"/mission{str(mission_id)}/glider{str(glider_num)}/dive{str(prev_dive[0])}"
 
         self.links_dict['glider status'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status"
         self.links_dict['science'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science"
         self.links_dict['mission page'] = "/mission" + str(mission_id)
-        if get_dive(glider_num, dive_num + 1, mission_id):
-            self.links_dict['next dive'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/dive" + str(
-                int(dive_num) + 1)
+        if next_dive:
+            self.links_dict['next dive'] = f"/mission{str(mission_id)}/glider{str(glider_num)}/dive{str(next_dive[0])}"
 
         if not dive_plot_paths:
             dive_plot_paths = ['/static/img/dives/hedge.png']

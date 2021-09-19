@@ -41,6 +41,49 @@ def get_dive(glider_num, dive_num, mission_num):
     return dive
 
 
+def adjacent_dives(glider_num, dive_num, mission_num):
+    session = create_session()
+    glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
+    if not glider:
+        return None
+    glider_id = glider.Number
+    prev_dive = session.query(Dives.DiveNo) \
+        .filter(Dives.GliderID == glider_id) \
+        .filter(Dives.MissionID == mission_num) \
+        .filter(Dives.DiveNo < dive_num) \
+        .order_by(Dives.DiveNo.desc()) \
+        .first()
+    session.close()
+    if not prev_dive:
+        prev_dive = None
+    next_dive = session.query(Dives.DiveNo) \
+        .filter(Dives.GliderID == glider_id) \
+        .filter(Dives.MissionID == mission_num) \
+        .filter(Dives.DiveNo > dive_num) \
+        .order_by(Dives.DiveNo.asc()) \
+        .first()
+    session.close()
+    if not next_dive:
+        next_dive = None
+    return prev_dive, next_dive
+
+
+def get_dive_nums(glider_num, mission_num):
+    session = create_session()
+    glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
+    if not glider:
+        return None
+    glider_id = glider.Number
+    dives = session.query(Dives.DiveNo) \
+        .filter(Dives.GliderID == glider_id) \
+        .filter(Dives.MissionID == mission_num) \
+        .all()
+    session.close()
+    if not dives:
+        return None
+    return dives
+
+
 def get_dive_count(filter_glider=False) -> int:
     session = create_session()
     if filter_glider:
