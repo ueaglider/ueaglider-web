@@ -122,7 +122,7 @@ class ArgosLocations(SqlAlchemyBase):
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Date = sqlalchemy.Column(sqlalchemy.DATETIME)
-    Quality = sqlalchemy.Column(sqlalchemy.VARCHAR)
+    Quality = sqlalchemy.Column(sqlalchemy.VARCHAR(1))
     Info = sqlalchemy.Column(sqlalchemy.TEXT)
 
 
