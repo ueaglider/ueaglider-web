@@ -112,3 +112,24 @@ class Audit(SqlAlchemyBase):
     UserID = sqlalchemy.Column(sqlalchemy.INT)
     Date = sqlalchemy.Column(sqlalchemy.DATETIME)
     Info = sqlalchemy.Column(sqlalchemy.TEXT)
+
+
+class ArgosLocations(SqlAlchemyBase):
+    __tablename__ = 'ArgosLocations'
+    LocationID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
+    MissionID = sqlalchemy.Column(sqlalchemy.INT)
+    Number = sqlalchemy.Column(sqlalchemy.INT)
+    Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
+    Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
+    Date = sqlalchemy.Column(sqlalchemy.DATETIME)
+    Quality = sqlalchemy.Column(sqlalchemy.VARCHAR(1))
+    Info = sqlalchemy.Column(sqlalchemy.TEXT)
+
+
+class ArgosTags(SqlAlchemyBase):
+    __tablename__ = 'ArgosTags'
+    TagID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
+    TagNumber = sqlalchemy.Column(sqlalchemy.INT)
+    MissionID = sqlalchemy.Column(sqlalchemy.INT)
+    GliderID = sqlalchemy.Column(sqlalchemy.INT)
+

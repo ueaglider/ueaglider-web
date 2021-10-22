@@ -17,9 +17,21 @@ def science(mission_id: int, glider_num: int):
     :returns:
     dive_plots: list of paths to images associated with the dive
     """
-    vm = ScienceViewModel(mission_id, glider_num)
+    vm = ScienceViewModel(mission_id, glider_num, False)
     return vm.to_dict()
 
+
+@blueprint.route('/mission<int:mission_id>/glider<int:glider_num>/science_python')
+@response(template_file='dive/dive.html')
+def science_python(mission_id: int, glider_num: int):
+    """
+    Python Science page method,
+    :returns:
+    dive_plots: list of paths to images associated with the dive
+    """
+    vm = ScienceViewModel(mission_id, glider_num, True)
+    vm.python_plots = True
+    return vm.to_dict()
 
 
 @blueprint.route('/mission<int:mission_id>/glider<int:glider_num>/status')
