@@ -151,7 +151,7 @@ def create_tag(number, mission_id, glider_id):
 
 
 def assign_tag(number, mission_id, glider_id):
-    tag, __ = tag_info(number)
+    tag= tag_info(number)
     tag.MissionID = mission_id
     tag.GliderID = glider_id
     session = create_session()
@@ -159,6 +159,17 @@ def assign_tag(number, mission_id, glider_id):
     session.commit()
     session.close()
     return tag
+
+
+def delete_tag(tag_num):
+    session = create_session()
+    target = session.query(ArgosTags) \
+        .filter(ArgosTags.TagNumber == tag_num) \
+        .first()
+    session.delete(target)
+    session.commit()
+    session.close()
+    return
 
 
 def audit_entry(user_id: int, message: str):

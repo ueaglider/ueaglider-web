@@ -8,3 +8,6 @@ netcdf4
 xarray
 numpy
 matplotlib
+zeep
+xmltodict
+

@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block additional_css %}
+    <title>Glider Summary</title>
+{% endblock %}
+{% block main_content %}
+
+    <div class="container glider-list">
+
+        <h2>Argos tags</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Tag number </th>
+                <th scope="col">Current Mission</th>
+                <th scope="col">Current Glider</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for g in tag_list %}
+
+                <tr>
+                <th scope="row">{{  g.TagNumber }}</th>
+                <td>{{  g.MissionID}}</td>
+                <td>{{  g.GliderID}}</td>
+            {%  endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+{% endblock %}
+

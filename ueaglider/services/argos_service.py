@@ -16,3 +16,12 @@ def tag_info(tag_num):
     tag_instance = session.query(ArgosTags).filter(ArgosTags.TagNumber == tag_num).first()
     session.close()
     return tag_instance
+
+
+def list_tags() -> list:
+    session = create_session()
+    tags = session.query(ArgosTags) \
+        .order_by(ArgosTags.TagNumber.asc()) \
+        .all()
+    session.close()
+    return tags
