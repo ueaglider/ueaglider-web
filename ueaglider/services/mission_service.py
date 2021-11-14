@@ -236,7 +236,7 @@ def get_mission_tag_locs(mission_id) -> Optional[Any]:
         .all()
     # Necessary because ArgosTags table records only them most recent mission for each tag
     tag_numbers = []
-    for value in session.query(ArgosLocations.Number) \
+    for value in session.query(ArgosLocations.TagNumber) \
             .filter(ArgosLocations.MissionID == mission_id) \
             .distinct():
         tag_numbers.append(value[0])
@@ -249,7 +249,7 @@ def get_mission_tag_locs(mission_id) -> Optional[Any]:
     for tag_num in tag_numbers:
         tag_locations = session.query(ArgosLocations) \
             .filter(ArgosLocations.MissionID == mission_id) \
-            .filter(ArgosLocations.Number == tag_num) \
+            .filter(ArgosLocations.TagNumber == tag_num) \
             .order_by(ArgosLocations.Date.desc()) \
             .all()
         locs_by_tag.append(tag_locations)

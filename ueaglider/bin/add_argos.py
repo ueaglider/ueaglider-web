@@ -67,7 +67,7 @@ def add_tag_location(tag_number, mission_num):
     b0 = b['satellitePass']
     session = Session()
     existing_loc_dates_lists = session.query(ArgosLocations.Date) \
-        .filter(ArgosLocations.Number == tag_number) \
+        .filter(ArgosLocations.TagNumber == tag_number) \
         .all()
     existing_loc_dates = [y for x in existing_loc_dates_lists for y in x]
     for b1 in b0:
@@ -77,7 +77,7 @@ def add_tag_location(tag_number, mission_num):
         if location.Date in existing_loc_dates:
             # If this location has already been logged, skip it
             continue
-        location.Number = int(tag_number)
+        location.TagNumber = int(tag_number)
         location.Longitude = float(argo_dict['longitude'])
         location.Latitude = float(argo_dict['latitude'])
         location.Quality = argo_dict['locationClass']

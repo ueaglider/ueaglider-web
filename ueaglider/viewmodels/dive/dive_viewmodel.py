@@ -10,13 +10,17 @@ sys.path.insert(0, folder)
 
 
 class ScienceViewModel(ViewModelBase):
-    def __init__(self, mission_id, glider_num):
+    def __init__(self, mission_id, glider_num, python_plot):
         super().__init__()
         self.mission_num = mission_id
         self.glider_num = glider_num
+        self.python_plots = python_plot
         folder_path = Path(folder)
         # Find the absolute path to the figures
-        path_add = 'static/img/dives/Mission' + str(mission_id) + '/' + str(glider_num) + '/Science'
+        if self.python_plots:
+            path_add = 'static/img/dives/Mission' + str(mission_id) + '/' + str(glider_num) + '/Science_python'
+        else:
+            path_add = 'static/img/dives/Mission' + str(mission_id) + '/' + str(glider_num) + '/Science'
         dive_path = folder_path / path_add
         figure_paths = sorted(dive_path.glob('*'))
         dive_plot_paths = []
@@ -28,6 +32,7 @@ class ScienceViewModel(ViewModelBase):
         self.links_dict = {
             'glider status': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status",
             'science': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science",
+            'science_python': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science_python",
             'mission page': "/mission" + str(mission_id),
         }
         if not dive_plot_paths:
@@ -54,6 +59,7 @@ class StatusViewModel(ViewModelBase):
         self.links_dict = {
             'glider status': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status",
             'science': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science",
+            'science_python': "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science_python",
             'mission page': "/mission" + str(mission_id),
         }
         if not dive_plot_paths:
@@ -110,6 +116,7 @@ class DiveViewModel(ViewModelBase):
 
         self.links_dict['glider status'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/status"
         self.links_dict['science'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science"
+        self.links_dict['science_python'] = "/mission" + str(mission_id) + "/glider" + str(glider_num) + "/science_python"
         self.links_dict['mission page'] = "/mission" + str(mission_id)
         if next_dive:
             self.links_dict['next dive'] = f"/mission{str(mission_id)}/glider{str(glider_num)}/dive{str(next_dive[0])}"

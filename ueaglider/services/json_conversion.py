@@ -170,8 +170,8 @@ def tags_to_json(dives, gliders) -> Tuple:
         quality = ''
         if dive.Quality in LocationClasses.keys():
             quality = LocationClasses[dive.Quality]
-        tgt_popup = 'Tag ' + str(dive.Number) + '<br>' + datetime.strftime(dive.Date, "%Y-%d-%m %H:%M:%S") +  "<br>Lat: " \
-            + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(dive.Longitude) +"<br>Quality: "\
+        tgt_popup = 'Tag ' + str(dive.TagNumber) + '<br>' + datetime.strftime(dive.Date, "%Y-%d-%m %H:%M:%S") + "<br>Lat: " \
+                    + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(dive.Longitude) +"<br>Quality: " \
                     + dive.Quality +"<br>" + quality
         dive_item = {
             "geometry": {
@@ -185,8 +185,8 @@ def tags_to_json(dives, gliders) -> Tuple:
             "type": "Feature",
             "properties": {
                 "popupContent": tgt_popup,
-                "gliderOrder": glider_order_dict[dive.Number],
-                "gliderNum": dive.Number,
+                "gliderOrder": glider_order_dict[dive.TagNumber],
+                "gliderNum": dive.TagNumber,
             },
             "id": i
         }
@@ -205,7 +205,7 @@ def tags_to_json(dives, gliders) -> Tuple:
             },
             "type": "Feature",
             "properties": {
-                "gliderOrder": glider_order_dict[dive.Number],
+                "gliderOrder": glider_order_dict[dive.TagNumber],
             },
             "id": i
         }]

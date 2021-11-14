@@ -118,12 +118,13 @@ class ArgosLocations(SqlAlchemyBase):
     __tablename__ = 'ArgosLocations'
     LocationID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
     MissionID = sqlalchemy.Column(sqlalchemy.INT)
-    Number = sqlalchemy.Column(sqlalchemy.INT)
+    TagNumber = sqlalchemy.Column(sqlalchemy.INT)
     Latitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Longitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Altitude = sqlalchemy.Column(sqlalchemy.FLOAT)
     Date = sqlalchemy.Column(sqlalchemy.DATETIME)
     Quality = sqlalchemy.Column(sqlalchemy.VARCHAR(1))
+
 
 
 class ArgosTags(SqlAlchemyBase):
