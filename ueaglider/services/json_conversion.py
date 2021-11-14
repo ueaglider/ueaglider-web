@@ -1,7 +1,17 @@
+from datetime import datetime
 from typing import Tuple
 
 from ueaglider.services.mission_service import degree_sign
-
+LocationClasses = {
+    'G': 'within 100 m',
+    '3': 'within 250 m',
+    '2': 'within 500 m',
+    '1': 'within 1500 m',
+    '0': 'greater than 1500 m',
+    'A': 'No accuracy estimation',
+    'B': 'No accuracy estimation',
+    'Z': 'Invalid location'
+}
 
 def coord_dec_to_pretty(coord_in):
     # convert from decimal degrees to pretty formatted string for popup text
@@ -139,3 +149,66 @@ def pins_to_json(waypoints) -> dict:
         "features": features
     }
     return waypointdict
+
+
+def tags_to_json(dives, gliders) -> Tuple:
+    # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
+    glider_number_dict = {}
+    for glider in gliders:
+        glider_number_dict[glider.TagNumber] = glider.TagNumber
+    # Make a sorted dictionary of ascending integers per gliderID for colouring the map dive icons
+    glider_ids = list(glider_number_dict.keys())
+    glider_ids.sort()
+    glider_order_dict = {val: i for i, val in enumerate(glider_ids)}
+    features = []
+    dive_page_links = []
+    coords = []
+    i = 0
+    dive = []
+    for i, dive in enumerate(dives):
+        coords.append([dive.Longitude, dive.Latitude])
+        quality = ''
+        if dive.Quality in LocationClasses.keys():
+            quality = LocationClasses[dive.Quality]
+        tgt_popup = 'Tag ' + str(dive.Number) + '<br>' + datetime.strftime(dive.Date, "%Y-%d-%m %H:%M:%S") +  "<br>Lat: " \
+            + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(dive.Longitude) +"<br>Quality: "\
+                    + dive.Quality +"<br>" + quality
+        dive_item = {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    # convert from kongsberg style degree-mins in table to decimal degrees
+                    dive.Longitude,
+                    dive.Latitude
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "popupContent": tgt_popup,
+                "gliderOrder": glider_order_dict[dive.Number],
+                "gliderNum": dive.Number,
+            },
+            "id": i
+        }
+        features.append(dive_item)
+    dive_page_links.sort(reverse=True)
+    divedict = {
+        "type": "FeatureCollection",
+        "features": features
+    }
+    linedict = {
+        "type": "FeatureCollection",
+        "features": [{
+            "geometry": {
+                "type": "LineString",
+                "coordinates": coords
+            },
+            "type": "Feature",
+            "properties": {
+                "gliderOrder": glider_order_dict[dive.Number],
+            },
+            "id": i
+        }]
+    }
+
+    return divedict, dive_page_links, linedict

@@ -78,3 +78,26 @@ class MissionViewModel(ViewModelBase):
             self.dives_by_glider_json_dupe = dives_by_glider_json
             self.lines_by_glider_json = lines_by_glider_json
             self.zoom = 'normal'
+
+    def check_tags(self):
+        tag_locs, mission_tags, locs_by_tag, most_recent_locs = mission_service.get_mission_tag_locs(self.mission_id)
+        if not tag_locs:
+            blank_json_dict = {"type": "FeatureCollection", "features": []}
+            self.recentlocsdict = blank_json_dict
+            self.locs_by_tag_json = blank_json_dict
+            self.locs_by_tag_json_dupe = []
+            self.lines_by_tag_json = blank_json_dict
+        else:
+            locs_by_tag_json = []
+            lines_by_tag_json = []
+            for dives_list in locs_by_tag:
+                dives_json, dive_page_links, line_json = json_conversion.tags_to_json(dives_list, mission_tags)
+                locs_by_tag_json.append(dives_json)
+                lines_by_tag_json.append(line_json)
+
+            recentdivesdict, __, __ = json_conversion.tags_to_json(most_recent_locs, mission_tags)
+            self.recentlocsdict = recentdivesdict
+            self.locs_by_tag_json = locs_by_tag_json
+            self.locs_by_tag_json_dupe = locs_by_tag_json
+            self.lines_by_tag_json = lines_by_tag_json
+

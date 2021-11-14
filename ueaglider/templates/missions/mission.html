@@ -80,6 +80,9 @@
     let divesDict = JSON.parse('{{ dives_by_glider_json| tojson | safe}}');
     let linesDict = JSON.parse('{{ lines_by_glider_json| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
+    let locsDict = JSON.parse('{{ locs_by_tag_json| tojson | safe}}');
+    let locsLinesDict = JSON.parse('{{ lines_by_tag_json| tojson | safe}}');
+    let latestLocsDict = JSON.parse('{{ recentlocsdict| tojson | safe}}');
     let depth50 = JSON.parse('{{ isobath_dict["depth_50_m"] | tojson | safe}}');
     let depth200 = JSON.parse('{{ isobath_dict["depth_200_m"] | tojson | safe}}');
     let depth500 = JSON.parse('{{ isobath_dict["depth_500_m"] | tojson | safe}}');
@@ -271,6 +274,15 @@
 		popupAnchor:  [3, -30] // point from which the popup should open relative to the iconAnchor
 	});
 
+	let locsIcon = L.icon({
+		iconUrl: '/static/img/icons/argos.png',
+		shadowUrl: '/static/img/icons/targetshadow.png',
+		iconSize:     [32, 32], // size of the icon
+		shadowSize:   [32, 32], // size of the shadow
+		iconAnchor:   [16, 31], // point of the icon which will correspond to marker's location
+		shadowAnchor: [10, 31],  // the same for the shadow
+		popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
+	});
 
     // Function adds popup content to markers
 	function popupText(feature, layer) {
@@ -340,6 +352,28 @@
 	let seagliderLayer = L.geoJSON(latestDivesDict, {
 		pointToLayer: function (feature, latlng) {
 			return L.marker(latlng, {icon: seagliderIcon});
+		},
+		onEachFeature: popupText
+	}).addTo(map);
+
+	// Argos tag layers in style of glider layers
+    L.geoJson(locsLinesDict).addTo(map);
+
+
+    let locsLayer = L.geoJson(locsDict, {
+        pointToLayer: function (feature, latlng) {
+        return new L.CircleMarker(latlng, {radius: 5,
+                                            fillOpacity: 0.8,
+                                            color: 'black',
+                                            fillColor: 'black',
+                                            weight: 1,});
+        },
+     onEachFeature: popupText
+    }).addTo(map);
+
+	let tagsLayer = L.geoJSON(latestLocsDict, {
+		pointToLayer: function (feature, latlng) {
+			return L.marker(latlng, {icon: locsIcon});
 		},
 		onEachFeature: popupText
 	}).addTo(map);

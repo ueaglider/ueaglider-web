@@ -1,7 +1,7 @@
 from typing import Optional, Any
 
 from ueaglider.data.db_session import create_session
-from ueaglider.data.db_classes import Gliders, Missions, Dives, Targets, Pins
+from ueaglider.data.db_classes import Gliders, Missions, Dives, Targets, Pins, ArgosLocations, ArgosTags
 
 degree_sign = u'\N{DEGREE SIGN}'
 # Add more non-UEA assets and missions here so they don't inflate our front page statistics
@@ -221,6 +221,42 @@ def get_mission_dives(mission_id) -> Optional[Any]:
 
     session.close()
     return dives, gliders, dives_by_glider, most_recent_dives
+
+
+def get_mission_tag_locs(mission_id) -> Optional[Any]:
+    if not mission_id:
+        return None
+
+    mission_id = int(mission_id)
+
+    session = create_session()
+
+    tag_locations = session.query(ArgosLocations) \
+        .filter(ArgosLocations.MissionID == mission_id) \
+        .all()
+    # Necessary because ArgosTags table records only them most recent mission for each tag
+    tag_numbers = []
+    for value in session.query(ArgosLocations.Number) \
+            .filter(ArgosLocations.MissionID == mission_id) \
+            .distinct():
+        tag_numbers.append(value[0])
+    query = session.query(ArgosTags).filter(ArgosTags.TagNumber.in_(tag_numbers))
+    tags = query.all()
+    # Get most recent locations from each tag
+    most_recent_locs = []
+    # Group locs by tag
+    locs_by_tag = []
+    for tag_num in tag_numbers:
+        tag_locations = session.query(ArgosLocations) \
+            .filter(ArgosLocations.MissionID == mission_id) \
+            .filter(ArgosLocations.Number == tag_num) \
+            .order_by(ArgosLocations.Date.desc()) \
+            .all()
+        locs_by_tag.append(tag_locations)
+        most_recent_locs.append(tag_locations[0])
+
+    session.close()
+    return tag_locations, tags, locs_by_tag, most_recent_locs
 
 
 def mission_loc(filter_missions=False, mission_no=None):
