@@ -63,7 +63,6 @@ def read_email_from_gmail():
                 last_check = datetime.fromisoformat((line.strip()))
     else:
         last_check = datetime(1970, 1, 1)
-    last_check = datetime(1970, 1, 1)
     # Write the time of this run
     with open('lastcheck.log', 'w') as f:
         f.write(str(datetime.now()))
@@ -115,7 +114,6 @@ def read_email_from_gmail():
                     email_parser = parse_glider_email(data, email_from)
                     if not email_parser:
                         continue
-                    print(email_parser.glider)
                     add_dive(email_parser)
 
 
