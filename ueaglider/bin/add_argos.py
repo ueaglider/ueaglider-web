@@ -7,12 +7,10 @@ import os
 import zeep
 import xmltodict
 
-
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
 from ueaglider.data.db_classes import Missions, ArgosTags, ArgosLocations
 from ueaglider.services import argos_service
-
 
 LocationClasses = {
     'G': 'within 100 m',
@@ -54,7 +52,8 @@ def add_tag_location(tag_number, mission_num):
     wsdl = "http://ws-argos.cls.fr/argosDws/services/DixService?wsdl"
 
     client = zeep.Client(wsdl=wsdl)
-    resp_xml = client.service.getXml(username=secrets["argo_user"], password=secrets["argo_pwd"], nbPassByPtt=100, nbDaysFromNow=20,
+    resp_xml = client.service.getXml(username=secrets["argo_user"], password=secrets["argo_pwd"], nbPassByPtt=100,
+                                     nbDaysFromNow=20,
                                      displayLocation="true", displayRawData="true",
                                      mostRecentPassages="true", platformId=str(tag_number))
 
@@ -71,6 +70,8 @@ def add_tag_location(tag_number, mission_num):
         .all()
     existing_loc_dates = [y for x in existing_loc_dates_lists for y in x]
     for b1 in b0:
+        if 'location' not in b1.keys():
+            continue
         argo_dict = b1['location']
         location = ArgosLocations()
         location.Date = datetime.datetime.strptime(argo_dict['locationDate'], '%Y-%m-%dT%H:%M:%S.%fZ')
