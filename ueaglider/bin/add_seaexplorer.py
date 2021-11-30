@@ -56,15 +56,15 @@ class GliderHTMLParser(HTMLParser):
 
 def read_email_from_gmail():
     # check what time email was last checked
-    timefile = Path("lastcheck.log")
+    timefile = Path(folder + "/ueaglider/lastcheck.log")
     if timefile.exists():
-        with open("lastcheck.log", "r") as variable_file:
+        with open(folder + "/ueaglider/lastcheck.log", "r") as variable_file:
             for line in variable_file.readlines():
                 last_check = datetime.fromisoformat((line.strip()))
     else:
         last_check = datetime(1970, 1, 1)
     # Write the time of this run
-    with open('lastcheck.log', 'w') as f:
+    with open(folder + '/ueaglider/lastcheck.log', 'w') as f:
         f.write(str(datetime.now()))
     # Check gmail account for emails
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
@@ -97,7 +97,7 @@ def read_email_from_gmail():
                         unread_emails.append(i)
     # Exit if no new emails
     if not unread_emails:
-        with open('seaexplorer.log', 'a') as f:
+        with open(folder + '/ueaglider/seaexplorer.log', 'a') as f:
             f.write(str(datetime.now()) + ' no new mail' + '\n')
         exit(0)
 
