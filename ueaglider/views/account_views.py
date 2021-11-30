@@ -482,11 +482,13 @@ def remove_multiple_dives_post():
 
     audit_message = 'Removed dives glider' + str(dive.GliderID)
     vm.message = 'Success! Removed dives from SG' + str(dive.GliderID) + \
-                 ' in Mission 1 \n now go and delete the dive images and matlab lock files on the basestation'
+                 ' in Mission 1 <br> now go and delete the matlab lock files and dive images on the basestation:'\
+                 + f'<br> /home/matlab/processed/sg{str(dive.GliderID)}/processed.1-x' + \
+                 '<br> /mnt/gliderstore/dives/Mission1/' + str(dive.GliderID)
     vm.update()
     audit_log = audit_entry(vm.user_id, audit_message)
     if audit_log:
-        vm.message = vm.message + '. This entry has been logged'
+        vm.message = vm.message + '<br>This entry has been logged'
     return vm.to_dict()
 
 ########################## ASSIGN GLIDER ##########################
