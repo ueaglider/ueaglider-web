@@ -257,6 +257,30 @@ class RemoveDiveViewModel(ViewModelBase):
         self.dive_id_confirm = ''
 
 
+class RemoveMultipleDivesViewModel(ViewModelBase):
+    def __init__(self):
+        super().__init__()
+        glider_nums = glider_service.glider_nums()
+        self.all_glider_ids = [y for x in glider_nums for y in x]
+        self.gliders = glider_service.list_all_gliders()
+        self.glider_id = self.request_dict.glider_id
+        self.glider_id_confirm = self.request_dict.glider_id_confirm
+
+    def validate(self):
+        if not self.glider_id or not self.glider_id_confirm:
+            self.error = 'Please fill in all fields'
+        self.glider_id = int(self.glider_id)
+        self.glider_id_confirm = int(self.glider_id_confirm)
+        if self.glider_id != self.glider_id_confirm:
+            self.error = 'Supplied values do not match'
+        elif self.glider_id not in self.all_glider_ids:
+            self.error = 'Glider not found'
+
+    def update(self):
+        self.glider_id = ''
+        self.glider_id_confirm = ''
+
+
 class AssignGliderViewModel(ViewModelBase):
     def __init__(self):
         super().__init__()
