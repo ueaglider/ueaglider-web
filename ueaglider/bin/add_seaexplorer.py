@@ -12,7 +12,6 @@ from pathlib import Path
 from html.parser import HTMLParser
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-#folder = '/media/callum/storage/Documents/basestation-migration/ueaglider-web'
 sys.path.insert(0, folder)
 from ueaglider.data.db_classes import Dives, Gliders, Missions
 
@@ -50,11 +49,9 @@ class GliderHTMLParser(HTMLParser):
         if 'Cycle' in data:
             result = re.findall(r'[-+]?\d*\.\d+|\d+', data)
             try:
-                self.dive= result[0]
+                self.dive = result[0]
             except:
                 pass
-
-
 
 
 def read_email_from_gmail():
@@ -66,6 +63,7 @@ def read_email_from_gmail():
                 last_check = datetime.fromisoformat((line.strip()))
     else:
         last_check = datetime(1970, 1, 1)
+    last_check = datetime(1970, 1, 1)
     # Write the time of this run
     with open('lastcheck.log', 'w') as f:
         f.write(str(datetime.now()))
@@ -113,12 +111,16 @@ def read_email_from_gmail():
                 email_subject = msg['subject']
                 email_from = msg['from']
                 # If email is from UEA domain and subject is GPS, pass to glider_loc script
-                if 'administrateur@alseamar' in email_from and 'SEA066' in email_subject:
+                if 'administrateur@alseamar' in email_from and 'SEA' in email_subject:
                     email_parser = parse_glider_email(data, email_from)
+                    if not email_parser:
+                        continue
+                    print(email_parser.glider)
                     add_dive(email_parser)
 
 
 def parse_glider_email(message, email_from):
+    body = None
     # Get the body of the message, surprisingly complicated
     raw_email = message[0][1]
     mail_content = raw_email.decode('utf-8')
@@ -133,6 +135,8 @@ def parse_glider_email(message, email_from):
                 break
     else:
         body = b.get_payload(decode=True)
+    if not body:
+        return None
     body_text = body.decode("utf-8")
     # parse email
     glider_email_parser = GliderHTMLParser()
@@ -175,12 +179,14 @@ def add_dive(glider_email):
     session.commit()
     session.close()
 
+
 def gebco_depth(lat_in, lon_in):
     # Find the GEBCO water depth underneath where the glider surfaced
     gebco_path = secrets['gebco_path']
     gebco = xr.open_dataset(gebco_path)
     gebco_elevation = int(gebco.sel(lon=lon_in, lat=lat_in, method='nearest').elevation)
     return gebco_elevation
+
 
 if __name__ == '__main__':
     read_email_from_gmail()
