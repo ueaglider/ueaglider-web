@@ -48,7 +48,7 @@ def dives_to_json(dives, gliders) -> Tuple:
             dive.GliderID] + "<br><a href=" + dive_page_link + ">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " \
                     + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(dive.Longitude)
         if dive.ReceivedDate:
-            tgt_popup = tgt_popup + "<br>" + datetime.strftime(dive.ReceivedDate,"%Y-%d-%m") + \
+            tgt_popup = tgt_popup + "<br>" + datetime.strftime(dive.ReceivedDate,"%Y-%m-%d") + \
                         "<BR>" + datetime.strftime(dive.ReceivedDate, "%H:%M:%S")
         dive_item = {
             "geometry": {
@@ -176,7 +176,7 @@ def tags_to_json(dives, gliders) -> Tuple:
         if dive.Quality in LocationClasses.keys():
             quality = LocationClasses[dive.Quality]
         tgt_popup = 'Tag ' + str(dive.TagNumber) + '<br>' + datetime.strftime(dive.Date,
-                                                                              "%Y-%d-%m %H:%M:%S") + "<br>Lat: " \
+                                                                              "%Y-%m-%d %H:%M:%S") + "<br>Lat: " \
                     + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(
             dive.Longitude) + "<br>Quality: " \
                     + dive.Quality + "<br>" + quality
