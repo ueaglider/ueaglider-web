@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Tuple
 
 from ueaglider.services.mission_service import degree_sign
+
 LocationClasses = {
     'G': 'within 100 m',
     '3': 'within 250 m',
@@ -13,14 +14,15 @@ LocationClasses = {
     'Z': 'Invalid location'
 }
 
+
 def coord_dec_to_pretty(coord_in):
     # convert from decimal degrees to pretty formatted string for popup text
     deg = int(coord_in)
     minutes = abs(coord_in - deg) * 60
     coord_str = str(deg) + degree_sign + " " + str(round(minutes, 2)) + "'"
     return coord_str
-    
-    
+
+
 def dives_to_json(dives, gliders) -> Tuple:
     # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
     gliders_name_dict = {}
@@ -44,7 +46,10 @@ def dives_to_json(dives, gliders) -> Tuple:
         dive_page_links.append(dive_page_link)
         tgt_popup = 'SG ' + str(dive.GliderID) + ' ' + gliders_name_dict[
             dive.GliderID] + "<br><a href=" + dive_page_link + ">Dive " + str(dive.DiveNo) + "</a>" + "<br>Lat: " \
-            + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(dive.Longitude)
+                    + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(dive.Longitude)
+        if dive.ReceivedDate:
+            tgt_popup = tgt_popup + "<br>" + datetime.strftime(dive.ReceivedDate,"%Y-%d-%m") + \
+                        "<BR>" + datetime.strftime(dive.ReceivedDate, "%H:%M:%S")
         dive_item = {
             "geometry": {
                 "type": "Point",
@@ -170,9 +175,11 @@ def tags_to_json(dives, gliders) -> Tuple:
         quality = ''
         if dive.Quality in LocationClasses.keys():
             quality = LocationClasses[dive.Quality]
-        tgt_popup = 'Tag ' + str(dive.TagNumber) + '<br>' + datetime.strftime(dive.Date, "%Y-%d-%m %H:%M:%S") + "<br>Lat: " \
-                    + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(dive.Longitude) +"<br>Quality: " \
-                    + dive.Quality +"<br>" + quality
+        tgt_popup = 'Tag ' + str(dive.TagNumber) + '<br>' + datetime.strftime(dive.Date,
+                                                                              "%Y-%d-%m %H:%M:%S") + "<br>Lat: " \
+                    + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(
+            dive.Longitude) + "<br>Quality: " \
+                    + dive.Quality + "<br>" + quality
         dive_item = {
             "geometry": {
                 "type": "Point",
