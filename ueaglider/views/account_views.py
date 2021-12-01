@@ -10,10 +10,10 @@ from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth
 from ueaglider.services.db_edits import audit_entry, delete_pin, delete_target, delete_mission, delete_glider, \
-    delete_dive, assign_glider, delete_tag
+    delete_dive, assign_glider, delete_tag, delete_multiple_dives
 from ueaglider.viewmodels.account.edit_viewmodel import AddPinViewModel, AddMissionViewModel, AddTargetViewModel, \
     RemovePinViewModel, RemoveTargetViewModel, RemoveMissionViewModel, AddGliderViewModel, RemoveDiveViewModel, \
-    AssignGliderViewModel, AddTagViewModel, AssignTagViewModel
+    AssignGliderViewModel, AddTagViewModel, AssignTagViewModel, RemoveMultipleDivesViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
@@ -453,6 +453,43 @@ def remove_dive_post():
         vm.message = vm.message + '. This entry has been logged'
     return vm.to_dict()
 
+########################## REMOVE MANY DIVES ##########################
+
+
+@blueprint.route('/account/remove_multiple_dives', methods=['GET'])
+@response(template_file='account/remove_multiple_dives.html')
+def remove_multiple_dives_get():
+    vm = RemoveMultipleDivesViewModel()
+
+    if not vm.user_id:
+        return flask.redirect('/account/login')
+    return vm.to_dict()
+
+
+@blueprint.route('/account/remove_multiple_dives', methods=['POST'])
+@response(template_file='account/remove_multiple_dives.html')
+def remove_multiple_dives_post():
+    vm = RemoveMultipleDivesViewModel()
+    vm.validate()
+
+    if vm.error:
+        return vm.to_dict()
+
+    dive = delete_multiple_dives(vm.glider_id)
+    if not dive:
+        vm.error = 'Dives could not be removed'
+        return vm.to_dict()
+
+    audit_message = 'Removed dives glider' + str(dive.GliderID)
+    vm.message = 'Success! Removed dives from SG' + str(dive.GliderID) + \
+                 ' in Mission 1 <br> now go and delete the matlab lock files and dive images on the basestation:'\
+                 + f'<br> /home/matlab/processed/sg{str(dive.GliderID)}/processed.1-x' + \
+                 '<br> /mnt/gliderstore/dives/Mission1/' + str(dive.GliderID)
+    vm.update()
+    audit_log = audit_entry(vm.user_id, audit_message)
+    if audit_log:
+        vm.message = vm.message + '<br>This entry has been logged'
+    return vm.to_dict()
 
 ########################## ASSIGN GLIDER ##########################
 

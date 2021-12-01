@@ -114,6 +114,19 @@ def delete_dive(dive_id):
     return dive
 
 
+def delete_multiple_dives(glider_id):
+    dive = None
+    session = create_session()
+    dives = session.query(Dives) \
+        .filter(Dives.MissionID == 1)\
+        .filter(Dives.GliderID == glider_id) \
+        .all()
+    for dive in dives:
+        session.delete(dive)
+    session.commit()
+    return dive
+
+
 def create_glider(number, name, info, mission_id, ueaglider):
     glider = Gliders()
     glider.Number = number
