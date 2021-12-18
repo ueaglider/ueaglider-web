@@ -23,7 +23,7 @@ Session = sessionmaker(bind=engine)
 
 def main():
     session = Session()
-    start = datetime.datetime.now() - datetime.timedelta(hours=24 * 150)
+    start = datetime.datetime.now() - datetime.timedelta(hours=36)
     dives = session.query(Dives)\
         .filter(Dives.ReceivedDate > start)\
         .all()
