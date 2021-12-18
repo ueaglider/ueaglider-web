@@ -22,7 +22,6 @@ Session = sessionmaker(bind=engine)
 
 
 def main():
-    print('start')
     session = Session()
     start = datetime.datetime.now() - datetime.timedelta(hours=24 * 150)
     dives = session.query(Dives)\
@@ -30,8 +29,6 @@ def main():
         .all()
     glider, divenum, times, lon, lat = [], [], [], [], []
     session.close()
-    print('dives')
-    print(dives)
     for dive in dives:
         glider.append(dive.GliderID)
         divenum.append(dive.DiveNo)
@@ -41,8 +38,7 @@ def main():
     df = pd.DataFrame({"glider": glider, "dive": divenum, "datetime":times, "lon": lon, "lat": lat})
     df["lon"] = np.round(df.lon.values, 4)
     df["lat"] = np.round(df.lat.values, 4)
-    df.to_csv('glider_locs.csv', index=False)
-    print('written')
+    df.to_csv('/apps/glider_locs.csv', index=False)
 
 if __name__ == '__main__':
     main()
