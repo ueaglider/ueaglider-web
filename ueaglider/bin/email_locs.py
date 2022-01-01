@@ -34,7 +34,7 @@ def main():
         divenum.append(dive.DiveNo)
         times.append(dive.ReceivedDate)
         lat.append(dive.Latitude)
-        lon.append(dive.Latitude)
+        lon.append(dive.Longitude)
     df = pd.DataFrame({"glider": glider, "dive": divenum, "datetime":times, "lon": lon, "lat": lat})
     df["lon"] = np.round(df.lon.values, 4)
     df["lat"] = np.round(df.lat.values, 4)
