@@ -160,7 +160,8 @@ def tags_to_json(dives, gliders) -> Tuple:
     # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
     glider_number_dict = {}
     for glider in gliders:
-        glider_number_dict[glider.TagNumber] = glider.TagNumber
+        glider_number_dict[glider.TagNumber] = glider.GliderID
+    print(glider_number_dict)
     # Make a sorted dictionary of ascending integers per gliderID for colouring the map dive icons
     glider_ids = list(glider_number_dict.keys())
     glider_ids.sort()
@@ -175,7 +176,7 @@ def tags_to_json(dives, gliders) -> Tuple:
         quality = ''
         if dive.Quality in LocationClasses.keys():
             quality = LocationClasses[dive.Quality]
-        tgt_popup = 'Tag ' + str(dive.TagNumber) + '<br>' + datetime.strftime(dive.Date,
+        tgt_popup = 'Tag ' + str(dive.TagNumber) + '<br>SG' + str(glider_number_dict[dive.TagNumber]) + '<br>' + datetime.strftime(dive.Date,
                                                                               "%Y-%m-%d %H:%M:%S") + "<br>Lat: " \
                     + coord_dec_to_pretty(dive.Latitude) + "<br>Lon: " + coord_dec_to_pretty(
             dive.Longitude) + "<br>Quality: " \
