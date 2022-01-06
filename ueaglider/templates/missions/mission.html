@@ -80,9 +80,17 @@
     let divesDict = JSON.parse('{{ dives_by_glider_json| tojson | safe}}');
     let linesDict = JSON.parse('{{ lines_by_glider_json| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
-    let locsDict = JSON.parse('{{ locs_by_tag_json| tojson | safe}}');
-    let locsLinesDict = JSON.parse('{{ lines_by_tag_json| tojson | safe}}');
-    let latestLocsDict = JSON.parse('{{ recentlocsdict| tojson | safe}}');
+    // Argos tag fun zone
+    let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
+    let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
+    let latestLocsDict_good = JSON.parse('{{ recentlocsdict[0]| tojson | safe}}');
+    let locsDict_med = JSON.parse('{{ locs_by_tag_json[1]| tojson | safe}}');
+    let locsLinesDict_med = JSON.parse('{{ lines_by_tag_json[1]| tojson | safe}}');
+    let latestLocsDict_med = JSON.parse('{{ recentlocsdict[1]| tojson | safe}}');
+    let locsDict_bad = JSON.parse('{{ locs_by_tag_json[2]| tojson | safe}}');
+    let locsLinesDict_bad = JSON.parse('{{ lines_by_tag_json[2]| tojson | safe}}');
+    let latestLocsDict_bad = JSON.parse('{{ recentlocsdict[2]| tojson | safe}}');
+    // end Argos tag fun zone
     let depth50 = JSON.parse('{{ isobath_dict["depth_50_m"] | tojson | safe}}');
     let depth200 = JSON.parse('{{ isobath_dict["depth_200_m"] | tojson | safe}}');
     let depth500 = JSON.parse('{{ isobath_dict["depth_500_m"] | tojson | safe}}');
@@ -152,6 +160,81 @@
         watercolor: watercolor,
     };
 
+    // Argos tag zone
+
+    let locsIcon = L.icon({
+        iconUrl: '/static/img/icons/argos.png',
+        shadowUrl: '/static/img/icons/targetshadow.png',
+        iconSize:     [32, 26], // size of the icon
+        shadowSize:   [32, 32], // size of the shadow
+        iconAnchor:   [16, 26], // point of the icon which will correspond to marker's location
+        shadowAnchor: [10, 31],  // the same for the shadow
+        popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
+    });
+
+    // Argos tag layers in style of glider layers
+
+    let tagsLayerGood = L.layerGroup([L.geoJSON(latestLocsDict_good, {
+		pointToLayer: function (feature, latlng) {
+			return L.marker(latlng, {icon: locsIcon});
+		},
+		onEachFeature: popupText
+	}),
+
+    L.geoJson(locsLinesDict_good, {style: {weight: 1, color:'red', dashArray: '10, 3'}}),
+
+     L.geoJson(locsDict_good, {
+        pointToLayer: function (feature, latlng) {
+            return new L.CircleMarker(latlng, {radius: 5,
+                fillOpacity: 0.8,
+                color: 'black',
+                fillColor: 'red',
+                weight: 1,});
+        },
+        onEachFeature: popupText
+    })]).addTo(map);
+
+
+    let tagsLayerMed = L.layerGroup([L.geoJSON(latestLocsDict_med, {
+        pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {icon: locsIcon});
+        },
+        onEachFeature: popupText
+    }),
+
+        L.geoJson(locsLinesDict_med, {style: {weight: 1, color:'yellow', dashArray: '10, 3'}}),
+
+        L.geoJson(locsDict_med, {
+            pointToLayer: function (feature, latlng) {
+                return new L.CircleMarker(latlng, {radius: 5,
+                    fillOpacity: 0.8,
+                    color: 'black',
+                    fillColor: 'yellow',
+                    weight: 1,});
+            },
+            onEachFeature: popupText
+        })])
+
+
+    let tagsLayerBad = L.layerGroup([L.geoJSON(latestLocsDict_bad, {
+        pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {icon: locsIcon});
+        },
+        onEachFeature: popupText
+    }),
+
+        L.geoJson(locsLinesDict_bad, {style: {weight: 1, color:'black', dashArray: '10, 3'}}),
+
+        L.geoJson(locsDict_bad, {
+            pointToLayer: function (feature, latlng) {
+                return new L.CircleMarker(latlng, {radius: 5,
+                    fillOpacity: 0.8,
+                    color: 'black',
+                    fillColor: 'black',
+                    weight: 1,});
+            },
+            onEachFeature: popupText
+        })])
     // Optional layers that plot on top of the basemap
     let mapLayers = {
 
@@ -249,7 +332,10 @@
 
         Graticule: graticule,
 
-        "Graticule (high lat)": graticuleHighLat
+        "Graticule (high lat)": graticuleHighLat,
+        "<span style='color: red'>Argos tags < 250 m 👌 </span>": tagsLayerGood,
+        "<span style='color: orange'>Argos tags < 1500 m  👍 </span> ": tagsLayerMed,
+        "<span style='color: black'>All Argos tags 🔥 </span>": tagsLayerBad,
 
     };
     // Add the targets and seaglider icons
@@ -274,15 +360,6 @@
 		popupAnchor:  [3, -30] // point from which the popup should open relative to the iconAnchor
 	});
 
-	let locsIcon = L.icon({
-		iconUrl: '/static/img/icons/argos.png',
-		shadowUrl: '/static/img/icons/targetshadow.png',
-		iconSize:     [32, 26], // size of the icon
-		shadowSize:   [32, 32], // size of the shadow
-		iconAnchor:   [16, 26], // point of the icon which will correspond to marker's location
-		shadowAnchor: [10, 31],  // the same for the shadow
-		popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
-	});
 
     // Function adds popup content to markers
 	function popupText(feature, layer) {
@@ -303,27 +380,6 @@
 	}).addTo(map);
 
 
-	// Argos tag layers in style of glider layers
-    L.geoJson(locsLinesDict, {style: {weight: 1, color:'white', dashArray: '10, 3'}}).addTo(map);
-
-
-    let locsLayer = L.geoJson(locsDict, {
-        pointToLayer: function (feature, latlng) {
-        return new L.CircleMarker(latlng, {radius: 5,
-                                            fillOpacity: 0.8,
-                                            color: 'black',
-                                            fillColor: 'white',
-                                            weight: 1,});
-        },
-     onEachFeature: popupText
-    }).addTo(map);
-
-	let tagsLayer = L.geoJSON(latestLocsDict, {
-		pointToLayer: function (feature, latlng) {
-			return L.marker(latlng, {icon: locsIcon});
-		},
-		onEachFeature: popupText
-	}).addTo(map);
 
     // Adding all dive connecting lines to map. Fillcolor by glider number
 
@@ -400,11 +456,6 @@
     </script>
     </div>
 
-    <div class="images">
-        {% for plot in missionplots %}
-        <img src={{ plot }} ><br>
-        {% endfor %}
-    </div>
 
 
 {% endblock %}
