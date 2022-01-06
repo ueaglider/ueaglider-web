@@ -82,7 +82,7 @@ class MissionViewModel(ViewModelBase):
     def check_tags(self):
         qualities_lists = (
             ('G', '3'),
-            ('G', '3', '2', '1', '0'),
+            ('G', '3', '2', '1'),
             ('G', '3', '2', '1', '0', 'A', 'B', 'Z'),
         )
         quality_levels = ('best', 'defined', 'all')
