@@ -71,6 +71,9 @@ def old_php():
     glider_num = request.args.get('gliderNo')
     mission_id = request.args.get('missionNo')
     dive_num = request.args.get('diveNo')
+    if not dive_num or not mission_id or not glider_num:
+        vm = DiveViewModel(1, 1, 1)
+        return vm.to_dict()
     vm = DiveViewModel(mission_id, glider_num, dive_num)
     return vm.to_dict()
 
