@@ -22,11 +22,10 @@
             {% for g in glider_list %}
 
                 <tr>
-                <th scope="row">SG{{  g.Number }}</th>
+                <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">SG{{g.Number}}</a></td>
                 <td>{{  g.Name}}</td>
                 <td>{{  g.Info|safe}}</td>
-                <td>{{  g.MissionID}}</td>
-                <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">Select Glider</a></td>
+                <td><a href="/mission{{ g.MissionID }}" class="btn btn-primary" role="button">Mission {{g.MissionID}}</a></td>
             {%  endfor %}
             </tbody>
         </table>
@@ -50,11 +49,10 @@
             {% for g in other_glider_list %}
 
                 <tr>
-                <th scope="row">SG{{  g.Number }}</th>
+                <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">SG{{g.Number}}</a></td>
                 <td>{{  g.Name}}</td>
                 <td>{{  g.Info|safe}}</td>
-                <td>{{  g.MissionID}}</td>
-                <td><a href="/gliders/SG{{ g.Number }}" class="btn btn-primary" role="button">Select Glider</a></td>
+                <td><a href="/mission{{ g.MissionID }}" class="btn btn-primary" role="button">Mission {{g.MissionID}}</a></td>
             {%  endfor %}
             </tbody>
         </table>

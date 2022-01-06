@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block additional_css %}
-    <title>Glider Summary</title>
+    <title>Argos Tags</title>
 {% endblock %}
 {% block main_content %}
 
@@ -22,8 +22,8 @@
 
                 <tr>
                 <th scope="row">{{  g.TagNumber }}</th>
-                <td>{{  g.MissionID}}</td>
-                <td>{{  g.GliderID}}</td>
+                <td><a href="/mission{{ g.MissionID }}" class="btn btn-primary" role="button">Mission {{g.MissionID}}</a></td>
+                <td><a href="/gliders/SG{{ g.GliderID }}" class="btn btn-primary" role="button">SG{{g.GliderID}}</a></td>
             {%  endfor %}
             </tbody>
         </table>
