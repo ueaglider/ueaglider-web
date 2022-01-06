@@ -223,7 +223,7 @@ def get_mission_dives(mission_id) -> Optional[Any]:
     return dives, gliders, dives_by_glider, most_recent_dives
 
 
-def get_mission_tag_locs(mission_id) -> Optional[Any]:
+def get_mission_tag_locs(mission_id, qualities=('G', '3', '2', '1', '0', 'A', 'B', 'Z')) -> Optional[Any]:
     if not mission_id:
         return None
 
@@ -252,8 +252,13 @@ def get_mission_tag_locs(mission_id) -> Optional[Any]:
             .filter(ArgosLocations.TagNumber == tag_num) \
             .order_by(ArgosLocations.Date.desc()) \
             .all()
-        locs_by_tag.append(tag_locations)
-        most_recent_locs.append(tag_locations[0])
+        good_tag_locs = []
+        for loc in tag_locations:
+            if loc.Quality in qualities:
+                good_tag_locs.append(loc)
+        if good_tag_locs:
+            locs_by_tag.append(good_tag_locs)
+            most_recent_locs.append(good_tag_locs[0])
 
     session.close()
     return tag_locations, tags, locs_by_tag, most_recent_locs
