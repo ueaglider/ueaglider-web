@@ -93,11 +93,8 @@
     let map = L.map('map')
 
     // A series of optional map layers. ortho has addTo(map) so is on by default
-    let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
-        layers: 'GEBCO_2019_Grid',
-        attribution: 'GEBCO Compilation Group (2020)'})
-    let watercolor = L.tileLayer.provider('Stamen.Watercolor')
-    let orthofr = L.tileLayer.provider('GeoportailFrance.orthos').addTo(map);
+	let oceans_layer = L.tileLayer("https://maps.nbp.usap.gov/maptiles/ocean_tiles/{z}/{y}/{x}.png",
+        {maxZoom: 8, attribution: "© Esri, USGS, NOAA", errorTileUrl: '/static/img/transparent-tile.png'}).addTo(map);
 
     // Graticule for lon and lat lines on map
 
@@ -150,9 +147,7 @@
 
     // Add basemap layers to mao
     let basemaps = {
-        Ortho: orthofr,
-        GEBCO: gebco,
-        watercolor: watercolor,
+        Oceans: oceans_layer,
     };
 
     // Argos tag zone
@@ -233,77 +228,15 @@
     // Optional layers that plot on top of the basemap
     let mapLayers = {
 
-        EEZ: L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
-            layers: 'eez_boundaries,eez', //'eez,eez_12nm,eez_24nm,eez_archipelagic_waters,eez_boundaries',
-            opacity: 0.5,
-            format: 'image/png',
-            transparent: true,
-            attribution:"Flanders Marine Institute (VLIZ)"
-        }),
-
-        Ice: L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
-            layers: 'polarview:antarctic_icechart_nic',
-            opacity: 0.5,
-            format: 'image/png',
-            transparent: true,
-            attribution: "Polar View (ESA)"
-        }),
-
-	    "AMSR (sea ice)" : L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
-		layers: 'polarview:antarctic_AMSR2.3031,polarview:arctic_AMSR2.3413',
-		opacity: 0.5,
-		format: 'image/png',
-        attribution: "Polar View (ESA)",
-		transparent: true
-		}),
-
-	Icebergs : L.tileLayer.wms('https://geos.polarview.aq/geoserver/wms?', {
-		layers: 'polarview:icebergs_s_current',
-		opacity: 0.8,
-		format: 'image/png',
-        attribution: "Polar View (ESA)",
-		transparent: true
-		}),
-
-	"FAO fishing areas" : L.tileLayer.wms('http://geo.vliz.be/geoserver/MarineRegions/wms?', {
-		layers: 'fao',
-		opacity: 0.5,
-		format: 'image/png',
-        attribution:"Flanders Marine Institute (VLIZ)",
-		transparent: true
-		}),
-
-	 CMEMS_SST : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
-		layers: 'thetao', // thetao, uo, vo, zos
-		opacity: 0.9,
-		format: 'image/png',
-        attribution:"Copernicus CMEMS",
-		transparent: true
-		}),
-
-	 CMEMS_SSH : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
-		layers: 'zos', // thetao, uo, vo, zos
-		opacity: 0.9,
-		format: 'image/png',
-         attribution:"Copernicus CMEMS",
-		transparent: true
-		}),
-
-	CMEMS_UO : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
-		layers: 'uo', // thetao, uo, vo, zos
-		opacity: 0.9,
-		format: 'image/png',
-        attribution:"Copernicus CMEMS",
-		transparent: true
-		}),
-
-	CMEMS_VO : L.tileLayer.wms('http://nrt.cmems-du.eu/thredds/wms/global-analysis-forecast-phy-001-024-hourly-t-u-v-ssh?', {
-		layers: 'vo', // thetao, uo, vo, zos
-		opacity: 0.9,
-		format: 'image/png',
-        attribution:"Copernicus CMEMS",
-		transparent: true
-		}),
+	    labels_layer: L.tileLayer("https://maps.nbp.usap.gov/maptiles/label_tiles/{z}/{y}/{x}.png",
+            {maxZoom: 8, attribution: "© Esri, USGS, NOAA", errorTileUrl: '/maptiles/transparent-tile.png'}),
+	    // This has has ocean features
+	    // Bathymetry layer for the southern ocean (below 60S)  Created by J. Race and C. Linden during NBP1704.  There are notes in the admin wiki about how this was done.
+	    Bathymetry: L.tileLayer("https://maps.nbp.usap.gov/maptiles/Bathymetry/{z}/{x}/{y}.png",
+            {minZoom: 1, maxZoom: 12, attribution: "GEBCO", errorTileUrl: '/maptiles/transparent-tile.png'}),
+	    // Layer showing the EEZs for the world
+	    lyrEEZ: L.tileLayer("https://dasng.nbp.usap.gov/BetterMap/Charts/EEZ/{z}/{x}/{y}.png",
+            {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
 
         "<span style='color: red'>GEBCO 50 m</span>": L.geoJSON(depth50, {
             attribution: "GEBCO & C Rollo",
