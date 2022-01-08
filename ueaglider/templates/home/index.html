@@ -41,10 +41,8 @@
 
     // Gebco base layer, we add it to map so it will always be the background
 
-    let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
-        layers: 'GEBCO_2019_Grid',
-        attribution: 'GEBCO Compilation Group (2020)'}).addTo(map);
-
+	let oceans_layer = L.tileLayer("https://maps.nbp.usap.gov/maptiles/ocean_tiles/{z}/{y}/{x}.png",
+        {maxZoom: 8, attribution: "© Esri, USGS, NOAA", errorTileUrl: '/static/img/transparent-tile.png'}).addTo(map);
 	let targetIcon = L.icon({
 		iconUrl: '/static/img/icons/target.png',
 		shadowUrl: '/static/img/icons/targetshadow.png',
