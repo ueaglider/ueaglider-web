@@ -11,6 +11,56 @@
     <script src="static/js/Leaflet.Graticule.js"></script>
 
     <title>Mission {{ mission.Number }}</title>
+
+    <!-- Palmer stuff here-->
+    <script src="static/js/jquery-1.7.2.js"></script>
+    <script src="static/js/leaflet.boatmarker.js"></script>
+    <!-- Require vessel_homepage.js where the function $.getData() is defined -->
+	<script type="text/javascript" src="https://www.nbp.usap.gov/include/js/suncalc.js"></script>
+	<script type="text/javascript" src="https://www.nbp.usap.gov/include/js/moment.min.js"></script>
+	<script type="text/javascript" src="https://www.nbp.usap.gov/include/vessel_homepage.js"></script>
+    <script>
+	// ------------ Global Vars ---------------
+	var host = document.location.host;
+	var course = 0.0;
+	var controlPanel;
+	var gps; // current ship's positoin (global so we can use it in multiple places)
+	var dasngTrackline; // ship trackline based on dasNG on hermes
+	var realtimeTrackline; // ship trackline realtime in-browser data
+	var shipMarker;  // marker for the ship
+	var wptMarker;  // waypoint for the marker for the ship
+	var showControls = false; // bool to show the map controls or not
+	var fallowShip = false; // whether to keep the map centerd on the ship during refresh
+	var autozoom = false; // bool whether to zoom to the ship and the next waypoint
+
+    function getParameterByName(name, url)
+	// Get URL query parameters
+	// Name is the name of the URL paramter you want to get the value for, and URL is a URL (will use the current page if null)
+	{
+		if (!url) url = window.location.href;
+		name = name.replace(/[\[\]]/g, "\\$&");
+		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		decoded = decodeURIComponent(results[2].replace(/\+/g, " "));
+		if (decoded.toUpperCase() == 'TRUE') return true;
+		if (decoded.toUpperCase() == 'FASLE') return false;
+		return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+    function getCurrentPosition()
+	// Get the ship's current position, and return a L.LatLng object
+	{
+					var lat = $.getData("NBPs330Lat",6);
+					var lng = $.getData("NBPs330Lon",6);
+					// if longitude is negative, move it to 0-360 instead of -180 to 180 range
+					// Disabled NBP1707 - found a better way!
+					//if (lng < 0) {lng = (parseFloat(lng) + 180) + 180;}
+					gps = new L.LatLng(parseFloat(lat),parseFloat(lng));
+					return gps;
+	}
+    </script>
+
 {% endblock %}
 
 {% block extra_nav %}
@@ -92,6 +142,17 @@
     let depth1000 = JSON.parse('{{ isobath_dict["depth_1000_m"] | tojson | safe}}');
     let map = L.map('map')
 
+    // Palmer stuff
+    var init_lat = getParameterByName('lat') || $.getData("NBPs330Lat",6);; // initial lat
+    var init_lon = getParameterByName('lon') || $.getData("NBPs330Lon",6); // initial lon
+    var startposition = new L.LatLng(parseFloat(init_lat),parseFloat(init_lon));
+
+		// Set initial map view (center & zoom)
+    map.setView(startposition, 9);
+    var shipIcon = new L.BoatIcon();
+    shipIcon.setHeadingWind($.getData("NBPGyroHeading",1),$.getData("NBPSUSTrueWindSpdKn",1),$.getData("NBPSUSTrueWindDir",1));
+    shipMarker = new L.marker(getCurrentPosition(), {icon: shipIcon});
+    shipMarker.addTo(map);
     // A series of optional map layers. ortho has addTo(map) so is on by default
 
 
@@ -369,17 +430,6 @@
 
 
 
-    // Setting map bounds. If dives exist, use them. If not, use passed lon and lat from target or waypoint
-    let err = {{ zoom |tojson }}
-    if(err.length <8){
-        map.fitBounds(divesLayer.getBounds())
-    }
-    else {
-        let lon = {{ lon|tojson|safe }};
-        let lat = {{ lat|tojson|safe }};
-        map.setView([lat, lon], zoom = 8);
-
-    }
 
     // Controls for the map
     L.control.layers(basemaps, mapLayers).addTo(map);
