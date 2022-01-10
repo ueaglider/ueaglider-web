@@ -1,7 +1,7 @@
 from typing import Optional, Any
 
 from ueaglider.data.db_session import create_session
-from ueaglider.data.db_classes import Gliders, Missions, Dives, Targets, Pins, ArgosLocations, ArgosTags
+from ueaglider.data.db_classes import Gliders, Missions, Dives, Targets, Pins, ArgosLocations, ArgosTags, SealDive
 
 degree_sign = u'\N{DEGREE SIGN}'
 # Add more non-UEA assets and missions here so they don't inflate our front page statistics
@@ -289,3 +289,11 @@ def mission_loc(filter_missions=False, mission_no=None):
             mission_locs.append(target)
     session.close()
     return mission_locs
+
+
+def get_seals():
+    session = create_session()
+    locs = session.query(SealDive).all()
+    seals = session.query(SealDive.TagNumber).all()
+    session.close()
+    return locs, seals

@@ -220,3 +220,62 @@ def tags_to_json(dives, gliders) -> Tuple:
     }
 
     return divedict, dive_page_links, linedict
+
+
+def seals_to_json(dives, seals):
+    # Extract the glider names and numbers corresponding to the GliderID that is included in DiveInfo table
+    glider_number_dict = {}
+    for glider in seals:
+        glider_number_dict[glider.TagNumber] = glider.TagNumber
+    print(glider_number_dict)
+    # Make a sorted dictionary of ascending integers per gliderID for colouring the map dive icons
+    glider_ids = list(glider_number_dict.keys())
+    glider_ids.sort()
+    glider_order_dict = {val: i for i, val in enumerate(glider_ids)}
+    features = []
+    dive_page_links = []
+    coords = []
+    i = 0
+    dive = []
+    for i, dive in enumerate(dives):
+        coords.append([float(dive.Longitude), float(dive.Latitude)])
+        tgt_popup = 'Tag ' + str(dive.TagNumber) + "<br>Lat: " \
+                    + coord_dec_to_pretty(float(dive.Latitude)) + "<br>Lon: " + coord_dec_to_pretty(
+            float(dive.Longitude)) + "<br>Depth: " + str(dive.Depth) + " m"
+        dive_item = {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    float(dive.Longitude),
+                    float(dive.Latitude)
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "popupContent": tgt_popup,
+                "gliderOrder": glider_order_dict[dive.TagNumber],
+                "gliderNum": dive.TagNumber,
+            },
+            "id": i
+        }
+        features.append(dive_item)
+    dive_page_links.sort(reverse=True)
+    divedict = {
+        "type": "FeatureCollection",
+        "features": features
+    }
+    linedict = {
+        "type": "FeatureCollection",
+        "features": [{
+            "geometry": {
+                "type": "LineString",
+                "coordinates": coords
+            },
+            "type": "Feature",
+            "properties": {
+                "gliderOrder": glider_order_dict[dive.TagNumber],
+            },
+            "id": i
+        }]
+    }
+    return divedict, linedict

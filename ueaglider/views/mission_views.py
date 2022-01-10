@@ -31,4 +31,7 @@ def missions(mission_id: int):
     vm = MissionViewModel(mission_id)
     vm.check_dives()
     vm.check_tags()
+    vm.add_seals()
+    print(vm.seals_dict)
+    print(vm.seals_lines_dict)
     return vm.to_dict()

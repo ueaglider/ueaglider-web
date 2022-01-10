@@ -86,8 +86,6 @@
             Mission {{ mission.Number}} {{ mission.Name }}
         </h3>
 
-    <div class="mapbox">
-     <!-- Create a map div -->
     <div id="map" style="height: 800px; "></div>
     <!-- Script to create a leaflet map-->
     <script nonce="{{ nonce }}">
@@ -101,6 +99,9 @@
     let divesDict = JSON.parse('{{ dives_by_glider_json| tojson | safe}}');
     let linesDict = JSON.parse('{{ lines_by_glider_json| tojson | safe}}');
     let latestDivesDict = JSON.parse('{{ recentdivesdict| tojson | safe}}');
+    // Extra databases for ITGC
+    let sealsDict = JSON.parse('{{ seals_dict| tojson | safe}}');
+    let sealsLinesDict = JSON.parse('{{ seals_lines_dict| tojson | safe}}');
     // Argos tag fun zone
     let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
     let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
@@ -263,50 +264,7 @@
             },
             onEachFeature: popupText
         })])
-    // Optional layers that plot on top of the basemap
-    let mapLayers = {
 
-        "Ocean shading": L.tileLayer("https://maps.nbp.usap.gov/maptiles/ocean_tiles/{z}/{y}/{x}.png",
-            {maxZoom: 16, attribution: "© Esri, USGS, NOAA", errorTileUrl: '/static/img/transparent-tile.png'}),
-	    Labels: L.tileLayer("https://maps.nbp.usap.gov/maptiles/label_tiles/{z}/{y}/{x}.png",
-            {maxZoom: 8, attribution: "© Esri, USGS, NOAA", errorTileUrl: '/maptiles/transparent-tile.png'}),
-
-	    // This has has ocean features
-	    // Bathymetry layer for the southern ocean (below 60S)  Created by J. Race and C. Linden during NBP1704.  There are notes in the admin wiki about how this was done.
-	    Bathymetry: L.tileLayer("https://maps.nbp.usap.gov/maptiles/Bathymetry/{z}/{x}/{y}.png",
-            {minZoom: 1, maxZoom: 12, attribution: "GEBCO", errorTileUrl: '/maptiles/transparent-tile.png'}),
-	    // Layer showing the EEZs for the world
-	    EEZ: L.tileLayer("https://dasng.nbp.usap.gov/BetterMap/Charts/EEZ/{z}/{x}/{y}.png",
-            {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
-
-        "<span style='color: red'>GEBCO 50 m</span>": L.geoJSON(depth50, {
-            attribution: "GEBCO & C Rollo",
-            color:'red',
-        }),
-
-         "<span style='color: #99CCFF'>GEBCO 200 m</span>": L.geoJSON(depth200, {
-            attribution: "GEBCO & C Rollo",
-             color:'#99CCFF',
-        }),
-
-        "<span style='color: blue'>GEBCO 500 m</span>": L.geoJSON(depth500, {
-            attribution: "GEBCO & C Rollo",
-            color:'blue',
-        }),
-
-         "<span style='color: gray'>GEBCO 1000 m</span>": L.geoJSON(depth1000, {
-             attribution: "GEBCO & C Rollo",
-             color:'gray',
-        }),
-
-        Graticule: graticule,
-
-        "Graticule (high lat)": graticuleHighLat,
-        "<span style='color: red'>Argos tags < 250 m 👌 </span>": tagsLayerGood,
-        "<span style='color: orange'>Argos tags < 1500 m  👍 </span> ": tagsLayerMed,
-        "<span style='color: black'>All Argos tags 🔥 </span>": tagsLayerBad,
-
-    };
     // Add the targets and seaglider icons
 
 	let targetIcon = L.icon({
@@ -404,9 +362,68 @@
 	}).addTo(map);
 
 
+    // Extra ITGC layers
+    // Seals
 
+    //L.geoJson(sealsLinesDict, {style: style})
 
+    let sealsLayer = L.geoJson(sealsDict, {
+        pointToLayer: function (feature, latlng) {
+        return new L.CircleMarker(latlng, {radius: 5,
+                                            fillOpacity: 0.8,
+                                            color: 'black',
+                                            fillColor: getColor(feature.properties.gliderOrder),
+                                            weight: 1,});
+        },
+     onEachFeature: popupText
+    })
 
+    // Optional layers that plot on top of the basemap
+    let mapLayers = {
+
+        "Ocean shading": L.tileLayer("https://maps.nbp.usap.gov/maptiles/ocean_tiles/{z}/{y}/{x}.png",
+            {maxZoom: 16, attribution: "© Esri, USGS, NOAA", errorTileUrl: '/static/img/transparent-tile.png'}),
+        Labels: L.tileLayer("https://maps.nbp.usap.gov/maptiles/label_tiles/{z}/{y}/{x}.png",
+            {maxZoom: 8, attribution: "© Esri, USGS, NOAA", errorTileUrl: '/maptiles/transparent-tile.png'}),
+
+        // This has has ocean features
+        // Bathymetry layer for the southern ocean (below 60S)  Created by J. Race and C. Linden during NBP1704.  There are notes in the admin wiki about how this was done.
+        Bathymetry: L.tileLayer("https://maps.nbp.usap.gov/maptiles/Bathymetry/{z}/{x}/{y}.png",
+            {minZoom: 1, maxZoom: 12, attribution: "GEBCO", errorTileUrl: '/maptiles/transparent-tile.png'}),
+        // Layer showing the EEZs for the world
+        EEZ: L.tileLayer("https://dasng.nbp.usap.gov/BetterMap/Charts/EEZ/{z}/{x}/{y}.png",
+            {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
+
+        "<span style='color: red'>GEBCO 50 m</span>": L.geoJSON(depth50, {
+            attribution: "GEBCO & C Rollo",
+            color:'red',
+        }),
+
+        "<span style='color: #99CCFF'>GEBCO 200 m</span>": L.geoJSON(depth200, {
+            attribution: "GEBCO & C Rollo",
+            color:'#99CCFF',
+        }),
+
+        "<span style='color: blue'>GEBCO 500 m</span>": L.geoJSON(depth500, {
+            attribution: "GEBCO & C Rollo",
+            color:'blue',
+        }),
+
+        "<span style='color: gray'>GEBCO 1000 m</span>": L.geoJSON(depth1000, {
+            attribution: "GEBCO & C Rollo",
+            color:'gray',
+        }),
+
+        Graticule: graticule,
+
+        "Graticule (high lat)": graticuleHighLat,
+
+        "Seals 🦭 🦭 🦭": sealsLayer,
+        "<span style='color: red'>Argos tags < 250 m 👌 </span>": tagsLayerGood,
+        "<span style='color: orange'>Argos tags < 1500 m  👍 </span> ": tagsLayerMed,
+        "<span style='color: black'>All Argos tags 🔥 </span>": tagsLayerBad,
+
+    };
     // Controls for the map
     L.control.layers(basemaps, mapLayers).addTo(map);
     // Length scale with max width in pixels

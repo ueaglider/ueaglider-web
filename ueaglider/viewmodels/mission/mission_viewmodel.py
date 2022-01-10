@@ -113,3 +113,6 @@ class MissionViewModel(ViewModelBase):
         self.locs_by_tag_json = locs_by_tag_json
         self.lines_by_tag_json = lines_by_tag_json
 
+    def add_seals(self):
+        locs, seals = mission_service.get_seals()
+        self.seals_dict , self.seals_lines_dict = json_conversion.seals_to_json(locs, seals)
