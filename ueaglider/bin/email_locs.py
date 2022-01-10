@@ -22,7 +22,7 @@ Session = sessionmaker(bind=engine)
 
 def get_dives():
     session = Session()
-    start = datetime.datetime.now() - datetime.timedelta(hours=3006)
+    start = datetime.datetime.now() - datetime.timedelta(hours=360)
     rows = session.query(Dives)\
         .filter(Dives.ReceivedDate > start)\
         .all()
@@ -31,6 +31,19 @@ def get_dives():
         return
     df = rows_to_df(rows)
     df.to_csv(folder + '/output/glider_locs.csv', index=False)
+
+
+def get_tag_locs():
+    session = Session()
+    start = datetime.datetime.now() - datetime.timedelta(hours=360)
+    rows = session.query(ArgosLocations) \
+        .filter(ArgosLocations.Date > start) \
+        .all()
+    session.close()
+    if not rows:
+        return
+    df = rows_to_df(rows)
+    df.to_csv(folder + '/output/argos_locs.csv', index=False)
 
 
 def rows_to_df(rows):
@@ -62,3 +75,4 @@ def get_tgts():
 if __name__ == '__main__':
     get_tgts()
     get_dives()
+    get_tag_locs()
