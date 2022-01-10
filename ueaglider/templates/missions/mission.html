@@ -75,20 +75,8 @@
         {% endfor %}
     </div>
 </li>
-    {% for glider_dives_list in dives_by_glider_json_dupe %}
-<li class="nav-item dropdown">
 
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            SG{{ glider_dives_list['features'][0]['properties']['gliderNum'] }} Select Dive
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            {% for d in glider_dives_list['features'] %}
-                <a class="dropdown-item" href={{ d["properties"]["diveLink"] }} >Dive {{ d["properties"]["diveNum"] }}</a>
-            {% endfor %}
-        </div>
-</li>
 
-    {% endfor %}
 {% endblock %}
 
 {% block main_content %}
@@ -97,18 +85,6 @@
         <h3>
             Mission {{ mission.Number}} {{ mission.Name }}
         </h3>
-        {{ mission.Info|safe}} <br>
-        Start {{ mission.StartDate.strftime("%Y-%m-%d") }}<br> End {{ mission.EndDate.strftime("%Y-%m-%d") }}
-    </div>
-
-    <div class="quicklinks">
-        {% for g in recentdivesdict["features"]%}
-
-            <a href="{{ g["properties"]["diveLink"] }}" class="btn btn-primary" role="button">SG{{ g["properties"]["gliderNum"] }} latest dive</a>
-        {% endfor %}
-    </div>
-
-
 
     <div class="mapbox">
      <!-- Create a map div -->
