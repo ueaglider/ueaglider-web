@@ -19,47 +19,7 @@
 	<script type="text/javascript" src="https://www.nbp.usap.gov/include/js/suncalc.js"></script>
 	<script type="text/javascript" src="https://www.nbp.usap.gov/include/js/moment.min.js"></script>
 	<script type="text/javascript" src="https://www.nbp.usap.gov/include/vessel_homepage.js"></script>
-    <script>
-	// ------------ Global Vars ---------------
-	var host = document.location.host;
-	var course = 0.0;
-	var controlPanel;
-	var gps; // current ship's positoin (global so we can use it in multiple places)
-	var dasngTrackline; // ship trackline based on dasNG on hermes
-	var realtimeTrackline; // ship trackline realtime in-browser data
-	var shipMarker;  // marker for the ship
-	var wptMarker;  // waypoint for the marker for the ship
-	var showControls = false; // bool to show the map controls or not
-	var fallowShip = false; // whether to keep the map centerd on the ship during refresh
-	var autozoom = false; // bool whether to zoom to the ship and the next waypoint
-
-    function getParameterByName(name, url)
-	// Get URL query parameters
-	// Name is the name of the URL paramter you want to get the value for, and URL is a URL (will use the current page if null)
-	{
-		if (!url) url = window.location.href;
-		name = name.replace(/[\[\]]/g, "\\$&");
-		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-			results = regex.exec(url);
-		if (!results) return null;
-		if (!results[2]) return '';
-		decoded = decodeURIComponent(results[2].replace(/\+/g, " "));
-		if (decoded.toUpperCase() == 'TRUE') return true;
-		if (decoded.toUpperCase() == 'FASLE') return false;
-		return decodeURIComponent(results[2].replace(/\+/g, " "));
-	}
-    function getCurrentPosition()
-	// Get the ship's current position, and return a L.LatLng object
-	{
-					var lat = $.getData("NBPs330Lat",6);
-					var lng = $.getData("NBPs330Lon",6);
-					// if longitude is negative, move it to 0-360 instead of -180 to 180 range
-					// Disabled NBP1707 - found a better way!
-					//if (lng < 0) {lng = (parseFloat(lng) + 180) + 180;}
-					gps = new L.LatLng(parseFloat(lat),parseFloat(lng));
-					return gps;
-	}
-    </script>
+    <script src="static/js/palmer.js"></script>
 
 {% endblock %}
 
@@ -117,15 +77,53 @@
     let depth200 = JSON.parse('{{ isobath_dict["depth_200_m"] | tojson | safe}}');
     let depth500 = JSON.parse('{{ isobath_dict["depth_500_m"] | tojson | safe}}');
     let depth1000 = JSON.parse('{{ isobath_dict["depth_1000_m"] | tojson | safe}}');
-    let map = L.map('map')
 
     // Palmer stuff
+    map	= L.map('map', {
+			worldCopyJump: true,
+			contextmenu: true,  // Add right-click context menu, and its options
+			contextmenuWidth: 140,
+			// This is where you can put extra menu items for the right-click context menu
+			contextmenuItems: [{
+				text: 'Show coordinates',
+				callback: showCoordinates
+				},
+				{
+				text: 'Center map here',
+				callback: centerMap
+				}
+				, '-',
+				{
+				text: 'Zoom in',
+				icon: '/js/images/zoom-in.png',
+				callback: zoomIn
+				},
+				{
+				text: 'Zoom out',
+				icon: '/js/images/zoom-out.png',
+				callback: zoomOut
+				}]
+			}
+		);
+
+    var zoom = getParameterByName('zoom') || 5; // initial map zoom
+    followShip = getParameterByName('followship') || false;  // boolean whether to have the map auto-center on the ship on refresh
+    autozoom = getParameterByName('autozoom') || false;  // boolean whether to have the map auto-zoom to the ship and the next waypoint
+    showControls = getParameterByName('showcontrols') || true; // boolean whether to display the infobox (speed, heading, etc)
+    //Set map options
+    map.options.maxZoom = getParameterByName('maxzoom') || 18; //set max zoom level
+    map.options.minZoom = 3; // set min zoom level (most zoomed out it can be)
+    //map.options.worldCopyJump = true;
     var init_lat = getParameterByName('lat') || $.getData("NBPs330Lat",6);; // initial lat
     var init_lon = getParameterByName('lon') || $.getData("NBPs330Lon",6); // initial lon
     var startposition = new L.LatLng(parseFloat(init_lat),parseFloat(init_lon));
 
-		// Set initial map view (center & zoom)
-    map.setView(startposition, 9);
+    // Set initial map view (center & zoom)
+    map.setView(startposition, zoom);
+    map.attributionControl.setPrefix("Zoom: " + zoom);
+    map.zoomControl.remove() // hide zoom control.  readd if showcontrols is true (see below)
+
+
     var shipIcon = new L.BoatIcon();
     shipIcon.setHeadingWind($.getData("NBPGyroHeading",1),$.getData("NBPSUSTrueWindSpdKn",1),$.getData("NBPSUSTrueWindDir",1));
     shipMarker = new L.marker(getCurrentPosition(), {icon: shipIcon});
