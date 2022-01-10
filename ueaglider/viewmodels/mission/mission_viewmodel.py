@@ -106,7 +106,6 @@ class MissionViewModel(ViewModelBase):
 
                 recentdivesdict, __, __ = json_conversion.tags_to_json(most_recent_locs, mission_tags)
                 recentlocsdict.append(recentdivesdict)
-                print(recentdivesdict)
                 locs_by_tag_json.append(locs_by_tag_json_i)
                 lines_by_tag_json.append(lines_by_tag_json_i)
         self.recentlocsdict = recentlocsdict

@@ -91,7 +91,6 @@ def add_depths():
     session = Session()
     dives = session.query(Dives)
     for dive in dives:
-        print(dive.DiveInfoID)
         dive.Elevation = gebco_depth(dive.Latitude, dive.Longitude)
     session.commit()
     session.close()
@@ -115,7 +114,6 @@ def convert_dives(overwrite_db=False):
     session = Session()
     dives = session.query(Dives)
     for dive in dives:
-        print(dive.DiveInfoID)
         dive.Latitude = coord_db_decimal(dive.Latitude)
         dive.Longitude = coord_db_decimal(dive.Longitude)
     session.commit()
@@ -129,7 +127,6 @@ def convert_targets(overwrite_db=False):
     session = Session()
     targets = session.query(Targets)
     for target in targets:
-        print(target.TargetsID)
         target.Latitude = coord_db_decimal(target.Latitude)
         target.Longitude = coord_db_decimal(target.Longitude)
     session.commit()
@@ -143,7 +140,6 @@ def convert_pins(overwrite_db=False):
     session = Session()
     pins = session.query(Pins)
     for pin in pins:
-        print(pin.WaypointsID)
         pin.Latitude = coord_db_decimal(pin.Latitude)
         pin.Longitude = coord_db_decimal(pin.Longitude)
     session.commit()

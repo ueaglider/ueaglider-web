@@ -98,7 +98,6 @@ def add_seals(seals_csv):
             .first()
         # stop if dive already exists
         if tgt_exists:
-            print('got seal')
             continue
         session.add(seal)
     session.commit()

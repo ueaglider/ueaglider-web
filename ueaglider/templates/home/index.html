@@ -36,94 +36,7 @@
     <script src="static/js/leaflet_005.js"></script>
     <script src="static/js/leaflet_006.js"></script>
 
-    <style>
-        html, body, #map {
-            margin: 0;
-            width: 100%;
-            height: 100%;
-            cursor: crosshair;
-        }
-        .leaflet-container
-        {
-            background-color: #b9d4ee;
-            background: #b9d4ee;
-        }
 
-        #info
-        {
-            width: 280px;
-            /*height: 100px;*/
-            background-color: white;
-            border: 3px solid #000;
-            padding: 5px;
-            z-index: 10;
-            position:absolute;
-            right:10px;
-            top: 10px;
-            font-size: 12pt;
-            display: flex;
-            flex-direction: column;
-            min-height: 40px;
-            z-index: 10000;
-            display: none;
-        }
-        #latlon
-        {
-            width: 230px;
-            /*height: 100px;*/
-            background-color: lightgrey;
-            border: 3px solid #000;
-            padding: 5px;
-            z-index: 1000;
-            position:absolute;
-            right:5px;
-            bottom: 20px;
-            font-size: 12pt;
-            display:none;
-            flex-direction: column;
-            min-height: 10px;
-        }
-        #mouseposition
-        {
-            display:inline;
-            bottom: 20px;
-        }
-        #text {
-            position: absolute;
-            bottom: 1em;
-            left: 1em;
-            width: 512px;
-            z-index: 20000;
-            background-color: white;
-            padding: 0 0.5em 0.5em 0.5em;
-        }
-        .weather_label
-        {
-            display: inline;
-            text-align: right;
-            font-weight: bold;
-            font-size: 1em;
-            color: black;
-        }
-        .weather_dataitem
-        {
-            padding-left: 3px;
-            display: inline;
-            font-size: 1em;
-            font-weight: normal;
-            color: black;
-        }
-        .vertical-flip
-        {
-            -moz-transform: scale(-1);
-            -o-transform: scaleY(-1);
-            -webkit-transform: scaleY(-1);
-            transform: scaleY(-1);
-            -ms-filter: "FlipV";
-            -ms-transform: scale(-1, 1);
-        }
-
-    </style>
 {% endblock %}
 
 {% block extra_nav %}
@@ -301,27 +214,6 @@
 
             // Argos tag layers in style of glider layers
 
-            let tagsLayerGood = L.layerGroup([L.geoJSON(latestLocsDict_good, {
-                pointToLayer: function (feature, latlng) {
-                    return L.marker(latlng, {icon: locsIcon});
-                },
-                onEachFeature: popupText
-            }),
-
-                L.geoJson(locsLinesDict_good, {style: {weight: 1, color:'red', dashArray: '10, 3'}}),
-
-                L.geoJson(locsDict_good, {
-                    pointToLayer: function (feature, latlng) {
-                        return new L.CircleMarker(latlng, {radius: 5,
-                            fillOpacity: 0.8,
-                            color: 'black',
-                            fillColor: 'red',
-                            weight: 1,});
-                    },
-                    onEachFeature: popupText
-                })])
-
-
             let tagsLayerMed = L.layerGroup([L.geoJSON(latestLocsDict_med, {
                 pointToLayer: function (feature, latlng) {
                     return L.marker(latlng, {icon: locsIcon});
@@ -343,24 +235,26 @@
                 })])
 
 
-            let tagsLayerBad = L.layerGroup([L.geoJSON(latestLocsDict_bad, {
-                pointToLayer: function (feature, latlng) {
-                    return L.marker(latlng, {icon: locsIcon});
-                },
-                onEachFeature: popupText
-            }),
 
-                L.geoJson(locsLinesDict_bad, {style: {weight: 1, color:'black', dashArray: '10, 3'}}),
 
-                L.geoJson(locsDict_bad, {
-                    pointToLayer: function (feature, latlng) {
-                        return new L.CircleMarker(latlng, {radius: 5,
-                            fillOpacity: 0.8,
-                            color: 'black',
-                            fillColor: 'black',
-                            weight: 1,});
-                    },
-                    onEachFeature: popupText
+            let gebcoLinesLayer = L.layerGroup([L.geoJSON(depth50, {
+                    attribution: "GEBCO & C Rollo",
+                    color:'red',
+                }),
+
+                L.geoJSON(depth200, {
+                    attribution: "GEBCO & C Rollo",
+                    color:'blue',
+                }),
+
+                L.geoJSON(depth500, {
+                    attribution: "GEBCO & C Rollo",
+                    color:'grey',
+                }),
+
+                 L.geoJSON(depth1000, {
+                    attribution: "GEBCO & C Rollo",
+                    color:'black',
                 })])
 
             // Add the targets and seaglider icons
@@ -483,8 +377,6 @@
                     {maxZoom: 16, attribution: "© Esri, USGS, NOAA", errorTileUrl: '/static/img/transparent-tile.png'}),
                 Labels: L.tileLayer("https://maps.nbp.usap.gov/maptiles/label_tiles/{z}/{y}/{x}.png",
                     {maxZoom: 8, attribution: "© Esri, USGS, NOAA", errorTileUrl: '/maptiles/transparent-tile.png'}),
-
-                // This has has ocean features
                 // Bathymetry layer for the southern ocean (below 60S)  Created by J. Race and C. Linden during NBP1704.  There are notes in the admin wiki about how this was done.
                 Bathymetry: L.tileLayer("https://maps.nbp.usap.gov/maptiles/Bathymetry/{z}/{x}/{y}.png",
                     {minZoom: 1, maxZoom: 12, attribution: "GEBCO", errorTileUrl: '/maptiles/transparent-tile.png'}),
@@ -492,34 +384,12 @@
                 EEZ: L.tileLayer("https://dasng.nbp.usap.gov/BetterMap/Charts/EEZ/{z}/{x}/{y}.png",
                     {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
 
-                "<span style='color: red'>GEBCO 50 m</span>": L.geoJSON(depth50, {
-                    attribution: "GEBCO & C Rollo",
-                    color:'red',
-                }),
-
-                "<span style='color: #99CCFF'>GEBCO 200 m</span>": L.geoJSON(depth200, {
-                    attribution: "GEBCO & C Rollo",
-                    color:'#99CCFF',
-                }),
-
-                "<span style='color: blue'>GEBCO 500 m</span>": L.geoJSON(depth500, {
-                    attribution: "GEBCO & C Rollo",
-                    color:'blue',
-                }),
-
-                "<span style='color: gray'>GEBCO 1000 m</span>": L.geoJSON(depth1000, {
-                    attribution: "GEBCO & C Rollo",
-                    color:'gray',
-                }),
-
                 Graticule: graticule,
-
+                "GEBCO <span style='color: red'>50 m</span> <span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m": gebcoLinesLayer,
                 "Graticule (high lat)": graticuleHighLat,
 
                 "Seals 🦭 🦭 🦭": sealsLayer,
-                "<span style='color: red'>Argos tags < 250 m 👌 </span>": tagsLayerGood,
-                "<span style='color: orange'>Argos tags < 1500 m  👍 </span> ": tagsLayerMed,
-                "<span style='color: black'>All Argos tags 🔥 </span>": tagsLayerBad,
+                "<span style='color: orange'>Glider Argos tags < 1500 m  🔥 </span> ": tagsLayerMed,
 
             };
 
@@ -569,29 +439,6 @@
                     color: '#FF0080'
                 }));
 
-                var kmlloader = L.Control.fileLayerLoad({
-                    // Allows you to use a customized version of L.geoJson.
-                    // For example if you are using the Proj4Leaflet leaflet plugin,
-                    // you can pass L.Proj.geoJson and load the files into the
-                    // L.Proj.GeoJson instead of the L.geoJson.
-                    layer: L.geoJson,
-                    // See http://leafletjs.com/reference.html#geojson-options
-                    layerOptions: {style: {color:'red'}},
-                    // Add to map after loading (default: true) ?
-                    addToMap: true,
-                    // File size limit in kb (default: 1024) ?
-                    fileSizeLimit: 10024,
-                    // Restrict accepted file formats (default: .geojson, .kml, and .gpx) ?
-                    formats: [
-                        '.geojson',
-                        '.kml'
-                    ]
-                })
-                kmlloader.addTo(map);
-                kmlloader.loader.on('data:loaded', function (e) {
-                    // Add to map layer switcher
-                    controlPanel.addOverlay(e.layer, e.filename);
-                });
                 // Set listener for onMouseMove to show Lat/Lon in an infobox
                 map.on('mousemove', onMouseMove);
             }

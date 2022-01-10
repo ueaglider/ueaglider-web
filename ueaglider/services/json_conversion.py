@@ -161,7 +161,6 @@ def tags_to_json(dives, gliders) -> Tuple:
     glider_number_dict = {}
     for glider in gliders:
         glider_number_dict[glider.TagNumber] = glider.GliderID
-    print(glider_number_dict)
     # Make a sorted dictionary of ascending integers per gliderID for colouring the map dive icons
     glider_ids = list(glider_number_dict.keys())
     glider_ids.sort()
@@ -227,7 +226,6 @@ def seals_to_json(dives, seals):
     glider_number_dict = {}
     for glider in seals:
         glider_number_dict[glider.TagNumber] = glider.TagNumber
-    print(glider_number_dict)
     # Make a sorted dictionary of ascending integers per gliderID for colouring the map dive icons
     glider_ids = list(glider_number_dict.keys())
     glider_ids.sort()
