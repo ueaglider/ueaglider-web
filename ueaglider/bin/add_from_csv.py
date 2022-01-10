@@ -1,14 +1,14 @@
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 import sys
-import datetime
 import json
 import os
 import pandas as pd
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
-from ueaglider.data.db_classes import Dives, Targets, ArgosLocations, Pins
+from ueaglider.data.db_classes import Dives, Targets, ArgosLocations, Pins, SealDive
+from sqlalchemy import MetaData
 with open(folder + '/ueaglider/secrets.txt') as json_file:
     secrets = json.load(json_file)
 
@@ -16,7 +16,7 @@ conn_str = 'mysql+pymysql://' + secrets['sql_user'] + ':' + secrets['sql_pwd'] +
            + '/' + secrets['db_name']
 
 # Can switch echo to True for debug, SQL actions print out to terminal
-engine = sqlalchemy.create_engine(conn_str, echo=False)
+engine = sqlalchemy.create_engine(conn_str, echo=True)
 Session = sessionmaker(bind=engine)
 
 
@@ -34,7 +34,7 @@ def add_dives(dive_csv):
             .first()
         # stop if dive already exists
         if dive_exists:
-            return
+            continue
         session.add(dive)
     session.commit()
     session.close()
@@ -48,17 +48,62 @@ def add_targets(target_csv):
         for key, val in row.items():
             setattr(tgt, key, val)
         tgt_exists = session.query(Targets) \
-            .filter(Targets.Name == int(row['Name'])) \
+            .filter(Targets.Name == row['Name']) \
             .filter(Targets.MissionID == row['MissionID']) \
             .first()
         # stop if dive already exists
         if tgt_exists:
-            return
+            continue
         session.add(tgt)
     session.commit()
     session.close()
 
 
+def add_seals(seals_csv):
+    df = pd.read_csv(seals_csv)
+    session = Session()
+    meta = MetaData()
+    meta.create_all(engine)
+    for i, row in df.iterrows():
+        seal = SealDive()
+        for key, val in row.items():
+            setattr(seal, key, val)
+        seal.Latitude = round(seal.Latitude, 3)
+        seal.Longitude = round(seal.Longitude, 3)
+        seal.TagNumber = 1
+        tgt_exists = session.query(SealDive) \
+            .filter(SealDive.TagNumber == seal.TagNumber) \
+            .filter(SealDive.Latitude == seal.Latitude) \
+            .filter(SealDive.Longitude == seal.Longitude) \
+            .first()
+        # stop if dive already exists
+        if tgt_exists:
+            print('got seal')
+            continue
+        session.add(seal)
+    session.commit()
+    session.close()
+
+
+def add_new_table():
+    from sqlalchemy import MetaData, Table, Column, Integer, Numeric
+    meta = MetaData()
+    SealDives = Table(
+        'SealDive', meta,
+        Column('LocationID', Integer, primary_key=True, autoincrement=True),
+        Column('TagNumber', Integer, nullable=True),
+        Column('Depth', Integer),
+        Column('Latitude', Numeric(10, 3)),
+        Column('Longitude', Numeric(10, 3)),
+    )
+    meta.create_all(engine)
+
+
+
 if __name__ == '__main__':
-    add_dives(f'{folder}/output/glider_locs.csv')
-    add_targets(f'{folder}/output/targets.csv')
+    #add_new_table()
+    #add_dives(f'{folder}/output/glider_locs.csv')
+    #add_targets(f'{folder}/output/targets.csv')
+    add_seals('/home/callum/Documents/tarsan/on-board/data-to-ship/seals/seals_sample.csv')
+
+

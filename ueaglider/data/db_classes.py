@@ -134,3 +134,13 @@ class ArgosTags(SqlAlchemyBase):
     MissionID = sqlalchemy.Column(sqlalchemy.INT)
     GliderID = sqlalchemy.Column(sqlalchemy.INT)
 
+
+class SealDive(SqlAlchemyBase):
+    __tablename__ = 'SealDive'
+    LocationID = sqlalchemy.Column(sqlalchemy.INT, primary_key=True, autoincrement=True)
+    TagNumber = sqlalchemy.Column(sqlalchemy.INT, nullable=True)
+    Depth = sqlalchemy.Column(sqlalchemy.INT)
+    Latitude = sqlalchemy.Column(sqlalchemy.NUMERIC(10, 3))
+    Longitude = sqlalchemy.Column(sqlalchemy.NUMERIC(10, 3))
+
+
