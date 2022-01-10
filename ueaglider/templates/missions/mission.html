@@ -4,6 +4,8 @@
 
      <!-- Link to leaflet CSS and javascript for maps-->
     <link rel="stylesheet" href="/static/css/leaflet.css"/>
+    <link rel="stylesheet" href= "/static/css/Leaflet.css"/>
+    <link rel="stylesheet" href="/static/css/leaflet_002.css"/>
     <script src="static/js/leaflet.js"></script>
     <!-- Link to providers CSS and javascript for leaflet provider extension-->
     <script src="static/js/leaflet-providers.js"></script>
@@ -13,14 +15,115 @@
     <title>Mission {{ mission.Number }}</title>
 
     <!-- Palmer stuff here-->
+	<script type="text/javascript" src="static/js/proj4js-compressed.js"></script>
+	<script type="text/javascript" src="static/js/proj4leaflet.js"></script>
+	<script type="text/javascript" src="static/js/countries-110m.js"></script>
+	<script src="static/js/leaflet-omnivore.js"></script>
     <script src="static/js/jquery-1.7.2.js"></script>
     <script src="static/js/leaflet.boatmarker.js"></script>
     <!-- Require vessel_homepage.js where the function $.getData() is defined -->
-	<script type="text/javascript" src="https://www.nbp.usap.gov/include/js/suncalc.js"></script>
-	<script type="text/javascript" src="https://www.nbp.usap.gov/include/js/moment.min.js"></script>
-	<script type="text/javascript" src="https://www.nbp.usap.gov/include/vessel_homepage.js"></script>
+	<script type="text/javascript" src="static/js/suncalc.js"></script>
+	<script type="text/javascript" src="static/js/moment.min.js"></script>
+	<script type="text/javascript" src="static/js/vessel_homepage.js"></script>
     <script src="static/js/palmer.js"></script>
+    <!-- Possible junk js-->
+    <script src="static/js/Leaflet.js"></script>
+    <script src="static/js/L.js"></script>
+    <script src="static/js/L_002.js"></script>
+    <script src="static/js/leaflet_002.js"></script>
+    <script src="static/js/leaflet_003.js"></script>
+    <script src="static/js/leaflet_004.js"></script>
+    <script src="static/js/leaflet_005.js"></script>
+    <script src="static/js/leaflet_006.js"></script>
 
+    <style>
+        html, body, #map {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+			cursor: crosshair;
+        }
+		.leaflet-container
+		{
+			background-color: #b9d4ee;
+			background: #b9d4ee;
+		}
+
+		#info
+		{
+			width: 280px;
+			/*height: 100px;*/
+			background-color: white;
+			border: 3px solid #000;
+			padding: 5px;
+			z-index: 10;
+			position:absolute;
+			right:10px;
+			top: 10px;
+			font-size: 12pt;
+			display: flex;
+			flex-direction: column;
+			min-height: 40px;
+			z-index: 10000;
+			display: none;
+		}
+		#latlon
+		{
+			width: 230px;
+			/*height: 100px;*/
+			background-color: lightgrey;
+			border: 3px solid #000;
+			padding: 5px;
+			z-index: 1000;
+			position:absolute;
+			right:5px;
+			bottom: 20px;
+			font-size: 12pt;
+			display:none;
+			flex-direction: column;
+			min-height: 10px;
+		}
+		#mouseposition
+		{
+			display:inline;
+			bottom: 20px;
+		}
+        #text {
+            position: absolute;
+            bottom: 1em;
+            left: 1em;
+            width: 512px;
+            z-index: 20000;
+            background-color: white;
+            padding: 0 0.5em 0.5em 0.5em;
+        }
+		.weather_label
+            {
+                display: inline;
+                text-align: right;
+                font-weight: bold;
+                font-size: 1em;
+                color: black;
+            }
+		.weather_dataitem
+		{
+			padding-left: 3px;
+			display: inline;
+			font-size: 1em;
+			font-weight: normal;
+			color: black;
+		}
+		.vertical-flip
+		{
+        -moz-transform: scale(-1);
+        -o-transform: scaleY(-1);
+        -webkit-transform: scaleY(-1);
+        transform: scaleY(-1);
+        -ms-filter: "FlipV";
+		-ms-transform: scale(-1, 1);
+		}
+
+    </style>
 {% endblock %}
 
 {% block extra_nav %}
@@ -95,12 +198,12 @@
 				, '-',
 				{
 				text: 'Zoom in',
-				icon: '/js/images/zoom-in.png',
+				icon: '/static/img/icons/zoom-in.png',
 				callback: zoomIn
 				},
 				{
 				text: 'Zoom out',
-				icon: '/js/images/zoom-out.png',
+				icon: '/static/img/icons/zoom-out.png',
 				callback: zoomOut
 				}]
 			}
@@ -124,10 +227,7 @@
     map.zoomControl.remove() // hide zoom control.  readd if showcontrols is true (see below)
 
 
-    var shipIcon = new L.BoatIcon();
-    shipIcon.setHeadingWind($.getData("NBPGyroHeading",1),$.getData("NBPSUSTrueWindSpdKn",1),$.getData("NBPSUSTrueWindDir",1));
-    shipMarker = new L.marker(getCurrentPosition(), {icon: shipIcon});
-    shipMarker.addTo(map);
+
     // A series of optional map layers. ortho has addTo(map) so is on by default
 
 
@@ -422,10 +522,126 @@
         "<span style='color: black'>All Argos tags 🔥 </span>": tagsLayerBad,
 
     };
-    // Controls for the map
-    L.control.layers(basemaps, mapLayers).addTo(map);
-    // Length scale with max width in pixels
-    L.control.scale({maxWidth: 200}).addTo(map)
+
+
+    // More Palmer stuff
+    		// Add a layer controller for turning on and off layers
+    controlPanel = L.control.layers(basemaps, mapLayers,{position: 'topright'});
+
+		// **** If we havne't hidden them, show the map controls *****
+		if (showControls == true)
+		{
+			//Add control panel
+			controlPanel.addTo(map);
+			new L.control.zoom().addTo(map);
+			$("#latlon").show();
+			//Add nautical scale
+			map.addControl(new L.Control.ScaleNautic({
+			metric: true,
+			imperial: true,
+			nautic: true
+			}));
+			// Add a ruler (for measuring lengths on the map)
+			var Ruler = L.Control.LinearMeasurement.extend(
+			{
+				layerSelected: function(e)
+				{
+					var html = [
+					'<table>',
+					' <tr><td class="cost_label">Total Distance:</td><td class="cost_value">{total_distance}</td></tr>',
+					'</table>'
+					].join(''),
+					numberWithCommas = function(x) {
+						return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+					};
+					var distance = e.total.scalar;
+					var data = {
+						total_distance: numberWithCommas(L.Util.formatNum(distance, 1))
+					};
+					//var content = L.Util.template(html, data),
+					//	popup = L.popup().setContent(content);
+					//e.total_label.bindPopup(popup, { offset: [45, 0] });
+					//e.total_label.openPopup();
+				}
+			});
+			map.addControl(new Ruler({
+			  unitSystem: 'imperial',
+			  color: '#FF0080'
+			}));
+
+			var kmlloader = L.Control.fileLayerLoad({
+			// Allows you to use a customized version of L.geoJson.
+			// For example if you are using the Proj4Leaflet leaflet plugin,
+			// you can pass L.Proj.geoJson and load the files into the
+			// L.Proj.GeoJson instead of the L.geoJson.
+			layer: L.geoJson,
+			// See http://leafletjs.com/reference.html#geojson-options
+			layerOptions: {style: {color:'red'}},
+			// Add to map after loading (default: true) ?
+			addToMap: true,
+			// File size limit in kb (default: 1024) ?
+			fileSizeLimit: 10024,
+			// Restrict accepted file formats (default: .geojson, .kml, and .gpx) ?
+			formats: [
+				'.geojson',
+				'.kml'
+			]
+			})
+			kmlloader.addTo(map);
+			kmlloader.loader.on('data:loaded', function (e) {
+				// Add to map layer switcher
+				controlPanel.addOverlay(e.layer, e.filename);
+			});
+			// Set listener for onMouseMove to show Lat/Lon in an infobox
+			map.on('mousemove', onMouseMove);
+		}
+
+
+		// Add ship trackline
+		getTrackline();
+		// Create polyline to collect 'realtime' trackline in-browser.  Start it with the current position.
+		realtimeTrackline = L.polyline([getCurrentPosition(), getCurrentPosition()], {color: "#ff7800",
+				weight: 5,
+				opacity: 0.65});
+		realtimeTrackline.addTo(map);
+		// Add ship icon.  First, create an icon for the marker, then add a new L.marker using that icon
+		// L.BoatIcon creates a vector ship icon along with an optional wind indicator arrow/barb
+		var shipIcon = new L.BoatIcon();
+		shipIcon.setHeadingWind($.getData("NBPGyroHeading",1),$.getData("NBPSUSTrueWindSpdKn",1),$.getData("NBPSUSTrueWindDir",1));
+		shipMarker = new L.marker(getCurrentPosition(), {icon: shipIcon});
+		shipMarker.addTo(map);
+
+		// Add a day/night terminator option
+		var terminator = L.terminator();
+		controlPanel.addOverlay(terminator, "Day/Night Overlay");
+
+		// Add waypoint marker
+		wptMarker = getNextWaypoint();
+		wptMarker.addTo(map);
+		if (followShip)
+		{
+			// If autozoom is set, set the view to the ship and the next waypoint
+			if (autozoom == true)
+			{
+				map.fitBounds([gps,wptMarker._latlng]);
+				// Now zoom out one level to make sure it's all in view
+				map.zoomOut();
+			}
+			else
+			{
+				//keep the ship at the center of the map
+				CenterOnShip();
+			}
+		}
+
+		// Set listener for onZoomEnd
+		map.on('zoomend', onZoomEnd);
+
+		// Refresh data every minute
+		window.setInterval(UpdateMap, 5000);
+
+
+</script>
     </script>
     </div>
 
