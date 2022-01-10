@@ -145,4 +145,5 @@ ueaglider/static/json
 ueaglider/static/GEBCO_2019.nc
 ueaglider/static/img/dives
 ueaglider/secrets.*
+output
 
