@@ -16,7 +16,7 @@ conn_str = 'mysql+pymysql://' + secrets['sql_user'] + ':' + secrets['sql_pwd'] +
            + '/' + secrets['db_name']
 
 # Can switch echo to True for debug, SQL actions print out to terminal
-engine = sqlalchemy.create_engine(conn_str, echo=True)
+engine = sqlalchemy.create_engine(conn_str, echo=False)
 Session = sessionmaker(bind=engine)
 
 
@@ -59,8 +59,28 @@ def add_targets(target_csv):
     session.close()
 
 
+def add_argos(argos_csv):
+    df = pd.read_csv(argos_csv)
+    session = Session()
+    for i, row in df.iterrows():
+        tgt = ArgosLocations()
+        for key, val in row.items():
+            setattr(tgt, key, val)
+        tgt_exists = session.query(ArgosLocations) \
+            .filter(ArgosLocations.Date == row['Date']) \
+            .filter(ArgosLocations.TagNumber == row['TagNumber']) \
+            .first()
+        # stop if dive already exists
+        if tgt_exists:
+            continue
+        session.add(tgt)
+    session.commit()
+    session.close()
+
+
 def add_seals(seals_csv):
     df = pd.read_csv(seals_csv)
+    df = df[:1000]
     session = Session()
     meta = MetaData()
     meta.create_all(engine)
@@ -104,6 +124,7 @@ if __name__ == '__main__':
     #add_new_table()
     #add_dives(f'{folder}/output/glider_locs.csv')
     #add_targets(f'{folder}/output/targets.csv')
-    add_seals('/home/callum/Documents/tarsan/on-board/data-to-ship/seals/seals_sample.csv')
+    #add_seals('/home/callum/Documents/tarsan/on-board/data-to-ship/seals/seal_dive_depths_all.csv')
+    add_argos('/home/callum/Documents/tarsan/on-board/data-to-ship/uea/output/argos_locs.csv')
 
 
