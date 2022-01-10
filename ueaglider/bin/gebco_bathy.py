@@ -19,7 +19,7 @@ def main():
     lon = float(sys.argv[1])
     lat = float(sys.argv[2])
     mission = sys.argv[3]
-    rad = 300  # radius in km from point to grab bathy data. Will return a square, not a circle though
+    rad = 600  # radius in km from point to grab bathy data. Will return a square, not a circle though
     # Create limits with the center point and the distance, approx converted to degrees lon and lat
     north = lat + rad / 111
     south = lat - rad / 111
