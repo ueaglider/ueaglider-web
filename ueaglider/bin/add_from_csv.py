@@ -60,5 +60,7 @@ def add_targets(target_csv):
 
 
 if __name__ == '__main__':
-    add_dives(f'{folder}/output/glider_locs.csv')
-    add_targets(f'{folder}/output/targets.csv')
+    input_dir = folder + '/output'
+    add_dives(f'{input_dir}/dives.csv')
+    add_targets(f'{input_dir}/targets.csv')
+    add_argos(f'{input_dir}/argos.csv')
