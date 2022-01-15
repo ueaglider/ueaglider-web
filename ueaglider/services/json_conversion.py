@@ -169,7 +169,7 @@ def tags_to_json(dives, gliders) -> Tuple:
     dive_page_links = []
     coords = []
     i = 0
-    dive = []
+    dive = None
     for i, dive in enumerate(dives):
         coords.append([dive.Longitude, dive.Latitude])
         quality = ''
@@ -203,6 +203,11 @@ def tags_to_json(dives, gliders) -> Tuple:
         "type": "FeatureCollection",
         "features": features
     }
+    if dive:
+        order = glider_order_dict[dive.TagNumber]
+    else:
+        order = 0
+        
     linedict = {
         "type": "FeatureCollection",
         "features": [{
@@ -212,7 +217,7 @@ def tags_to_json(dives, gliders) -> Tuple:
             },
             "type": "Feature",
             "properties": {
-                "gliderOrder": glider_order_dict[dive.TagNumber],
+                "gliderOrder": order,
             },
             "id": i
         }]
