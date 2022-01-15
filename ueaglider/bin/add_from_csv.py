@@ -81,6 +81,6 @@ def add_argos(argos_csv):
 
 if __name__ == '__main__':
     folder = '/home/callum/Documents/tarsan/on-board/data-to-ship/uea/2022-01-15'
-    add_dives(f'{folder}/dives.csv')
-    add_targets(f'{folder}/targets.csv')
-    add_argos(f'{folder}/argos.csv')
+    add_dives(f'{folder}/glider_locs.csv')
+    add_targets(f'{folder}/targets_locs.csv')
+    add_argos(f'{folder}/argos_locs.csv')
