@@ -123,7 +123,7 @@ def add_new_table():
 
 
 if __name__ == '__main__':
-    folder = '/home/callum/Documents/tarsan/on-board/data-to-ship/uea/2022-01-15'
+    folder = '/home/callum/Documents/web/output'
     add_dives(f'{folder}/glider_locs.csv')
     add_targets(f'{folder}/targets_locs.csv')
     add_argos(f'{folder}/argos_locs.csv')
