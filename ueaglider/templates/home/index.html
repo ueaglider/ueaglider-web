@@ -214,26 +214,6 @@
 
             // Argos tag layers in style of glider layers
 
-            let tagsLayerMed = L.layerGroup([L.geoJSON(latestLocsDict_med, {
-                pointToLayer: function (feature, latlng) {
-                    return L.marker(latlng, {icon: locsIcon});
-                },
-                onEachFeature: popupText
-            }),
-
-                L.geoJson(locsLinesDict_med, {style: {weight: 1, color:'orange', dashArray: '10, 3'}}),
-
-                L.geoJson(locsDict_med, {
-                    pointToLayer: function (feature, latlng) {
-                        return new L.CircleMarker(latlng, {radius: 5,
-                            fillOpacity: 0.8,
-                            color: 'black',
-                            fillColor: 'orange',
-                            weight: 1,});
-                    },
-                    onEachFeature: popupText
-                })])
-
 
 
 
@@ -284,31 +264,12 @@
             function popupText(feature, layer) {
                 layer.bindPopup(feature.properties.popupContent);
             }
-
-            // Use the target icon on each target and add popup content
-            let targetsLayer = L.geoJSON(targetDict, {
-                pointToLayer: function (feature, latlng) {
-                    return L.marker(latlng, {icon: targetIcon});
-                },
-                onEachFeature: popupText
-            }).addTo(map);
-
-
-            let waypointLayer = L.geoJSON(waypointDict, {
-                onEachFeature: popupText
-            }).addTo(map);
-
-
-
-            // Adding all dive connecting lines to map. Fillcolor by glider number
-
             function style(feature) {
                 return {
                     weight: 1,
                     color: getColor(feature.properties.gliderOrder),
                 };
             }
-            L.geoJson(linesDict, {style: style}).addTo(map);
 
             // setting color from geojson. We have enough unique colors for 8 gliders. After that they'll all be white
             function getColor(style) {
@@ -331,28 +292,57 @@
                         return 'black';
                 }
             }
-
-            // Adding all dives to map. Fillcolor by glider number, adding popup text
-            let divesLayer = L.geoJson(divesDict, {
+            // Use layer group for gliders
+            let glidersLayer = L.layerGroup([
+                L.geoJSON(targetDict, {
                 pointToLayer: function (feature, latlng) {
-                    return new L.CircleMarker(latlng, {radius: 5,
-                        fillOpacity: 0.8,
-                        color: 'black',
-                        fillColor: getColor(feature.properties.gliderOrder),
-                        weight: 1,});
+                    return L.marker(latlng, {icon: targetIcon});
                 },
                 onEachFeature: popupText
-            }).addTo(map);
-
-
-            // Use the seaglider icon on most recent dive by each glider and add popup content
-            let seagliderLayer = L.geoJSON(latestDivesDict, {
-                pointToLayer: function (feature, latlng) {
-                    return L.marker(latlng, {icon: seagliderIcon});
-                },
+            }),
+                L.geoJSON(waypointDict, {
                 onEachFeature: popupText
-            }).addTo(map);
+            }),
+                L.geoJson(linesDict, {style: style}),
 
+                L.geoJson(divesDict, {
+                    pointToLayer: function (feature, latlng) {
+                        return new L.CircleMarker(latlng, {radius: 5,
+                            fillOpacity: 0.8,
+                            color: 'black',
+                            fillColor: getColor(feature.properties.gliderOrder),
+                            weight: 1,});
+                    },
+                    onEachFeature: popupText
+                }),
+
+                L.geoJSON(latestDivesDict, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.marker(latlng, {icon: seagliderIcon});
+                    },
+                    onEachFeature: popupText
+                }),
+
+                L.geoJSON(latestLocsDict_med, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.marker(latlng, {icon: locsIcon});
+                    },
+                    onEachFeature: popupText
+                }),
+
+                    L.geoJson(locsLinesDict_med, {style: {weight: 1, color:'orange', dashArray: '10, 3'}}),
+
+                    L.geoJson(locsDict_med, {
+                        pointToLayer: function (feature, latlng) {
+                            return new L.CircleMarker(latlng, {radius: 5,
+                                fillOpacity: 0.8,
+                                color: 'black',
+                                fillColor: 'orange',
+                                weight: 1,});
+                        },
+                        onEachFeature: popupText
+                    }),
+            ]).addTo(map);
 
             // Extra ITGC layers
             // Seals
@@ -370,6 +360,7 @@
                 onEachFeature: popupText
             })
 
+            var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
 
@@ -383,13 +374,14 @@
                 // Layer showing the EEZs for the world
                 EEZ: L.tileLayer("https://dasng.nbp.usap.gov/BetterMap/Charts/EEZ/{z}/{x}/{y}.png",
                     {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
+                "Day/Night overlay": terminator,
 
                 Graticule: graticule,
                 "Graticule (high lat": graticuleHighLat,
                 "GEBCO <span style='color: red'>50 m</span> <span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
 
+                gliders: glidersLayer,
                 "Seals 🦭 🦭 🦭": sealsLayer,
-                "<span style='color: orange'>Glider Argos tags < 1500 m  🔥 </span> ": tagsLayerMed,
 
             };
 
@@ -397,6 +389,7 @@
             // More Palmer stuff
             // Add a layer controller for turning on and off layers
             controlPanel = L.control.layers(basemaps, mapLayers,{position: 'topright'});
+            // Add a day/night terminator option
 
             // **** If we havne't hidden them, show the map controls *****
             if (showControls == true)
@@ -458,9 +451,6 @@
             shipMarker = new L.marker(getCurrentPosition(), {icon: shipIcon});
             shipMarker.addTo(map);
 
-            // Add a day/night terminator option
-            var terminator = L.terminator();
-            controlPanel.addOverlay(terminator, "Day/Night Overlay");
 
             // Add waypoint marker
             wptMarker = getNextWaypoint();
