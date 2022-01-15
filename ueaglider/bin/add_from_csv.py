@@ -1,14 +1,13 @@
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 import sys
-import datetime
 import json
 import os
 import pandas as pd
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
-from ueaglider.data.db_classes import Dives, Targets, ArgosLocations, Pins
+from ueaglider.data.db_classes import Dives, Targets, ArgosLocations
 with open(folder + '/ueaglider/secrets.txt') as json_file:
     secrets = json.load(json_file)
 
@@ -26,6 +25,8 @@ def add_dives(dive_csv):
     for i, row in df.iterrows():
         dive = Dives()
         for key, val in row.items():
+            if str(val) == 'nan':
+                val = None
             setattr(dive, key, val)
         dive_exists = session.query(Dives) \
             .filter(Dives.GliderID == int(row['GliderID'])) \
@@ -34,7 +35,7 @@ def add_dives(dive_csv):
             .first()
         # stop if dive already exists
         if dive_exists:
-            return
+            continue
         session.add(dive)
     session.commit()
     session.close()
@@ -48,19 +49,38 @@ def add_targets(target_csv):
         for key, val in row.items():
             setattr(tgt, key, val)
         tgt_exists = session.query(Targets) \
-            .filter(Targets.Name == int(row['Name'])) \
+            .filter(Targets.Name == row['Name']) \
             .filter(Targets.MissionID == row['MissionID']) \
             .first()
         # stop if dive already exists
         if tgt_exists:
-            return
+            continue
+        session.add(tgt)
+    session.commit()
+    session.close()
+
+
+def add_argos(argos_csv):
+    df = pd.read_csv(argos_csv)
+    session = Session()
+    for i, row in df.iterrows():
+        tgt = ArgosLocations()
+        for key, val in row.items():
+            setattr(tgt, key, val)
+        tgt_exists = session.query(ArgosLocations) \
+            .filter(ArgosLocations.Date == row['Date']) \
+            .filter(ArgosLocations.TagNumber == row['TagNumber']) \
+            .first()
+        # stop if dive already exists
+        if tgt_exists:
+            continue
         session.add(tgt)
     session.commit()
     session.close()
 
 
 if __name__ == '__main__':
-    input_dir = folder + '/output'
-    add_dives(f'{input_dir}/dives.csv')
-    add_targets(f'{input_dir}/targets.csv')
-    add_argos(f'{input_dir}/argos.csv')
+    folder = '/home/callum/Documents/tarsan/on-board/data-to-ship/uea/2022-01-15'
+    add_dives(f'{folder}/dives.csv')
+    add_targets(f'{folder}/targets.csv')
+    add_argos(f'{folder}/argos.csv')
