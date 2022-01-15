@@ -26,6 +26,8 @@ def add_dives(dive_csv):
     for i, row in df.iterrows():
         dive = Dives()
         for key, val in row.items():
+            if str(val) == 'nan':
+                val = None
             setattr(dive, key, val)
         dive_exists = session.query(Dives) \
             .filter(Dives.GliderID == int(row['GliderID'])) \
@@ -119,11 +121,9 @@ def add_new_table():
 
 
 
+
 if __name__ == '__main__':
-    #add_new_table()
-    #add_dives(f'{folder}/output/glider_locs.csv')
-    #add_targets(f'{folder}/output/targets.csv')
-    #add_seals('/home/callum/Documents/tarsan/on-board/data-to-ship/seals/seal_dive_depths_all.csv')
-    add_argos('/home/callum/Documents/tarsan/on-board/data-to-ship/uea/output/argos_locs.csv')
-
-
+    folder = '/home/callum/Documents/tarsan/on-board/data-to-ship/uea/2022-01-15'
+    add_dives(f'{folder}/dives.csv')
+    add_targets(f'{folder}/targets.csv')
+    add_argos(f'{folder}/argos.csv')
