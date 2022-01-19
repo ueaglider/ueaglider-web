@@ -115,3 +115,13 @@ class MissionViewModel(ViewModelBase):
     def add_seals(self):
         locs, seals = mission_service.get_seals()
         self.seals_dict , self.seals_lines_dict = json_conversion.seals_to_json(locs, seals)
+
+    def add_events(self):
+        print('\nhere')
+        blank_json_dict = {"type": "FeatureCollection", "features": []}
+        try:
+            with open('/home/callum/Documents/tarsan/on-board/data-to-ship/git/ctd.json') as json_file:
+                self.ctd_dict = json.load(json_file)
+        except:
+            self.ctd_dict = blank_json_dict
+        print(self.ctd_dict)

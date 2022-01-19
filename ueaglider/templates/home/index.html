@@ -78,6 +78,7 @@
             // Extra databases for ITGC
             let sealsDict = JSON.parse('{{ seals_dict| tojson | safe}}');
             let sealsLinesDict = JSON.parse('{{ seals_lines_dict| tojson | safe}}');
+            let ctdDict = JSON.parse('{{ ctd_dict| tojson | safe}}');
             // Argos tag fun zone
             let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
             let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
@@ -360,6 +361,17 @@
                 onEachFeature: popupText
             })
 
+            let ctdLayer = L.geoJson(ctdDict, {
+                pointToLayer: function (feature, latlng) {
+                    return new L.CircleMarker(latlng, {radius: 5,
+                        fillOpacity: 0.8,
+                        color: 'black',
+                        fillColor: 'yellow',
+                        weight: 1,});
+                },
+                onEachFeature: popupText
+            })
+
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
@@ -374,6 +386,8 @@
                 // Layer showing the EEZs for the world
                 EEZ: L.tileLayer("https://dasng.nbp.usap.gov/BetterMap/Charts/EEZ/{z}/{x}/{y}.png",
                     {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
+                "AMSR sea ice": L.tileLayer("/static/img/tiles/AMSR/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 9},
+                    {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
                 "Day/Night overlay": terminator,
 
                 Graticule: graticule,
@@ -381,6 +395,7 @@
                 "GEBCO <span style='color: red'>50 m</span> <span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
 
                 gliders: glidersLayer,
+                CTD: ctdLayer,
                 "Seals 🦭 🦭 🦭": sealsLayer,
 
             };
