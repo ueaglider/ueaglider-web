@@ -24,10 +24,7 @@ def index():
     vm.check_dives()
     vm.check_tags()
     vm.add_seals()
-    print('validate\n')
     vm.add_events()
-    print(vm.ctd_dict)
-
     return vm.to_dict()
 
 

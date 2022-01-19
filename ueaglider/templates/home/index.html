@@ -79,6 +79,7 @@
             let sealsDict = JSON.parse('{{ seals_dict| tojson | safe}}');
             let sealsLinesDict = JSON.parse('{{ seals_lines_dict| tojson | safe}}');
             let ctdDict = JSON.parse('{{ ctd_dict| tojson | safe}}');
+            let tmcDict = JSON.parse('{{ tmc_dict| tojson | safe}}');
             // Argos tag fun zone
             let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
             let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
@@ -372,6 +373,17 @@
                 onEachFeature: popupText
             })
 
+            let tmcLayer = L.geoJson(tmcDict, {
+                pointToLayer: function (feature, latlng) {
+                    return new L.CircleMarker(latlng, {radius: 5,
+                        fillOpacity: 0.8,
+                        color: 'black',
+                        fillColor: 'grey',
+                        weight: 1,});
+                },
+                onEachFeature: popupText
+            })
+
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
@@ -392,11 +404,12 @@
 
                 Graticule: graticule,
                 "Graticule (high lat": graticuleHighLat,
-                "GEBCO <span style='color: red'>50 m</span> <span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
+                "GEBCO 2020 <span style='color: red'>50 m</span><br><span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
 
                 gliders: glidersLayer,
                 CTD: ctdLayer,
-                "Seals 🦭 🦭 🦭": sealsLayer,
+                TMC: tmcLayer,
+                //"Seals 🦭 🦭 🦭": sealsLayer,
 
             };
 
