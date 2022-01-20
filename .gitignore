@@ -148,3 +148,4 @@ ueaglider/secrets.*
 output
 
 ueaglider/static/img/tiles/
+ueaglider/static/nbp_data/

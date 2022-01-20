@@ -118,8 +118,7 @@ class MissionViewModel(ViewModelBase):
 
     def add_events(self):
         blank_json_dict = {"type": "FeatureCollection", "features": []}
-        event_dir = \
-            '/run/user/1000/gvfs/smb-share:server=157.132.128.55,share=science/NBP2202/data-to-map/event-log/output/'
+        event_dir = folder+'/static/nbp_data/'
         try:
             with open(event_dir + 'ctd.json') as json_to_load:
                 self.ctd_dict = json.load(json_to_load)
