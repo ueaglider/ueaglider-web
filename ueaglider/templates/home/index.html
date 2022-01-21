@@ -58,8 +58,9 @@
 
     <div class="totals">
         <h3>
-            ITGC platforms
+            NBP 2202 data collection map
         </h3>
+        Scroll down for tips on using the map
 
         <div id="map" style="height: 800px; "></div>
         <!-- Script to create a leaflet map-->
@@ -125,7 +126,7 @@
                 }
             );
 
-            var zoom = getParameterByName('zoom') || 5; // initial map zoom
+            var zoom = getParameterByName('zoom') || 6; // initial map zoom
             followShip = getParameterByName('followship') || false;  // boolean whether to have the map auto-center on the ship on refresh
             autozoom = getParameterByName('autozoom') || false;  // boolean whether to have the map auto-zoom to the ship and the next waypoint
             showControls = getParameterByName('showcontrols') || true; // boolean whether to display the infobox (speed, heading, etc)
@@ -138,7 +139,7 @@
             var startposition = new L.LatLng(parseFloat(init_lat),parseFloat(init_lon));
 
             // Set initial map view (center & zoom)
-            map.setView(startposition, zoom);
+            map.setView([-73,-115], zoom);
             map.attributionControl.setPrefix("Zoom: " + zoom);
             map.zoomControl.remove() // hide zoom control.  readd if showcontrols is true (see below)
 
@@ -530,7 +531,23 @@
         </script>
     </div>
 
+<h3> How do I use this map?</h3>
+    - Select layers with icon in upper right corner <br>
 
+    - If you don't see the ship's track (orange line) or blue background, visit <a href=https://dasng.nbp.usap.gov" >https://dasng.nbp.usap.gov</a>
+    click "advanced" and "proceed to dasng.nbp.usap.gov (unsafe)" or similar, then come back here and refresh the page. This will tell your browser to trust data coming from NBP's map server <br>
+    - You can use the ruler on the left to get a distance between points <br>
+
+<h3> Where are the data coming from?</h3>
+    - Ships's track and several background layers like place names and GEBCO bathy are pulled from the ship's systems in the same manner as the NBP map<br>
+    - AMSR ice imagery is created from the AMSR geotiffs using gdal2tiles (thanks Ashley!) and gdalwarp (thanks Li!). This is updated daily<br>
+    - Glider data are pulled from a database that is updated a few times a day<br>
+    - Other datasets are automagically parsed from the event log. You can see the scripts used to perform this on the science drive in "data-to-map"<br>
+    - Want to see your dataset on here? Talk to Callum :) <br>
+<h3> What else is here?</h3>
+    - This website is based on the <a href="ueaglider.uea.ac.uk">ueaglider website</a> with modifications to pull data from NBP rather than the internet <br>
+    - All code is available in a <a href="github.com/ueaglider/ueaglider-web">GitHub repo</a> or from Callum
+    - This is a work in progress! Any feedback is much appreciated
 
 {% endblock %}
 
