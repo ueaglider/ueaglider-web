@@ -120,26 +120,12 @@ class MissionViewModel(ViewModelBase):
     def add_events(self):
         blank_json_dict = {"type": "FeatureCollection", "features": []}
         event_dir = folder+'/static/nbp_data/'
-        try:
-            with open(event_dir + 'ctd.json') as json_to_load:
-                self.ctd_dict = json.load(json_to_load)
-        except:
-            self.ctd_dict = blank_json_dict
-        try:
-            with open(event_dir + 'tmc.json') as json_to_load:
-                self.tmc_dict = json.load(json_to_load)
-        except:
-            self.tmc_dict = blank_json_dict
-        try:
-            with open(event_dir + 'core.json') as json_to_load:
-                self.core_dict = json.load(json_to_load)
-        except:
-            self.core_dict = blank_json_dict
-        try:
-            with open(event_dir + 'thor.json') as json_to_load:
-                self.thor_dict = json.load(json_to_load)
-        except:
-            self.thor_dict = blank_json_dict
+        for dataset in ['ctd', 'tmc', 'core', 'thor', 'hugin']:
+            try:
+                with open(f"{event_dir}{dataset}.json") as json_to_load:
+                    self.__setattr__(f"{dataset}_dict", json.load(json_to_load))
+            except:
+                self.__setattr__(f"{dataset}_dict", blank_json_dict)
         try:
             amsr_file = glob.glob('/home/callum/Documents/nbp_scripts/tiler/amsr/*AMSR*.tif')[0]
             amsr_date = amsr_file[-14:-4]
