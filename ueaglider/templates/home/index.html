@@ -376,7 +376,7 @@
                         weight: 1,});
                 },
                 onEachFeature: popupText
-            })
+            }).addTo(map);
 
             let tmcLayer = L.geoJson(tmcDict, {
                 pointToLayer: function (feature, latlng) {
@@ -387,18 +387,20 @@
                         weight: 1,});
                 },
                 onEachFeature: popupText
-            })
+            }).addTo(map);
+            let coreIcon = L.icon({
+                iconUrl: '/static/img/icons/core.png',
+                iconSize:     [30, 30], // size of the icon
+                iconAnchor:   [20, 15], // point of the icon which will correspond to marker's location
+                popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+            });
 
-            let coreLayer = L.geoJson(coreDict, {
-                pointToLayer: function (feature, latlng) {
-                    return new L.CircleMarker(latlng, {radius: 5,
-                        fillOpacity: 0.8,
-                        color: 'black',
-                        fillColor: 'red',
-                        weight: 1,});
-                },
-                onEachFeature: popupText
-            })
+            let coreLayer =  L.geoJSON(coreDict, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.marker(latlng, {icon: coreIcon});
+                    },
+                    onEachFeature: popupText
+            }).addTo(map);
 
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
@@ -426,7 +428,7 @@
                 "gliders extra": glidersExtra,
                 CTD: ctdLayer,
                 TMC: tmcLayer,
-                cores: coreLayer,
+                "cores 🟫": coreLayer,
                 //"Seals 🦭 🦭 🦭": sealsLayer,
 
             };
