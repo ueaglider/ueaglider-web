@@ -134,3 +134,8 @@ class MissionViewModel(ViewModelBase):
                 self.core_dict = json.load(json_to_load)
         except:
             self.core_dict = blank_json_dict
+        try:
+            with open(event_dir + 'thor.json') as json_to_load:
+                self.thor_dict = json.load(json_to_load)
+        except:
+            self.thor_dict = blank_json_dict

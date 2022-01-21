@@ -80,6 +80,7 @@
             let ctdDict = JSON.parse('{{ ctd_dict| tojson | safe}}');
             let tmcDict = JSON.parse('{{ tmc_dict| tojson | safe}}');
             let coreDict = JSON.parse('{{ core_dict| tojson | safe}}');
+            let thorDict = JSON.parse('{{ thor_dict| tojson | safe}}');
             // Argos tag fun zone
             let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
             let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
@@ -352,6 +353,24 @@
                 ])
 
             // Extra ITGC layers
+            // Add ship trackline
+            getTrackline();
+            // Create polyline to collect 'realtime' trackline in-browser.  Start it with the current position.
+            realtimeTrackline = L.polyline([getCurrentPosition(), getCurrentPosition()], {color: "#ff7800",
+                weight: 5,
+                opacity: 0.45});
+            realtimeTrackline.addTo(map);
+            // Add ship icon.  First, create an icon for the marker, then add a new L.marker using that icon
+            // L.BoatIcon creates a vector ship icon along with an optional wind indicator arrow/barb
+            var shipIcon = new L.BoatIcon();
+            shipIcon.setHeadingWind($.getData("NBPGyroHeading",1),$.getData("NBPSUSTrueWindSpdKn",1),$.getData("NBPSUSTrueWindDir",1));
+            shipMarker = new L.marker(getCurrentPosition(), {icon: shipIcon});
+            shipMarker.addTo(map);
+
+
+            // Add waypoint marker
+            wptMarker = getNextWaypoint();
+            wptMarker.addTo(map);
             // Seals
 
             //L.geoJson(sealsLinesDict, {style: style})
@@ -376,7 +395,7 @@
                         weight: 1,});
                 },
                 onEachFeature: popupText
-            }).addTo(map);
+            })
 
             let tmcLayer = L.geoJson(tmcDict, {
                 pointToLayer: function (feature, latlng) {
@@ -387,7 +406,7 @@
                         weight: 1,});
                 },
                 onEachFeature: popupText
-            }).addTo(map);
+            })
             let coreIcon = L.icon({
                 iconUrl: '/static/img/icons/core.png',
                 iconSize:     [30, 30], // size of the icon
@@ -400,8 +419,21 @@
                         return L.marker(latlng, {icon: coreIcon});
                     },
                     onEachFeature: popupText
-            }).addTo(map);
+            })
 
+            let thorIcon = L.icon({
+                iconUrl: '/static/img/icons/thor.png',
+                iconSize:     [30, 35], // size of the icon
+                iconAnchor:   [20, 15], // point of the icon which will correspond to marker's location
+                popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+            });
+
+            let thorLayer =  L.geoJSON(thorDict, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.marker(latlng, {icon: thorIcon});
+                    },
+                    onEachFeature: popupText
+            })
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
@@ -428,7 +460,8 @@
                 "gliders extra": glidersExtra,
                 CTD: ctdLayer,
                 TMC: tmcLayer,
-                "cores 🟫": coreLayer,
+                "mono core 🟫": coreLayer,
+                "mega/kasten core ⛏": thorLayer,
                 //"Seals 🦭 🦭 🦭": sealsLayer,
 
             };
@@ -485,45 +518,12 @@
             }
 
 
-            // Add ship trackline
-            getTrackline();
-            // Create polyline to collect 'realtime' trackline in-browser.  Start it with the current position.
-            realtimeTrackline = L.polyline([getCurrentPosition(), getCurrentPosition()], {color: "#ff7800",
-                weight: 5,
-                opacity: 0.65});
-            realtimeTrackline.addTo(map);
-            // Add ship icon.  First, create an icon for the marker, then add a new L.marker using that icon
-            // L.BoatIcon creates a vector ship icon along with an optional wind indicator arrow/barb
-            var shipIcon = new L.BoatIcon();
-            shipIcon.setHeadingWind($.getData("NBPGyroHeading",1),$.getData("NBPSUSTrueWindSpdKn",1),$.getData("NBPSUSTrueWindDir",1));
-            shipMarker = new L.marker(getCurrentPosition(), {icon: shipIcon});
-            shipMarker.addTo(map);
-
-
-            // Add waypoint marker
-            wptMarker = getNextWaypoint();
-            wptMarker.addTo(map);
-            if (followShip)
-            {
-                // If autozoom is set, set the view to the ship and the next waypoint
-                if (autozoom == true)
-                {
-                    map.fitBounds([gps,wptMarker._latlng]);
-                    // Now zoom out one level to make sure it's all in view
-                    map.zoomOut();
-                }
-                else
-                {
-                    //keep the ship at the center of the map
-                    CenterOnShip();
-                }
-            }
 
             // Set listener for onZoomEnd
             map.on('zoomend', onZoomEnd);
 
             // Refresh data every minute
-            window.setInterval(UpdateMap, 5000);
+            window.setInterval(UpdateMap, 50000);
 
 
         </script>
