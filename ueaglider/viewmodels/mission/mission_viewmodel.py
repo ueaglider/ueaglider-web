@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 import json
+import glob
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
@@ -139,3 +140,10 @@ class MissionViewModel(ViewModelBase):
                 self.thor_dict = json.load(json_to_load)
         except:
             self.thor_dict = blank_json_dict
+        try:
+            amsr_file = glob.glob('/home/callum/Documents/nbp_scripts/tiler/amsr/*AMSR*.tif')[0]
+            amsr_date = amsr_file[-14:-4]
+            self.amsr_date = amsr_date.replace('_', '-')
+        except:
+            self.amsr_date = 'unknown date'
+

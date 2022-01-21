@@ -449,7 +449,7 @@
                 // Layer showing the EEZs for the world
                 EEZ: L.tileLayer("https://dasng.nbp.usap.gov/BetterMap/Charts/EEZ/{z}/{x}/{y}.png",
                     {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
-                "AMSR sea ice": L.tileLayer("/static/img/tiles/AMSR/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 9},
+                "AMSR sea ice {{amsr_date}}": L.tileLayer("/static/img/tiles/AMSR/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 9},
                     {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
                 "Day/Night overlay": terminator,
 
