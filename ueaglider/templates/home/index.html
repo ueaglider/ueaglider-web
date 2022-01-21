@@ -79,6 +79,7 @@
             let sealsLinesDict = JSON.parse('{{ seals_lines_dict| tojson | safe}}');
             let ctdDict = JSON.parse('{{ ctd_dict| tojson | safe}}');
             let tmcDict = JSON.parse('{{ tmc_dict| tojson | safe}}');
+            let coreDict = JSON.parse('{{ core_dict| tojson | safe}}');
             // Argos tag fun zone
             let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
             let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
@@ -388,6 +389,17 @@
                 onEachFeature: popupText
             })
 
+            let coreLayer = L.geoJson(coreDict, {
+                pointToLayer: function (feature, latlng) {
+                    return new L.CircleMarker(latlng, {radius: 5,
+                        fillOpacity: 0.8,
+                        color: 'black',
+                        fillColor: 'red',
+                        weight: 1,});
+                },
+                onEachFeature: popupText
+            })
+
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
@@ -414,6 +426,7 @@
                 "gliders extra": glidersExtra,
                 CTD: ctdLayer,
                 TMC: tmcLayer,
+                cores: coreLayer,
                 //"Seals 🦭 🦭 🦭": sealsLayer,
 
             };
@@ -461,7 +474,7 @@
                         }
                     });
                 map.addControl(new Ruler({
-                    unitSystem: 'imperial',
+                    unitSystem: 'metric',
                     color: '#FF0080'
                 }));
 
