@@ -295,15 +295,6 @@
             }
             // Use layer group for gliders
             let glidersLayer = L.layerGroup([
-                L.geoJSON(targetDict, {
-                pointToLayer: function (feature, latlng) {
-                    return L.marker(latlng, {icon: targetIcon});
-                },
-                onEachFeature: popupText
-            }),
-                L.geoJSON(waypointDict, {
-                onEachFeature: popupText
-            }),
                 L.geoJson(linesDict, {style: style}),
 
                 L.geoJson(divesDict, {
@@ -324,6 +315,20 @@
                     onEachFeature: popupText
                 }),
 
+
+            ]).addTo(map);
+
+            let glidersExtra = L.layerGroup([
+                L.geoJSON(targetDict, {
+                    pointToLayer: function (feature, latlng) {
+                        return L.marker(latlng, {icon: targetIcon});
+                    },
+                    onEachFeature: popupText
+                }),
+                L.geoJSON(waypointDict, {
+                    onEachFeature: popupText
+                }),
+
                 L.geoJSON(latestLocsDict_med, {
                     pointToLayer: function (feature, latlng) {
                         return L.marker(latlng, {icon: locsIcon});
@@ -331,19 +336,19 @@
                     onEachFeature: popupText
                 }),
 
-                    L.geoJson(locsLinesDict_med, {style: {weight: 1, color:'orange', dashArray: '10, 3'}}),
+                L.geoJson(locsLinesDict_med, {style: {weight: 1, color:'red', dashArray: '10, 3'}}),
 
-                    L.geoJson(locsDict_med, {
-                        pointToLayer: function (feature, latlng) {
-                            return new L.CircleMarker(latlng, {radius: 5,
-                                fillOpacity: 0.8,
-                                color: 'black',
-                                fillColor: 'orange',
-                                weight: 1,});
-                        },
-                        onEachFeature: popupText
-                    }),
-            ]).addTo(map);
+                L.geoJson(locsDict_med, {
+                    pointToLayer: function (feature, latlng) {
+                        return new L.CircleMarker(latlng, {radius: 5,
+                            fillOpacity: 0.8,
+                            color: 'black',
+                            fillColor: 'orange',
+                            weight: 1,});
+                    },
+                    onEachFeature: popupText
+                }),
+                ])
 
             // Extra ITGC layers
             // Seals
@@ -406,6 +411,7 @@
                 "GEBCO 2020 <span style='color: red'>50 m</span><br><span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
 
                 gliders: glidersLayer,
+                "gliders extra": glidersExtra,
                 CTD: ctdLayer,
                 TMC: tmcLayer,
                 //"Seals 🦭 🦭 🦭": sealsLayer,
