@@ -80,6 +80,7 @@
             let sealsLinesDict = JSON.parse('{{ seals_lines_dict| tojson | safe}}');
             let ctdDict = JSON.parse('{{ ctd_dict| tojson | safe}}');
             let tmcDict = JSON.parse('{{ tmc_dict| tojson | safe}}');
+            let vmpDict = JSON.parse('{{ vmp_dict| tojson | safe}}');
             let coreDict = JSON.parse('{{ core_dict| tojson | safe}}');
             let thorDict = JSON.parse('{{ thor_dict| tojson | safe}}');
             let huginDict = JSON.parse('{{ hugin_dict| tojson | safe}}');
@@ -410,6 +411,16 @@
                 },
                 onEachFeature: popupText
             })
+            let vmpLayer = L.geoJson(vmpDict, {
+                pointToLayer: function (feature, latlng) {
+                    return new L.CircleMarker(latlng, {radius: 5,
+                        fillOpacity: 0.8,
+                        color: 'black',
+                        fillColor: 'green',
+                        weight: 1,});
+                },
+                onEachFeature: popupText
+            })
             let coreIcon = L.icon({
                 iconUrl: '/static/img/icons/core.png',
                 iconSize:     [30, 30], // size of the icon
@@ -479,6 +490,7 @@
                 "gliders extra": glidersExtra,
                 CTD: ctdLayer,
                 TMC: tmcLayer,
+                VMP: vmpLayer,
                 "mono core 🟫": coreLayer,
                 "mega/kasten core ⛏": thorLayer,
                 "<span style='color: #00b2ff'>Hugin</span>": huginLayer,
