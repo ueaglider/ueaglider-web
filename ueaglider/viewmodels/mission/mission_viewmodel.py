@@ -132,4 +132,16 @@ class MissionViewModel(ViewModelBase):
             self.amsr_date = amsr_date.replace('_', '-')
         except:
             self.amsr_date = 'unknown date'
+        try:
+            modis_dirs = glob.glob(f'{folder}/static/img/tiles/MODIS*')
+            modis_dirs.sort()
+            modis_dict = {}
+            for modis in modis_dirs:
+                modis_date = modis.split('/')[-1][-8:]
+                date_str = f"{modis_date[:4]}-{modis_date[4:6]}-{modis_date[6:]}"
+                modis_dict[date_str] = modis[-32:]
+            self.modis_dict = modis_dict
+        except:
+            self.modis_dict = {}
+
 

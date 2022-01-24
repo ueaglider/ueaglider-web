@@ -458,6 +458,10 @@
                     {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
                 "AMSR sea ice {{amsr_date}}": L.tileLayer("/static/img/tiles/AMSR/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 9},
                     {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
+                {% for d, n in modis_dict.items() %}
+                    "MODIS {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 10},
+                    {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
+                {% endfor %}
                 "Day/Night overlay": terminator,
 
                 Graticule: graticule,
