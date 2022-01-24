@@ -443,9 +443,12 @@
                     color:'#00b2ff',
                 }).bindPopup("Hugin mission 2")
 
-            let alrLayer= L.geoJSON(alrDict,
-            )
-
+            let alrLayer =  L.geoJSON(alrDict, {color:'#fffb08',
+                    lineStringToLayer: function (feature, latlng) {
+                        return L.line(latlng, );
+                    },
+                    onEachFeature: popupText
+            })
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
@@ -479,7 +482,7 @@
                 "mono core 🟫": coreLayer,
                 "mega/kasten core ⛏": thorLayer,
                 "<span style='color: #00b2ff'>Hugin</span>": huginLayer,
-                "<span style='color: #00b2ff'>ALR</span>": alrLayer,
+                "<span style='color:#fffb08'>ALR</span>": alrLayer,
                 //"Seals 🦭 🦭 🦭": sealsLayer,
 
             };
