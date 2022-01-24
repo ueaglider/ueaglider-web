@@ -25,7 +25,6 @@ def index():
     vm.check_tags()
     vm.add_seals()
     vm.add_events()
-    print(vm.modis_dict)
     return vm.to_dict()
 
 

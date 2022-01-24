@@ -83,6 +83,7 @@
             let coreDict = JSON.parse('{{ core_dict| tojson | safe}}');
             let thorDict = JSON.parse('{{ thor_dict| tojson | safe}}');
             let huginDict = JSON.parse('{{ hugin_dict| tojson | safe}}');
+            let alrDict = JSON.parse('{{ alr_dict| tojson | safe}}');
             // Argos tag fun zone
             let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
             let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
@@ -442,6 +443,9 @@
                     color:'#00b2ff',
                 }).bindPopup("Hugin mission 2")
 
+            let alrLayer= L.geoJSON(alrDict,
+            )
+
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
@@ -456,18 +460,18 @@
                 // Layer showing the EEZs for the world
                 EEZ: L.tileLayer("https://dasng.nbp.usap.gov/BetterMap/Charts/EEZ/{z}/{x}/{y}.png",
                     {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
-                "AMSR sea ice {{amsr_date}}": L.tileLayer("/static/img/tiles/AMSR/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 9},
-                    {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
-                {% for d, n in modis_dict.items() %}
-                    "MODIS {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 10},
-                    {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
-                {% endfor %}
                 "Day/Night overlay": terminator,
 
                 Graticule: graticule,
                 "Graticule (high lat": graticuleHighLat,
                 "GEBCO 2020 <span style='color: red'>50 m</span><br><span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
 
+                {% for d, n in modis_dict.items() %}
+                    "MODIS {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 10},
+                        {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
+                {% endfor %}
+                "AMSR sea ice {{amsr_date}}<br><hr>": L.tileLayer("/static/img/tiles/AMSR/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 9},
+                    {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
                 gliders: glidersLayer,
                 "gliders extra": glidersExtra,
                 CTD: ctdLayer,
@@ -475,6 +479,7 @@
                 "mono core 🟫": coreLayer,
                 "mega/kasten core ⛏": thorLayer,
                 "<span style='color: #00b2ff'>Hugin</span>": huginLayer,
+                "<span style='color: #00b2ff'>ALR</span>": alrLayer,
                 //"Seals 🦭 🦭 🦭": sealsLayer,
 
             };
@@ -546,9 +551,9 @@
 <h3> How do I use this map?</h3>
     - Select layers with icon in upper right corner <br>
 
-    - If you don't see the ship's track (orange line) or blue background, visit <a href=https://dasng.nbp.usap.gov" >https://dasng.nbp.usap.gov</a>
-    click "advanced" and "proceed to dasng.nbp.usap.gov (unsafe)" or similar, then come back here and refresh the page. This will tell your browser to trust data coming from NBP's map server <br>
-    - You can use the ruler on the left to get a distance between points <br>
+    - If you don't see the ship's track (orange line) or blue background, visit <a href=https://dasng.nbp.usap.gov>https://dasng.nbp.usap.gov</a>
+    click "advanced" and "proceed to dasng.nbp.usap.gov (unsafe)" or similar, then come back here and refresh the page. This will tell your browser to trust data coming from NBP's servers <br>
+    - You can use the ruler on the left to get a distance between points. Do the same with <a href=https://maps.nbp.usap.gov>https://maps.nbp.usap.gov</a>  to get map layers<br>
 
 <h3> Where are the data coming from?</h3>
     - Ships's track and several background layers like place names and GEBCO bathy are pulled from the ship's systems in the same manner as the NBP map<br>
