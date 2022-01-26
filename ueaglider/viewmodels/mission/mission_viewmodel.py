@@ -64,7 +64,8 @@ class MissionViewModel(ViewModelBase):
         if not self.end:
             self.end_dt = datetime.datetime(2100, 1, 1)
         else:
-            self.end_dt = datetime.datetime(int(self.end[:4]), int(self.end[5:7]), int(self.end[8:]))
+            self.end_dt = datetime.datetime(int(self.end[:4]), int(self.end[5:7]), int(self.end[8:]))\
+                          + datetime.timedelta(days=1)
 
     def check_dives(self):
         if self.mission_id >= 62:
@@ -139,7 +140,27 @@ class MissionViewModel(ViewModelBase):
         for dataset in ['ctd', 'tmc', 'core', 'thor', 'hugin', 'alr', 'vmp']:
             try:
                 with open(f"{event_dir}{dataset}.json") as json_to_load:
-                    self.__setattr__(f"{dataset}_dict", json.load(json_to_load))
+                    json_dict = json.load(json_to_load)
+                features = json_dict['features']
+                features_in_time = []
+                for feature in features:
+                    try:
+                        start = datetime.datetime.fromisoformat(feature['start'])
+                    except:
+                        print('bad start')
+                        print(feature['properties'])
+                        print(start, feature['start'])
+                        print(end, feature['end'])
+                        features_in_time.append(feature)
+                        continue
+                    try:
+                        end = datetime.datetime.fromisoformat(feature['end'])
+                    except:
+                        end = start
+                    if self.start_dt < start < self.end_dt or self.start_dt < end < self.end_dt:
+                        features_in_time.append(feature)
+                    json_dict['features'] = features_in_time
+                self.__setattr__(f"{dataset}_dict", json_dict)
             except:
                 self.__setattr__(f"{dataset}_dict", blank_json_dict)
         try:
