@@ -103,6 +103,7 @@
             let thorDict = JSON.parse('{{ thor_dict| tojson | safe}}');
             let huginDict = JSON.parse('{{ hugin_dict| tojson | safe}}');
             let alrDict = JSON.parse('{{ alr_dict| tojson | safe}}');
+            let shipDict = JSON.parse('{{ ship_dict| tojson | safe}}');
             // Argos tag fun zone
             let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
             let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
@@ -376,12 +377,7 @@
 
             // Extra ITGC layers
             // Add ship trackline
-            getTrackline();
             // Create polyline to collect 'realtime' trackline in-browser.  Start it with the current position.
-            realtimeTrackline = L.polyline([getCurrentPosition(), getCurrentPosition()], {color: "#ff7800",
-                weight: 5,
-                opacity: 0.45});
-            realtimeTrackline.addTo(map);
             // Add ship icon.  First, create an icon for the marker, then add a new L.marker using that icon
             // L.BoatIcon creates a vector ship icon along with an optional wind indicator arrow/barb
             var shipIcon = new L.BoatIcon();
@@ -478,6 +474,12 @@
                     },
                     onEachFeature: popupText
             })
+            let shipLayer =  L.geoJSON(shipDict, {color:'orange',
+                lineStringToLayer: function (feature, latlng) {
+                    return L.line(latlng, );
+                },
+                onEachFeature: popupText
+            }).addTo(map);
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
@@ -513,6 +515,7 @@
                 "mega/kasten core ⛏": thorLayer,
                 "<span style='color: #00b2ff'>Hugin</span>": huginLayer,
                 "<span style='color:#fffb08'>ALR</span>": alrLayer,
+                Ship: shipLayer,
                 //"Seals 🦭 🦭 🦭": sealsLayer,
 
             };

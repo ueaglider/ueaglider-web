@@ -4,6 +4,7 @@ import sys
 import json
 import glob
 import datetime
+import pandas as pd
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
@@ -137,7 +138,7 @@ class MissionViewModel(ViewModelBase):
     def add_events(self):
         blank_json_dict = {"type": "FeatureCollection", "features": []}
         event_dir = folder+'/static/nbp_data/'
-        for dataset in ['ctd', 'tmc', 'core', 'thor', 'hugin', 'alr', 'vmp']:
+        for dataset in ['ctd', 'tmc', 'core', 'thor', 'hugin', 'alr', 'vmp', 'ship']:
             try:
                 with open(f"{event_dir}{dataset}.json") as json_to_load:
                     json_dict = json.load(json_to_load)
@@ -147,17 +148,13 @@ class MissionViewModel(ViewModelBase):
                     try:
                         start = datetime.datetime.fromisoformat(feature['start'])
                     except:
-                        print('bad start')
-                        print(feature['properties'])
-                        print(start, feature['start'])
-                        print(end, feature['end'])
                         features_in_time.append(feature)
                         continue
                     try:
                         end = datetime.datetime.fromisoformat(feature['end'])
                     except:
                         end = start
-                    if self.start_dt < start < self.end_dt or self.start_dt < end < self.end_dt:
+                    if self.start_dt <= start <= self.end_dt or self.start_dt <= end <= self.end_dt:
                         features_in_time.append(feature)
                     json_dict['features'] = features_in_time
                 self.__setattr__(f"{dataset}_dict", json_dict)
