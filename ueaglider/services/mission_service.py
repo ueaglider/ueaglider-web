@@ -1,4 +1,6 @@
+import datetime
 from typing import Optional, Any
+import numpy as np
 
 from ueaglider.data.db_session import create_session
 from ueaglider.data.db_classes import Gliders, Missions, Dives, Targets, Pins, ArgosLocations, ArgosTags, SealDive
@@ -187,7 +189,8 @@ def get_dives() -> Optional[Any]:
     session.close()
     return dives, dive_ids
 
-def get_mission_dives(mission_id) -> Optional[Any]:
+
+def get_mission_dives(mission_id, start=None, end=None) -> Optional[Any]:
     if not mission_id:
         return None
 
@@ -211,14 +214,34 @@ def get_mission_dives(mission_id) -> Optional[Any]:
     # Group dives by glider
     dives_by_glider = []
     for glider_id in glider_ids:
-        dives = session.query(Dives) \
-            .filter(Dives.MissionID == mission_id) \
-            .filter(Dives.GliderID == glider_id) \
-            .order_by(Dives.DiveNo.desc()) \
-            .all()
-        dives_by_glider.append(dives)
-        most_recent_dives.append(dives[0])
+        if start:
+            dives = session.query(Dives) \
+                .filter(Dives.MissionID == mission_id) \
+                .filter(Dives.GliderID == glider_id) \
+                .filter(Dives.ReceivedDate > start) \
+                .filter(Dives.ReceivedDate < end) \
+                .order_by(Dives.DiveNo.desc()) \
+                .all()
+        else:
+            dives = session.query(Dives) \
+                .filter(Dives.MissionID == mission_id) \
+                .filter(Dives.GliderID == glider_id) \
+                .order_by(Dives.DiveNo.desc()) \
+                .all()
+        # Correct for GPS rollover if present
+        for dive in dives:
+            if dive.ReceivedDate < datetime.datetime(2010, 1, 1):
+                dive.ReceivedDate = dive.ReceivedDate + datetime.timedelta(weeks=1024)
+        if dives:
+            most_recent_dives.append(dives[0])
+            dives_by_glider.append(dives)
 
+    # find gliders that have valid dives in this selection
+    valid_gliders = []
+    for dive in most_recent_dives:
+        valid_gliders.append(dive.GliderID)
+    query = session.query(Gliders).filter(Gliders.Number.in_(valid_gliders))
+    gliders = query.all()
     session.close()
     return dives, gliders, dives_by_glider, most_recent_dives
 

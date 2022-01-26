@@ -3,6 +3,7 @@ import subprocess
 import sys
 import json
 import glob
+import datetime
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
@@ -54,10 +55,25 @@ class MissionViewModel(ViewModelBase):
         self.missionplots = [
             'static/img/dives/Mission' + str(self.mission_id) + '/map.png'
         ]
+        self.start = self.request_dict.start
+        self.end = self.request_dict.end
+        if not self.start:
+            self.start_dt = datetime.datetime(2000, 1, 1)
+        else:
+            self.start_dt = datetime.datetime(int(self.start[:4]), int(self.start[5:7]), int(self.start[8:]))
+        if not self.end:
+            self.end_dt = datetime.datetime(2100, 1, 1)
+        else:
+            self.end_dt = datetime.datetime(int(self.end[:4]), int(self.end[5:7]), int(self.end[8:]))
 
     def check_dives(self):
-        dives, mission_gliders, dives_by_glider, most_recent_dives = mission_service.get_mission_dives(self.mission_id)
-        if not dives:
+        if self.mission_id >= 62:
+            dives, mission_gliders, dives_by_glider, most_recent_dives = mission_service.get_mission_dives(self.mission_id,
+                                                                        start=self.start_dt, end=self.end_dt)
+        else:
+            dives, mission_gliders, dives_by_glider, most_recent_dives = mission_service.get_mission_dives(self.mission_id)
+
+        if not dives_by_glider:
             self.zoom = 'No dives yet for this mission'
             blank_json_dict = {"type": "FeatureCollection", "features": []}
             self.dive_page_links = []

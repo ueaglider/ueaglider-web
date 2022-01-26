@@ -7,9 +7,9 @@ from ueaglider.viewmodels.mission.mission_viewmodel import MissionViewModel
 blueprint = flask.Blueprint('home', __name__, template_folder='templates')
 
 
-@blueprint.route('/')
+@blueprint.route('/', methods=['GET'])
 @response(template_file='/home/index.html')
-def index():
+def index_get():
     """
     Home page method,
     :returns: counts of total missions, unique gliders and dives completed
@@ -21,6 +21,29 @@ def index():
         return flask.redirect('/')
 
     vm = MissionViewModel(mission_id)
+
+    vm.check_dives()
+    vm.check_tags()
+    vm.add_seals()
+    vm.add_events()
+    return vm.to_dict()
+
+
+@blueprint.route('/', methods=['POST'])
+@response(template_file='/home/index.html')
+def index_post():
+    """
+    Home page method,
+    :returns: counts of total missions, unique gliders and dives completed
+    """
+    mission_id = 64
+    missions_nums = mission_service.mission_ids()
+    id_list = [y for x in missions_nums for y in x]
+    if mission_id not in id_list:
+        return flask.redirect('/')
+
+    vm = MissionViewModel(mission_id)
+
     vm.check_dives()
     vm.check_tags()
     vm.add_seals()

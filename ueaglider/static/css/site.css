@@ -39,6 +39,12 @@ footer {
     margin-top: 50px;
 
 }
+
+.timesel {
+        max-width: 600px;
+        align-self: center;
+}
+
 .oldphp h1 {
     color: red;
 }
