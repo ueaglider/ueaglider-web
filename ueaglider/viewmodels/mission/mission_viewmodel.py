@@ -4,7 +4,6 @@ import sys
 import json
 import glob
 import datetime
-import pandas as pd
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)

@@ -462,10 +462,13 @@
                     onEachFeature: popupText
             })
 
-            let huginLayer = L.geoJSON(huginDict, {
-                    attribution: "Hugin team",
-                    color:'#00b2ff',
-                }).bindPopup("Hugin mission 2")
+
+            let huginLayer =  L.geoJSON(huginDict, {color:'#00b2ff',
+                    lineStringToLayer: function (feature, latlng) {
+                        return L.line(latlng, );
+                    },
+                    onEachFeature: popupText
+            })
 
             let alrLayer =  L.geoJSON(alrDict, {color:'#fffb08',
                     lineStringToLayer: function (feature, latlng) {
@@ -473,7 +476,7 @@
                     },
                     onEachFeature: popupText
             })
-            let shipLayer =  L.geoJSON(shipDict, {color:'orange',
+            let shipLayer =  L.geoJSON(shipDict, {color:random,
                 lineStringToLayer: function (feature, latlng) {
                     return L.line(latlng, );
                 },
@@ -494,19 +497,11 @@
                 EEZ: L.tileLayer("https://dasng.nbp.usap.gov/BetterMap/Charts/EEZ/{z}/{x}/{y}.png",
                     {minZoom: 0, maxZoom: 8, errorTileUrl: '/maptiles/transparent-tile.png'}),
                 "Day/Night overlay": terminator,
-
                 Graticule: graticule,
-                "Graticule (high lat)<br><hr>": graticuleHighLat,
-
-                {% for d, n in amsr_dict.items() %}
-                    "AMSR sea ice {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 10},
-                        {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
-                {% endfor %}
-                {% for d, n in modis_dict.items() %}
-                    "MODIS {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 10},
-                        {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
-                {% endfor %}
+                "Graticule (high lat)": graticuleHighLat,
                 "GEBCO 2020 <span style='color: red'>50 m</span><br><span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
+
+                Ship: shipLayer,
                 "gliders": glidersLayer,
                 "gliders extra": glidersExtra,
                 CTD: ctdLayer,
@@ -515,8 +510,15 @@
                 "mono core 🟫": coreLayer,
                 "mega/kasten core ⛏": thorLayer,
                 "<span style='color: #00b2ff'>Hugin</span>": huginLayer,
-                "<span style='color:#fffb08'>ALR</span>": alrLayer,
-                Ship: shipLayer,
+                "<span style='color:#fffb08'>ALR</span><br><hr>": alrLayer,
+                {% for d, n in amsr_dict.items() %}
+                    "AMSR sea ice {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 10},
+                        {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
+                {% endfor %}
+                {% for d, n in modis_dict.items() %}
+                    "MODIS {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.5, minZoom: 1, maxZoom: 10},
+                        {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
+                {% endfor %}
                 //"Seals 🦭 🦭 🦭": sealsLayer,
 
             };
