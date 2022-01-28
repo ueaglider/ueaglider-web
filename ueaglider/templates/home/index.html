@@ -71,7 +71,6 @@
             </tr>
             </thead>
             <tbody>
-
             <td><form action="" method="POST" class="account-form">
             <input name="start" type="date" placeholder=" Start date" class="form-control" value="{{ start }}" required></td>
             <td> <input name="end" type="date" placeholder=" End date " class="form-control" value="{{ end }}" required></td>
@@ -497,16 +496,18 @@
                 "Day/Night overlay": terminator,
 
                 Graticule: graticule,
-                "Graticule (high lat": graticuleHighLat,
-                "GEBCO 2020 <span style='color: red'>50 m</span><br><span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
+                "Graticule (high lat)<br><hr>": graticuleHighLat,
 
+                {% for d, n in amsr_dict.items() %}
+                    "AMSR sea ice {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 10},
+                        {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
+                {% endfor %}
                 {% for d, n in modis_dict.items() %}
                     "MODIS {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 10},
                         {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
                 {% endfor %}
-                "AMSR sea ice {{amsr_date}}<br><hr>": L.tileLayer("/static/img/tiles/AMSR/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 9},
-                    {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
-                gliders: glidersLayer,
+                "GEBCO 2020 <span style='color: red'>50 m</span><br><span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
+                "gliders": glidersLayer,
                 "gliders extra": glidersExtra,
                 CTD: ctdLayer,
                 TMC: tmcLayer,

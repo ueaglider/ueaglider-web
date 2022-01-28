@@ -161,11 +161,17 @@ class MissionViewModel(ViewModelBase):
             except:
                 self.__setattr__(f"{dataset}_dict", blank_json_dict)
         try:
-            amsr_file = glob.glob('/home/callum/Documents/nbp_scripts/tiler/amsr/*AMSR*.tif')[0]
-            amsr_date = amsr_file[-14:-4]
-            self.amsr_date = amsr_date.replace('_', '-')
+            amsr_dirs = glob.glob(f'{folder}/static/img/tiles/AMSR*')
+            amsr_dirs.sort()
+            amsr_dict = {}
+            for amsr in amsr_dirs:
+                amsr_date = amsr.split('/')[-1][-10:]
+                date_str = amsr_date.replace('_', '-')
+                amsr_dict[date_str] = amsr[-32:]
+            self.amsr_dict = amsr_dict
         except:
-            self.amsr_date = 'unknown date'
+            self.modis_dict = {}
+
         try:
             modis_dirs = glob.glob(f'{folder}/static/img/tiles/MODIS*')
             modis_dirs.sort()
