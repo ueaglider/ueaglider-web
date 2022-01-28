@@ -317,6 +317,25 @@
                         return 'black';
                 }
             }
+
+            function styler(feature) {
+                return {
+                    weight: 3,
+                    color: getColor2(feature.properties.gliderOrder),
+                };
+            }
+
+            // setting color from geojson. We have enough unique colors for 8 gliders. After that they'll all be white
+            function getColor2(style) {
+                switch (style) {
+                    case 0:
+                        return 'black';
+                    case 1:
+                        return "#ff7f0e" ;
+                    default:
+                        return 'black';
+                }
+            }
             // Use layer group for gliders
             let glidersLayer = L.layerGroup([
                 L.geoJson(linesDict, {style: style}),
@@ -476,7 +495,7 @@
                     },
                     onEachFeature: popupText
             })
-            let shipLayer =  L.geoJSON(shipDict, {color:random,
+            let shipLayer =  L.geoJSON(shipDict, {style: styler,
                 lineStringToLayer: function (feature, latlng) {
                     return L.line(latlng, );
                 },
