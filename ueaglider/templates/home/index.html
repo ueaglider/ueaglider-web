@@ -103,6 +103,7 @@
             let huginDict = JSON.parse('{{ hugin_dict| tojson | safe}}');
             let alrDict = JSON.parse('{{ alr_dict| tojson | safe}}');
             let shipDict = JSON.parse('{{ ship_dict| tojson | safe}}');
+            let shipDaysDict = JSON.parse('{{ ship_days_dict| tojson | safe}}');
             let wpDict = JSON.parse('{{ wp_dict| tojson | safe}}');
             let pointsDict = JSON.parse('{{ points_dict| tojson | safe}}');
             // Argos tag fun zone
@@ -331,10 +332,15 @@
             function getColor2(style) {
                 switch (style) {
                     case 0:
-                        return 'black';
+                        return "#ee7103" ;
                     case 1:
-                        return "#ff7f0e" ;
-                    default:
+                        return "#385be5";
+                    case 2:
+                        return '#e8ef09';
+                    case 3:
+                        return '#f9faf8';
+                    case 4:
+                        return '#0e0e0e';
                         return 'black';
                 }
             }
@@ -495,12 +501,22 @@
                     },
                     onEachFeature: popupText
             })
-            let shipLayer =  L.geoJSON(shipDict, {style: styler,
+            let shipLayer = L.layerGroup([ L.geoJSON(shipDict, {style: styler,
                 lineStringToLayer: function (feature, latlng) {
                     return L.line(latlng, );
                 },
                 onEachFeature: popupText
-            }).addTo(map);
+            }),
+           L.geoJson(shipDaysDict, {
+                pointToLayer: function (feature, latlng) {
+                    return new L.CircleMarker(latlng, {radius: 5,
+                        fillOpacity: 0.9,
+                        color: 'black',
+                        fillColor: 'black',
+                        weight: 1,});
+                },
+                onEachFeature: popupText
+            })]).addTo(map);
             let wpLayer = L.geoJSON(wpDict, {
                 pointToLayer: function (feature, latlng) {
                     return L.marker(latlng, {icon: targetIcon});
