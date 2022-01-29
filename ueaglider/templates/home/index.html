@@ -232,11 +232,11 @@
             let locsIcon = L.icon({
                 iconUrl: '/static/img/icons/argos.png',
                 shadowUrl: '/static/img/icons/targetshadow.png',
-                iconSize:     [32, 26], // size of the icon
-                shadowSize:   [32, 32], // size of the shadow
+                iconSize:     [50, 40], // size of the icon
+                shadowSize:   [40, 40], // size of the shadow
                 iconAnchor:   [16, 26], // point of the icon which will correspond to marker's location
-                shadowAnchor: [10, 31],  // the same for the shadow
-                popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
+                shadowAnchor: [0, 31],  // the same for the shadow
+                popupAnchor:  [10, -30] // point from which the popup should open relative to the iconAnchor
             });
 
             // Argos tag layers in style of glider layers
@@ -509,7 +509,7 @@
             }).addTo(map);
             let pointsLayer = L.geoJSON(pointsDict, {
                 pointToLayer: function (feature, latlng) {
-                    return L.marker(latlng, {icon: targetIcon});
+                    return L.marker(latlng, {icon: locsIcon});
                 },
                 onEachFeature: popupText
             }).addTo(map);
@@ -626,7 +626,8 @@
     - If you don't see the ship's track (orange line) or blue background, visit <a href=https://dasng.nbp.usap.gov>https://dasng.nbp.usap.gov</a>
     click "advanced" and "proceed to dasng.nbp.usap.gov (unsafe)" or similar, then come back here and refresh the page. This will tell your browser to trust data coming from NBP's servers <br>
     - You can use the ruler on the left to get a distance between points. Do the same with <a href=https://maps.nbp.usap.gov>https://maps.nbp.usap.gov</a>  to get map layers<br>
-    - Points of interest can be added to the map by editing a file on the science drive science/NBP2202/data-to-map/points-for-map.txt. You can right-click on the map and select "show coordinates" where you wish to place a pin. NB These points can take up to 10 minutes
+    - Points of interest can be added to the map by editing a file on the science drive science/NBP2202/data-to-map/points-for-map.txt.
+    You can right-click on the map and select "show coordinates" where you wish to place a pin. NB These points can take up to 10 minutes to appear on the map
 <h3> Where are the data coming from?</h3>
     - Ships's track and several background layers like place names and GEBCO bathy are pulled from the ship's systems in the same manner as the NBP map<br>
     - AMSR ice imagery is created from the AMSR geotiffs using gdal2tiles (thanks Ashley!) and gdalwarp (thanks Li!). This is updated daily<br>
