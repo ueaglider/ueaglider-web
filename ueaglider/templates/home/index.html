@@ -104,6 +104,7 @@
             let alrDict = JSON.parse('{{ alr_dict| tojson | safe}}');
             let shipDict = JSON.parse('{{ ship_dict| tojson | safe}}');
             let wpDict = JSON.parse('{{ wp_dict| tojson | safe}}');
+            let pointsDict = JSON.parse('{{ points_dict| tojson | safe}}');
             // Argos tag fun zone
             let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
             let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
@@ -506,6 +507,12 @@
                 },
                 onEachFeature: popupText
             }).addTo(map);
+            let pointsLayer = L.geoJSON(pointsDict, {
+                pointToLayer: function (feature, latlng) {
+                    return L.marker(latlng, {icon: targetIcon});
+                },
+                onEachFeature: popupText
+            }).addTo(map);
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
@@ -527,6 +534,7 @@
 
                 Ship: shipLayer,
                 Waypoint: wpLayer,
+                "Points of interest": pointsLayer,
                 "gliders": glidersLayer,
                 "gliders extra": glidersExtra,
                 CTD: ctdLayer,
@@ -614,11 +622,11 @@
 
 <h3> How do I use this map?</h3>
     - Select layers with icon in upper right corner <br>
-
+    - Click on items to get info including location, time and (where valid0 event number matching event log
     - If you don't see the ship's track (orange line) or blue background, visit <a href=https://dasng.nbp.usap.gov>https://dasng.nbp.usap.gov</a>
     click "advanced" and "proceed to dasng.nbp.usap.gov (unsafe)" or similar, then come back here and refresh the page. This will tell your browser to trust data coming from NBP's servers <br>
     - You can use the ruler on the left to get a distance between points. Do the same with <a href=https://maps.nbp.usap.gov>https://maps.nbp.usap.gov</a>  to get map layers<br>
-
+    - Points of interest can be added to the map by editing a file on the science drive science/NBP2202/data-to-map/points-for-map.txt. You can right-click on the map and select "show coordinates" where you wish to place a pin. NB These points can take up to 10 minutes
 <h3> Where are the data coming from?</h3>
     - Ships's track and several background layers like place names and GEBCO bathy are pulled from the ship's systems in the same manner as the NBP map<br>
     - AMSR ice imagery is created from the AMSR geotiffs using gdal2tiles (thanks Ashley!) and gdalwarp (thanks Li!). This is updated daily<br>
