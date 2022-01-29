@@ -332,16 +332,15 @@
             function getColor2(style) {
                 switch (style) {
                     case 0:
-                        return "#ee7103" ;
+                        return "#ee8803" ;
                     case 1:
                         return "#385be5";
                     case 2:
-                        return '#e8ef09';
+                        return '#07cb27';
                     case 3:
-                        return '#f9faf8';
-                    case 4:
                         return '#0e0e0e';
-                        return 'black';
+                    case 4:
+                        return '#f5f5f5';
                 }
             }
             // Use layer group for gliders
@@ -636,24 +635,27 @@
         </script>
     </div>
 
+
+<div class="container instructions">
 <h3> How do I use this map?</h3>
     - Select layers with icon in upper right corner <br>
-    - Click on items to get info including location, time and (where valid0 event number matching event log
-    - If you don't see the ship's track (orange line) or blue background, visit <a href=https://dasng.nbp.usap.gov>https://dasng.nbp.usap.gov</a>
+    - Click on items to get info including location, time and event number<br>
+    - Subset times using the calendar fields at the top of the page. Note, this will reset the map, so select time before selecting layers <br>
+    - If you don't see any background imagery, visit <a href=https://dasng.nbp.usap.gov>https://dasng.nbp.usap.gov</a>
     click "advanced" and "proceed to dasng.nbp.usap.gov (unsafe)" or similar, then come back here and refresh the page. This will tell your browser to trust data coming from NBP's servers <br>
     - You can use the ruler on the left to get a distance between points. Do the same with <a href=https://maps.nbp.usap.gov>https://maps.nbp.usap.gov</a>  to get map layers<br>
     - Points of interest can be added to the map by editing a file on the science drive science/NBP2202/data-to-map/points-for-map.txt.
-    You can right-click on the map and select "show coordinates" where you wish to place a pin. NB These points can take up to 10 minutes to appear on the map
+    You can right-click on the map and select "show coordinates" where you wish to place a pin. NB These points can take up to a minute appear on the map & will require a refresh
 <h3> Where are the data coming from?</h3>
-    - Ships's track and several background layers like place names and GEBCO bathy are pulled from the ship's systems in the same manner as the NBP map<br>
-    - AMSR ice imagery is created from the AMSR geotiffs using gdal2tiles (thanks Ashley!) and gdalwarp (thanks Li!). This is updated daily<br>
+    - Ships's track and several background layers like place names and GEBCO bathymetry are pulled from the ship's systems in the same manner as the NBP map<br>
+    - AMSR ice extent and MODIS imagery are created from the AMSR and MODIS geotiffs using gdal2tiles (thanks Ashley!) and gdalwarp (thanks Li!). This is updated daily<br>
     - Glider data are pulled from a database that is updated a few times a day<br>
     - Other datasets are automagically parsed from the event log. You can see the scripts used to perform this on the science drive in "data-to-map"<br>
     - Want to see your dataset on here? Talk to Callum :) <br>
 <h3> What else is here?</h3>
     - This website is based on the <a href="ueaglider.uea.ac.uk">ueaglider website</a> with modifications to pull data from NBP rather than the internet <br>
-    - All code is available in a <a href="github.com/ueaglider/ueaglider-web">GitHub repo</a> or from Callum
+    - All code is available in a <a href="github.com/ueaglider/ueaglider-web">GitHub repo</a> or from Callum <br>
     - This is a work in progress! Any feedback is much appreciated
-
+</div>
 {% endblock %}
 
