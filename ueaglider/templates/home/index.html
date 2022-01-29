@@ -103,6 +103,7 @@
             let huginDict = JSON.parse('{{ hugin_dict| tojson | safe}}');
             let alrDict = JSON.parse('{{ alr_dict| tojson | safe}}');
             let shipDict = JSON.parse('{{ ship_dict| tojson | safe}}');
+            let wpDict = JSON.parse('{{ wp_dict| tojson | safe}}');
             // Argos tag fun zone
             let locsDict_good = JSON.parse('{{ locs_by_tag_json[0]| tojson | safe}}');
             let locsLinesDict_good = JSON.parse('{{ lines_by_tag_json[0]| tojson | safe}}');
@@ -405,8 +406,6 @@
 
 
             // Add waypoint marker
-            wptMarker = getNextWaypoint();
-            wptMarker.addTo(map);
             // Seals
 
             //L.geoJson(sealsLinesDict, {style: style})
@@ -501,6 +500,12 @@
                 },
                 onEachFeature: popupText
             }).addTo(map);
+            let wpLayer = L.geoJSON(wpDict, {
+                pointToLayer: function (feature, latlng) {
+                    return L.marker(latlng, {icon: targetIcon});
+                },
+                onEachFeature: popupText
+            }).addTo(map);
             var terminator = L.terminator();
             // Optional layers that plot on top of the basemap
             let mapLayers = {
@@ -521,6 +526,7 @@
                 "GEBCO 2020 <span style='color: red'>50 m</span><br><span style='color: blue'>200 m</span> <span style='color: grey'>500 m</span> 1000 m)<br><hr>": gebcoLinesLayer,
 
                 Ship: shipLayer,
+                Waypoint: wpLayer,
                 "gliders": glidersLayer,
                 "gliders extra": glidersExtra,
                 CTD: ctdLayer,

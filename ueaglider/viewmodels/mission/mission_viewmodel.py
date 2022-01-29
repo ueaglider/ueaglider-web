@@ -137,7 +137,7 @@ class MissionViewModel(ViewModelBase):
     def add_events(self):
         blank_json_dict = {"type": "FeatureCollection", "features": []}
         event_dir = folder+'/static/nbp_data/'
-        for dataset in ['ctd', 'tmc', 'core', 'thor', 'hugin', 'alr', 'vmp', 'ship']:
+        for dataset in ['ctd', 'tmc', 'core', 'thor', 'hugin', 'alr', 'vmp', 'ship', 'wp']:
             try:
                 with open(f"{event_dir}{dataset}.json") as json_to_load:
                     json_dict = json.load(json_to_load)
