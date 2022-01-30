@@ -57,9 +57,6 @@
 
 {% block main_content %}
 
-    <h1>ITGC science map</h1>
-    Scroll down for tips and instructions
-
         <div class="container timesel">
         <table class="table">
             <thead>
@@ -565,6 +562,10 @@
                 {% endfor %}
                 {% for d, n in modis_dict.items() %}
                     "MODIS {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.5, minZoom: 1, maxZoom: 10},
+                        {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
+                {% endfor %}
+                {% for d, n in polar_dict.items() %}
+                    "Polar View {{d}}": L.tileLayer("{{ n }}/{z}/{x}/{y}.png", {tms: true, opacity: 0.7, minZoom: 1, maxZoom: 10},
                         {minZoom: 0, maxZoom: 8, errorTileUrl:  '/static/img/transparent-tile.png'}),
                 {% endfor %}
                 //"Seals 🦭 🦭 🦭": sealsLayer,

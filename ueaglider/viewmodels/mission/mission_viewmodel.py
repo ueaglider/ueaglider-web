@@ -169,7 +169,7 @@ class MissionViewModel(ViewModelBase):
                 amsr_dict[date_str] = amsr[-32:]
             self.amsr_dict = amsr_dict
         except:
-            self.modis_dict = {}
+            self.amsr_dict = {}
 
         try:
             modis_dirs = glob.glob(f'{folder}/static/img/tiles/MODIS*')
@@ -183,4 +183,14 @@ class MissionViewModel(ViewModelBase):
         except:
             self.modis_dict = {}
 
-
+        try:
+            polar_dirs = glob.glob(f'{folder}/static/img/tiles/polarview/*')
+            polar_dirs.sort()
+            polar_dict = {}
+            for amsr in polar_dirs:
+                amsr_date = amsr.split('/')[-1]
+                date_str = f"{amsr_date[:4]}-{amsr_date[4:6]}-{amsr_date[6:8]} {amsr_date[9:11]}:{amsr_date[11:13]}:{amsr_date[13:15]}"
+                polar_dict[date_str] = amsr[-42:]
+            self.polar_dict = polar_dict
+        except:
+            self.polar_dict = {}
