@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="/static/css/leaflet_002.css"/>
     <script src="static/js/leaflet.js"></script>
     <!-- Link to providers CSS and javascript for leaflet provider extension-->
-    <script src="static/js/leaflet-providers.js"></script>
-    <!-- Link to graticle extension-->
     <script src="static/js/Leaflet.Graticule.js"></script>
 
     <title>ITGC map</title>
@@ -98,6 +96,7 @@
             let coreDict = JSON.parse('{{ core_dict| tojson | safe}}');
             let thorDict = JSON.parse('{{ thor_dict| tojson | safe}}');
             let huginDict = JSON.parse('{{ hugin_dict| tojson | safe}}');
+            let huginBottleDict = JSON.parse('{{ hugin_bottle_dict| tojson | safe}}');
             let alrDict = JSON.parse('{{ alr_dict| tojson | safe}}');
             let shipDict = JSON.parse('{{ ship_dict| tojson | safe}}');
             let shipDaysDict = JSON.parse('{{ ship_days_dict| tojson | safe}}');
@@ -458,8 +457,14 @@
             let coreIcon = L.icon({
                 iconUrl: '/static/img/icons/core.png',
                 iconSize:     [30, 30], // size of the icon
-                iconAnchor:   [20, 15], // point of the icon which will correspond to marker's location
+                iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
                 popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+            });
+            let waterIcon =  L.icon({
+                iconUrl: '/static/img/icons/bottle.png',
+                iconSize:     [30, 30], // size of the icon
+                iconAnchor:   [15, 15], // point of the icon which will correspond to marker's location
+                popupAnchor:  [5, -15] // point from which the popup should open relative to the iconAnchor
             });
 
             let coreLayer =  L.geoJSON(coreDict, {
@@ -484,12 +489,20 @@
             })
 
 
-            let huginLayer =  L.geoJSON(huginDict, {color:'#00b2ff',
+            let huginLayer =  L.layerGroup([L.geoJSON(huginDict, {color:'#00b2ff',
                     lineStringToLayer: function (feature, latlng) {
                         return L.line(latlng, );
                     },
                     onEachFeature: popupText
-            })
+            }),
+
+
+             L.geoJSON(huginBottleDict, {
+                pointToLayer: function (feature, latlng) {
+                    return L.marker(latlng, {icon: waterIcon});
+                },
+                onEachFeature: popupText
+            })])
 
             let alrLayer =  L.geoJSON(alrDict, {color:'#fffb08',
                     lineStringToLayer: function (feature, latlng) {
