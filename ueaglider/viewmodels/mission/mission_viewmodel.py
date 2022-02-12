@@ -165,10 +165,11 @@ class MissionViewModel(ViewModelBase):
                     df = pd.read_csv(f"{event_dir}1_min_nrt.csv", parse_dates=['datetime'])
                     df_a = df[df.datetime > self.start_dt]
                     df_cut = df_a[df_a.datetime < self.end_dt]
+                    today = df.julian_day.values[-1]
                     jul_days = np.unique(df_cut.julian_day)
                     items = []
                     for day in jul_days:
-                        if day == jul_days[-1]:
+                        if day == today:
                             last_day = True
                         else:
                             last_day = False

@@ -161,7 +161,9 @@
             var startposition = new L.LatLng(parseFloat(init_lat),parseFloat(init_lon));
 
             // Set initial map view (center & zoom)
-            map.setView([-73,-115], zoom);
+            map.setView([-73.9,-113.6], 8);
+
+            //map.setView([-73,-115], zoom);
             map.attributionControl.setPrefix("Zoom: " + zoom);
             map.zoomControl.remove() // hide zoom control.  readd if showcontrols is true (see below)
 
@@ -233,8 +235,8 @@
                 shadowUrl: '/static/img/icons/targetshadow.png',
                 iconSize:     [50, 40], // size of the icon
                 shadowSize:   [40, 40], // size of the shadow
-                iconAnchor:   [16, 26], // point of the icon which will correspond to marker's location
-                shadowAnchor: [0, 31],  // the same for the shadow
+                iconAnchor:   [25, 30], // point of the icon which will correspond to marker's location
+                shadowAnchor: [10, 32],  // the same for the shadow
                 popupAnchor:  [10, -30] // point from which the popup should open relative to the iconAnchor
             });
 
@@ -528,15 +530,15 @@
                 },
                 onEachFeature: popupText
             })]).addTo(map);
-            let wpLayer = L.geoJSON(wpDict, {
-                pointToLayer: function (feature, latlng) {
-                    return L.marker(latlng, {icon: targetIcon});
-                },
-                onEachFeature: popupText
-            }).addTo(map);
             let pointsLayer = L.geoJSON(pointsDict, {
                 pointToLayer: function (feature, latlng) {
                     return L.marker(latlng, {icon: locsIcon});
+                },
+                onEachFeature: popupText
+            }).addTo(map);
+            let wpLayer = L.geoJSON(wpDict, {
+                pointToLayer: function (feature, latlng) {
+                    return L.marker(latlng, {icon: targetIcon});
                 },
                 onEachFeature: popupText
             }).addTo(map);
