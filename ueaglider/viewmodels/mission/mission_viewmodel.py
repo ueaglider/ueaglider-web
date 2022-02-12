@@ -4,6 +4,8 @@ import sys
 import json
 import glob
 import datetime
+import pandas as pd
+import numpy as np
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
@@ -57,15 +59,34 @@ class MissionViewModel(ViewModelBase):
         ]
         self.start = self.request_dict.start
         self.end = self.request_dict.end
+        self.start_time = self.request_dict.start_time
+        self.end_time = self.request_dict.end_time
+        if self.start_time or self.end_time:
+            self.hidef_ship_track = True
+        else:
+            self.hidef_ship_track = False
         if not self.start:
             self.start_dt = datetime.datetime(2000, 1, 1)
         else:
-            self.start_dt = datetime.datetime(int(self.start[:4]), int(self.start[5:7]), int(self.start[8:]))
+            if not self.start_time:
+                start_hour = 0
+                start_min = 0
+            else:
+                start_hour = int(self.start_time[:2])
+                start_min = int(self.start_time[3:])
+            self.start_dt = datetime.datetime(int(self.start[:4]), int(self.start[5:7]), int(self.start[8:]),
+                                              start_hour, start_min)
         if not self.end:
             self.end_dt = datetime.datetime(2100, 1, 1)
         else:
-            self.end_dt = datetime.datetime(int(self.end[:4]), int(self.end[5:7]), int(self.end[8:]))\
-                          + datetime.timedelta(days=1)
+            if not self.end_time:
+                end_hour = 23
+                end_min = 59
+            else:
+                end_hour = int(self.end_time[:2])
+                end_min = int(self.end_time[3:])
+            self.end_dt = datetime.datetime(int(self.end[:4]), int(self.end[5:7]), int(self.end[8:]),
+                                            end_hour, end_min)
 
     def check_dives(self):
         if self.mission_id >= 62:
@@ -140,6 +161,25 @@ class MissionViewModel(ViewModelBase):
         for dataset in ['ctd', 'tmc', 'core', 'thor', 'hugin', 'alr', 'vmp', 'ship', 'wp', 'points', 'ship_days',
                         'hugin_bottle']:
             try:
+                if self.hidef_ship_track and dataset == 'ship':
+                    df = pd.read_csv(f"{event_dir}1_min_nrt.csv", parse_dates=['datetime'])
+                    df_a = df[df.datetime > self.start_dt]
+                    df_cut = df_a[df_a.datetime < self.end_dt]
+                    jul_days = np.unique(df_cut.julian_day)
+                    items = []
+                    for day in jul_days:
+                        if day == jul_days[-1]:
+                            last_day = True
+                        else:
+                            last_day = False
+                        df_sub = df_cut[df_cut.julian_day == day]
+                        items.append(mission_service.track_to_json(df_sub, today=last_day))
+                    tgtdict = {
+                        "type": "FeatureCollection",
+                        "features": items
+                    }
+                    self.__setattr__(f"{dataset}_dict", tgtdict)
+                    continue
                 with open(f"{event_dir}{dataset}.json") as json_to_load:
                     json_dict = json.load(json_to_load)
                 features = json_dict['features']
@@ -148,8 +188,11 @@ class MissionViewModel(ViewModelBase):
                     try:
                         start = datetime.datetime.fromisoformat(feature['start'])
                     except:
-                        features_in_time.append(feature)
-                        continue
+                        try:
+                            start = datetime.datetime.fromisoformat(feature['end'])
+                        except:
+                            features_in_time.append(feature)
+                            continue
                     try:
                         end = datetime.datetime.fromisoformat(feature['end'])
                     except:

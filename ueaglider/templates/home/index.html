@@ -67,8 +67,10 @@
             </thead>
             <tbody>
             <td><form action="" method="POST" class="account-form">
-            <input name="start" type="date" placeholder=" Start date" class="form-control" value="{{ start }}" required></td>
-            <td> <input name="end" type="date" placeholder=" End date " class="form-control" value="{{ end }}" required></td>
+            <input name="start" type="date" placeholder=" Start date" class="form-control" value="{{ start }}" required>
+            <input name="start_time" type="time" placeholder=" Start time" class="form-control" value="{{ start_time }}" optional></td>
+            <td> <input name="end" type="date" placeholder=" End date " class="form-control" value="{{ end }}" required>
+            <input name="end_time" type="time" placeholder="End time" class="form-control" value="{{ end_time }}" optional></td>
             <td><button type="submit" class="btn btn-danger">Subset to dates</button></td>
             <div style="clear: both;"></div></form>
             </tbody>

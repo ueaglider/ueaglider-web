@@ -32,10 +32,10 @@ def get_dive(glider_num, dive_num, mission_num):
     if not glider:
         return None
     glider_id = glider.Number
-    dive = session.query(Dives)\
-        .filter(Dives.GliderID == glider_id)\
-        .filter(Dives.DiveNo == dive_num)\
-        .filter(Dives.MissionID == mission_num)\
+    dive = session.query(Dives) \
+        .filter(Dives.GliderID == glider_id) \
+        .filter(Dives.DiveNo == dive_num) \
+        .filter(Dives.MissionID == mission_num) \
         .first()
     session.close()
     if not dive:
@@ -93,11 +93,11 @@ def get_dive_count(filter_glider=False) -> int:
             .filter(Dives.GliderID == filter_glider) \
             .filter(Dives.MissionID.notin_(non_uea_mission_numbers)).count()
     else:
-        non_uea_gliders_list = session.query(Gliders.Number)\
+        non_uea_gliders_list = session.query(Gliders.Number) \
             .filter(Gliders.UEAGlider == 0) \
             .all()
         non_uea_gliders = [y for x in non_uea_gliders_list for y in x]
-        dives = session.query(Dives)\
+        dives = session.query(Dives) \
             .filter(Dives.GliderID.notin_(non_uea_gliders)) \
             .filter(Dives.MissionID.notin_(non_uea_mission_numbers)).count()
     session.close()
@@ -320,3 +320,30 @@ def get_seals():
     seals = session.query(SealDive.TagNumber).all()
     session.close()
     return locs, seals
+
+
+def track_to_json(df, today=False) -> dict:
+    """ converts a dataframe of track points to geojson format"""
+    loc_list = []
+    for i, row in df.iterrows():
+        if not np.isnan(row.lon) and not np.isnan(row.lat):
+            loc = [row.lon, row.lat]
+            loc_list.append(loc)
+    start_time = df.loc[df.index[0], 'datetime']
+    end_time = df.loc[df.index[-1], 'datetime']
+    jul = df.loc[df.index[0]].julian_day
+    if today:
+        glider_order = 4
+    else:
+        glider_order = int(jul) % 4
+    target_item = {
+        "type": "Feature",
+        "properties": {"popupContent": f"Julian day {int(jul)}",
+                       "gliderOrder": glider_order},
+        "start": start_time,
+        "end": end_time,
+        "geometry": {
+            "type": "LineString",
+            "coordinates": loc_list
+        }}
+    return target_item
