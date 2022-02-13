@@ -239,5 +239,7 @@ class MissionViewModel(ViewModelBase):
             self.polar_dict = polar_dict
         except:
             self.polar_dict = {}
+        self.pre_start_time = self.start_time
+        self.pre_end_time = self.end_time
         self.start_time = None
         self.end_time = None
