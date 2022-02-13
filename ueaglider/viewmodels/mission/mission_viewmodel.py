@@ -159,7 +159,7 @@ class MissionViewModel(ViewModelBase):
         blank_json_dict = {"type": "FeatureCollection", "features": []}
         event_dir = folder+'/static/nbp_data/'
         for dataset in ['ctd', 'tmc', 'core', 'thor', 'hugin', 'alr', 'vmp', 'ship', 'wp', 'points', 'ship_days',
-                        'hugin_bottle']:
+                        'hugin_bottle', 'fish']:
             try:
                 if self.hidef_ship_track and dataset == 'ship':
                     df = pd.read_csv(f"{event_dir}1_min_nrt.csv", parse_dates=['datetime'])
