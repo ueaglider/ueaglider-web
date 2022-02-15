@@ -163,7 +163,7 @@
             var startposition = new L.LatLng(parseFloat(init_lat),parseFloat(init_lon));
 
             // Set initial map view (center & zoom)
-            map.setView([-73.9,-113.6], 8);
+            map.setView([-74,-114.2], 8);
 
             //map.setView([-73,-115], zoom);
             map.attributionControl.setPrefix("Zoom: " + zoom);
@@ -239,7 +239,7 @@
                 shadowSize:   [40, 40], // size of the shadow
                 iconAnchor:   [25, 30], // point of the icon which will correspond to marker's location
                 shadowAnchor: [10, 32],  // the same for the shadow
-                popupAnchor:  [10, -30] // point from which the popup should open relative to the iconAnchor
+                popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
             });
 
             // Argos tag layers in style of glider layers
