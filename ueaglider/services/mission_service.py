@@ -1,5 +1,5 @@
 from typing import Optional, Any
-
+import datetime
 from ueaglider.data.db_session import create_session
 from ueaglider.data.db_classes import Gliders, Missions, Dives, Targets, Pins, ArgosLocations, ArgosTags
 
@@ -216,6 +216,12 @@ def get_mission_dives(mission_id) -> Optional[Any]:
             .filter(Dives.GliderID == glider_id) \
             .order_by(Dives.DiveNo.desc()) \
             .all()
+        # Correct for GPS rollover if present
+        for dive in dives:
+            if not dive.ReceivedDate:
+                continue
+            if dive.ReceivedDate < datetime.datetime(2010, 1, 1):
+                dive.ReceivedDate = dive.ReceivedDate + datetime.timedelta(weeks=1024)
         dives_by_glider.append(dives)
         most_recent_dives.append(dives[0])
 
