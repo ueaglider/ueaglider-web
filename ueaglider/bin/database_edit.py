@@ -44,7 +44,7 @@ def backfill_dives(glider_num):
             gps_line = None
             dive_num = 0
             for line in origin_file:
-                sel_line = re.findall(r'\$GPS', line)
+                sel_line = re.findall(r'\$GPS,', line)
                 if sel_line:
                     # Keep only most recent GPS line
                     gps_line = line
