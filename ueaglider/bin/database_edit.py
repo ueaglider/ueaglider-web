@@ -6,6 +6,7 @@ import datetime
 import json
 import os
 import xarray as xr
+import glob
 
 folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 sys.path.insert(0, folder)
@@ -26,8 +27,64 @@ Session = sessionmaker(bind=engine)
 def main():
     # get glider num from bash script. Gliders are linux users named sgXXX where XXX is the glider number
     glider_num = sys.argv[1][2:]
-    add_dive(glider_num)
+    try:
+        add_dive(glider_num)
+    except:
+        print("add_dive failed")
+    backfill_dives(glider_num)
 
+
+def backfill_dives(glider_num):
+    glider_dir = "/home/sg" + str(int(glider_num)).zfill(3)
+    log_files = glob.glob(f"{glider_dir}/p*.log")
+    session = Session()
+    for log_file in log_files:
+        with open(log_file) as origin_file:
+            # Go through comm log looking for GPS lines
+            gps_line = None
+            dive_num = 0
+            for line in origin_file:
+                sel_line = re.findall(r'\$GPS', line)
+                if sel_line:
+                    # Keep only most recent GPS line
+                    gps_line = line
+                dive_line = re.findall(r'\$DIVE,', line)
+                if dive_line:
+                    dive_num = int(line.split(',')[1])
+            if not gps_line:
+                continue
+            if dive_num == 0:
+                continue
+            gps_list = gps_line.split(',')
+            date = gps_list[1]
+            time = gps_list[2]
+            dive_datetime = datetime.datetime.strptime(date + time, "%d%m%y%H%M%S")
+            lat = float(gps_list[3]) / 100
+            lon = float(gps_list[4]) / 100
+            status_str = None
+            elevation = gebco_depth(lat, lon)
+            glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
+            mission_num = session.query(Missions).filter(Missions.Number == glider.MissionID).first().Number
+            dive_exists = session.query(Dives) \
+                .filter(Dives.GliderID == int(glider_num)) \
+                .filter(Dives.DiveNo == dive_num) \
+                .filter(Dives.MissionID == mission_num) \
+                .first()
+            # stop if dive already exists
+            if dive_exists:
+                continue
+            dive = Dives()
+            dive.MissionID = mission_num
+            dive.GliderID = glider_num
+            dive.Longitude = coord_db_decimal(lon)
+            dive.Latitude = coord_db_decimal(lat)
+            dive.DiveNo = dive_num
+            dive.Status = status_str
+            dive.ReceivedDate = dive_datetime
+            dive.Elevation = elevation
+            session.add(dive)
+    session.commit()
+    session.close()
 
 def add_dive(glider_num):
     session = Session()
