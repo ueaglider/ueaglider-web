@@ -38,6 +38,16 @@ def list_gliders(non_uea=False) -> list:
     return gliders
 
 
+def list_all_gliders() -> list:
+    session = create_session()
+    gliders = session.query(Gliders) \
+        .order_by(
+        Gliders.Number.asc())\
+        .all()
+    session.close()
+    return gliders
+
+
 def glider_info(glider_num):
     session = create_session()
     glider_instance = session.query(Gliders).filter(Gliders.Number == glider_num).first()

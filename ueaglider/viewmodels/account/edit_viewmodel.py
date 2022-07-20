@@ -1,5 +1,5 @@
 from ueaglider.data.db_classes import coord_db_decimal
-from ueaglider.services import mission_service, glider_service
+from ueaglider.services import mission_service, glider_service, argos_service
 from ueaglider.viewmodels.shared.viewmodelbase import ViewModelBase
 
 
@@ -126,6 +126,37 @@ class AddGliderViewModel(ViewModelBase):
             self.ueaglider = False
 
 
+class AddTagViewModel(ViewModelBase):
+    def __init__(self):
+        super().__init__()
+        tag_nums = argos_service.tag_nums()
+        id_list = [y for x in tag_nums for y in x]
+        self.tag_nums = id_list
+        self.missionid = self.request_dict.missionid
+        if self.missionid:
+            self.missionid = int(self.missionid)
+        self.gliderid = self.request_dict.gliderid
+        if self.gliderid:
+            self.gliderid = int(self.gliderid)
+        self.tag_num = self.request_dict.tag_num
+        if self.tag_num:
+            self.tag_num = int(self.tag_num)
+        self.overwrite_check = self.request_dict.overwrite_check
+
+    def validate(self):
+        if not self.tag_num or not self.missionid or not self.gliderid:
+            self.error = 'Please fill in all fields'
+
+        if self.tag_num in self.tag_nums:
+            # Error if the glider already exists
+            if 'overwrite_check' in self.request_dict:
+                # Unless user opted to overwrite it
+                self.overwrite_check = True
+            else:
+                self.error = 'Tag number' + str(self.tag_num) + ' already exists'
+
+
+
 class RemovePinViewModel(ViewModelBase):
     def __init__(self):
         super().__init__()
@@ -226,6 +257,30 @@ class RemoveDiveViewModel(ViewModelBase):
         self.dive_id_confirm = ''
 
 
+class RemoveMultipleDivesViewModel(ViewModelBase):
+    def __init__(self):
+        super().__init__()
+        glider_nums = glider_service.glider_nums()
+        self.all_glider_ids = [y for x in glider_nums for y in x]
+        self.gliders = glider_service.list_all_gliders()
+        self.glider_id = self.request_dict.glider_id
+        self.glider_id_confirm = self.request_dict.glider_id_confirm
+
+    def validate(self):
+        if not self.glider_id or not self.glider_id_confirm:
+            self.error = 'Please fill in all fields'
+        self.glider_id = int(self.glider_id)
+        self.glider_id_confirm = int(self.glider_id_confirm)
+        if self.glider_id != self.glider_id_confirm:
+            self.error = 'Supplied values do not match'
+        elif self.glider_id not in self.all_glider_ids:
+            self.error = 'Glider not found'
+
+    def update(self):
+        self.glider_id = ''
+        self.glider_id_confirm = ''
+
+
 class AssignGliderViewModel(ViewModelBase):
     def __init__(self):
         super().__init__()
@@ -248,6 +303,42 @@ class AssignGliderViewModel(ViewModelBase):
         if self.glider_num not in self.glider_nums:
             # Error if the glider already exists
             self.error = 'Glider SG' + str(self.glider_num) + ' does not exist'
+
+        if self.missionid not in self.all_mission_ids:
+            self.error = 'Mission ' + str(self.missionid) + ' does not exist'
+
+
+class AssignTagViewModel(ViewModelBase):
+    def __init__(self):
+        super().__init__()
+        tag_nums = argos_service.tag_nums()
+        id_list = [y for x in tag_nums for y in x]
+        self.missions, mission_ids = mission_service.get_missions()
+        self.all_mission_ids = [y for x in mission_ids for y in x]
+        self.tag_nums = id_list
+        glider_nums = glider_service.glider_nums()
+        glider_list = [y for x in glider_nums for y in x]
+        self.glider_nums = glider_list
+        self.missionid = self.request_dict.missionid
+        if self.missionid:
+            self.missionid = int(self.missionid)
+        self.gliderid = self.request_dict.gliderid
+        if self.gliderid:
+            self.gliderid = int(self.gliderid)
+        self.tag_num = self.request_dict.tag_num
+        if self.tag_num:
+            self.tag_num = int(self.tag_num)
+
+    def validate(self):
+        if self.tag_num not in self.tag_nums:
+            self.error = 'Tag number not found in database'
+
+        if not self.tag_num or not self.missionid or not self.gliderid:
+            self.error = 'Please fill in all fields'
+
+        if self.gliderid not in self.glider_nums:
+            # Error if the glider already exists
+            self.error = 'Glider SG' + str(self.gliderid) + ' does not exist'
 
         if self.missionid not in self.all_mission_ids:
             self.error = 'Mission ' + str(self.missionid) + ' does not exist'

@@ -10,10 +10,10 @@ from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import user_service, db_edits
 from ueaglider.infrastructure import cookie_auth as cookie_auth
 from ueaglider.services.db_edits import audit_entry, delete_pin, delete_target, delete_mission, delete_glider, \
-    delete_dive, assign_glider
+    delete_dive, assign_glider, delete_tag, delete_multiple_dives
 from ueaglider.viewmodels.account.edit_viewmodel import AddPinViewModel, AddMissionViewModel, AddTargetViewModel, \
     RemovePinViewModel, RemoveTargetViewModel, RemoveMissionViewModel, AddGliderViewModel, RemoveDiveViewModel, \
-    AssignGliderViewModel
+    AssignGliderViewModel, AddTagViewModel, AssignTagViewModel, RemoveMultipleDivesViewModel
 from ueaglider.viewmodels.account.index_viewmodel import AccountIndexViewModel
 from ueaglider.viewmodels.account.login_viewmodel import LoginViewModel
 from ueaglider.viewmodels.account.register_viewmodel import RegisterViewModel
@@ -273,6 +273,43 @@ def addglider_post():
     return vm.to_dict()
 
 
+########################## ADD TAG ##########################
+
+
+@blueprint.route('/account/add_tag', methods=['GET'])
+@response(template_file='account/add_tag.html')
+def addtag_get():
+    vm = AddTagViewModel()
+
+    if not vm.user_id:
+        return flask.redirect('/account/login')
+    return vm.to_dict()
+
+
+@blueprint.route('/account/add_tag', methods=['POST'])
+@response(template_file='account/add_tag.html')
+def addtag_post():
+    vm = AddTagViewModel()
+    vm.validate()
+    if vm.error:
+        return vm.to_dict()
+    if vm.overwrite_check:
+        delete_tag(vm.tag_num)
+    tag = db_edits.create_tag(vm.tag_num, vm.missionid, vm.gliderid)
+    if not tag:
+        vm.error = 'The tag could not be created'
+        return vm.to_dict()
+
+    audit_message = 'Add tag' + str(vm.tag_num)
+    vm.message = f'Success! You have added tag {vm.tag_num}'
+    vm.tag_num = ''
+    vm.missionid = ''
+    vm.gliderid = ''
+    audit_log = audit_entry(vm.user_id, audit_message)
+    if audit_log:
+        vm.message = vm.message + '. This entry has been logged'
+    return vm.to_dict()
+
 ########################## REMOVE PIN ##########################
 
 
@@ -416,6 +453,43 @@ def remove_dive_post():
         vm.message = vm.message + '. This entry has been logged'
     return vm.to_dict()
 
+########################## REMOVE MANY DIVES ##########################
+
+
+@blueprint.route('/account/remove_multiple_dives', methods=['GET'])
+@response(template_file='account/remove_multiple_dives.html')
+def remove_multiple_dives_get():
+    vm = RemoveMultipleDivesViewModel()
+
+    if not vm.user_id:
+        return flask.redirect('/account/login')
+    return vm.to_dict()
+
+
+@blueprint.route('/account/remove_multiple_dives', methods=['POST'])
+@response(template_file='account/remove_multiple_dives.html')
+def remove_multiple_dives_post():
+    vm = RemoveMultipleDivesViewModel()
+    vm.validate()
+
+    if vm.error:
+        return vm.to_dict()
+
+    dive = delete_multiple_dives(vm.glider_id)
+    if not dive:
+        vm.error = 'Dives could not be removed'
+        return vm.to_dict()
+
+    audit_message = 'Removed dives glider' + str(dive.GliderID)
+    vm.message = 'Success! Removed dives from SG' + str(dive.GliderID) + \
+                 ' in Mission 1 <br> now go and delete the matlab lock files and dive images on the basestation:'\
+                 + f'<br> /home/matlab/processed/sg{str(dive.GliderID)}/processed.1-x' + \
+                 '<br> /mnt/gliderstore/dives/Mission1/' + str(dive.GliderID)
+    vm.update()
+    audit_log = audit_entry(vm.user_id, audit_message)
+    if audit_log:
+        vm.message = vm.message + '<br>This entry has been logged'
+    return vm.to_dict()
 
 ########################## ASSIGN GLIDER ##########################
 
@@ -448,6 +522,42 @@ def assignglider_post():
         vm.glider_num) + "</a>"  ' to ' + '<a href="/mission' + str(vm.missionid) + '">' + "mission " + str(vm.missionid) + "</a>"
     vm.glider_num = ''
     vm.missionid = ''
+    audit_log = audit_entry(vm.user_id, audit_message)
+    if audit_log:
+        vm.message = vm.message + '. This entry has been logged'
+    return vm.to_dict()
+
+########################## ASSIGN TAG ##########################
+
+
+@blueprint.route('/account/assign_tag', methods=['GET'])
+@response(template_file='account/assign_tag.html')
+def assigntag_get():
+    vm = AssignTagViewModel()
+
+    if not vm.user_id:
+        return flask.redirect('/account/login')
+    return vm.to_dict()
+
+
+@blueprint.route('/account/assign_tag', methods=['POST'])
+@response(template_file='account/assign_tag.html')
+def assigntag_post():
+    vm = AssignTagViewModel()
+    vm.validate()
+
+    if vm.error:
+        return vm.to_dict()
+    tag = db_edits.assign_tag(vm.tag_num, vm.missionid, vm.gliderid)
+    if not tag:
+        vm.error = 'The tag could not be assigned'
+        return vm.to_dict()
+
+    audit_message = 'Add tag' + str(vm.tag_num)
+    vm.message = f'Success! You have assigned tag {vm.tag_num} to SG{vm.gliderid} on mission {vm.missionid} '
+    vm.tag_num = ''
+    vm.missionid = ''
+    vm.gliderid = ''
     audit_log = audit_entry(vm.user_id, audit_message)
     if audit_log:
         vm.message = vm.message + '. This entry has been logged'

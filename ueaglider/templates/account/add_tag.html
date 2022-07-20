@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block main_content %}
+        <div class="form-container">
+        <form action="" method="POST" class="account-form">
+            <h1>Add Argos Tag</h1>
+            <input name="overwrite_check" type="checkbox" ><label for="overwrite_check"> Overwrite existing tag? DANGER data loss</label>
+            <input name="tag_num" type="number" placeholder="Tag number" min="1" class="form-control" value="{{ tag_num }}" required>
+            <input name="missionid" type="number" placeholder="Mission number" min="0" class="form-control" value="{{ missionid }}" required>
+            <input name="gliderid" type="number" placeholder="Glider number, no SG" min="0" class="form-control" value="{{ gliderid }}" required>
+            <button type="submit" class="btn btn-danger">Add Tag</button>
+            <div style="clear: both;"></div>
+
+            {% if message %}
+                <div class="success-message">{{ message|safe }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block additional_css %}
+    <link rel="stylesheet" href="/static/css/edit.css">
+{% endblock %}

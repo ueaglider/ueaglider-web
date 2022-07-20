@@ -1,7 +1,7 @@
 from typing import Optional, Any
-
+import datetime
 from ueaglider.data.db_session import create_session
-from ueaglider.data.db_classes import Gliders, Missions, Dives, Targets, Pins
+from ueaglider.data.db_classes import Gliders, Missions, Dives, Targets, Pins, ArgosLocations, ArgosTags
 
 degree_sign = u'\N{DEGREE SIGN}'
 # Add more non-UEA assets and missions here so they don't inflate our front page statistics
@@ -39,6 +39,49 @@ def get_dive(glider_num, dive_num, mission_num):
     if not dive:
         return None
     return dive
+
+
+def adjacent_dives(glider_num, dive_num, mission_num):
+    session = create_session()
+    glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
+    if not glider:
+        return None
+    glider_id = glider.Number
+    prev_dive = session.query(Dives.DiveNo) \
+        .filter(Dives.GliderID == glider_id) \
+        .filter(Dives.MissionID == mission_num) \
+        .filter(Dives.DiveNo < dive_num) \
+        .order_by(Dives.DiveNo.desc()) \
+        .first()
+    session.close()
+    if not prev_dive:
+        prev_dive = None
+    next_dive = session.query(Dives.DiveNo) \
+        .filter(Dives.GliderID == glider_id) \
+        .filter(Dives.MissionID == mission_num) \
+        .filter(Dives.DiveNo > dive_num) \
+        .order_by(Dives.DiveNo.asc()) \
+        .first()
+    session.close()
+    if not next_dive:
+        next_dive = None
+    return prev_dive, next_dive
+
+
+def get_dive_nums(glider_num, mission_num):
+    session = create_session()
+    glider = session.query(Gliders).filter(Gliders.Number == int(glider_num)).first()
+    if not glider:
+        return None
+    glider_id = glider.Number
+    dives = session.query(Dives.DiveNo) \
+        .filter(Dives.GliderID == glider_id) \
+        .filter(Dives.MissionID == mission_num) \
+        .all()
+    session.close()
+    if not dives:
+        return None
+    return dives
 
 
 def get_dive_count(filter_glider=False) -> int:
@@ -173,11 +216,58 @@ def get_mission_dives(mission_id) -> Optional[Any]:
             .filter(Dives.GliderID == glider_id) \
             .order_by(Dives.DiveNo.desc()) \
             .all()
+        # Correct for GPS rollover if present
+        for dive in dives:
+            if not dive.ReceivedDate:
+                continue
+            if dive.ReceivedDate < datetime.datetime(2010, 1, 1):
+                dive.ReceivedDate = dive.ReceivedDate + datetime.timedelta(weeks=1024)
         dives_by_glider.append(dives)
         most_recent_dives.append(dives[0])
 
     session.close()
     return dives, gliders, dives_by_glider, most_recent_dives
+
+
+def get_mission_tag_locs(mission_id, qualities=('G', '3', '2', '1', '0', 'A', 'B', 'Z')) -> Optional[Any]:
+    if not mission_id:
+        return None
+
+    mission_id = int(mission_id)
+
+    session = create_session()
+
+    tag_locations = session.query(ArgosLocations) \
+        .filter(ArgosLocations.MissionID == mission_id) \
+        .all()
+    # Necessary because ArgosTags table records only them most recent mission for each tag
+    tag_numbers = []
+    for value in session.query(ArgosLocations.TagNumber) \
+            .filter(ArgosLocations.MissionID == mission_id) \
+            .distinct():
+        tag_numbers.append(value[0])
+    query = session.query(ArgosTags).filter(ArgosTags.TagNumber.in_(tag_numbers))
+    tags = query.all()
+    # Get most recent locations from each tag
+    most_recent_locs = []
+    # Group locs by tag
+    locs_by_tag = []
+    for tag_num in tag_numbers:
+        tag_locations = session.query(ArgosLocations) \
+            .filter(ArgosLocations.MissionID == mission_id) \
+            .filter(ArgosLocations.TagNumber == tag_num) \
+            .order_by(ArgosLocations.Date.desc()) \
+            .all()
+        good_tag_locs = []
+        for loc in tag_locations:
+            if loc.Quality in qualities:
+                good_tag_locs.append(loc)
+        if good_tag_locs:
+            locs_by_tag.append(good_tag_locs)
+            most_recent_locs.append(good_tag_locs[0])
+
+    session.close()
+    return tag_locations, tags, locs_by_tag, most_recent_locs
 
 
 def mission_loc(filter_missions=False, mission_no=None):

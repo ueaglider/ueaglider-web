@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from ueaglider.data.db_session import create_session
-from ueaglider.data.db_classes import Pins, Audit, Missions, Targets, Gliders, Dives
+from ueaglider.data.db_classes import Pins, Audit, Missions, Targets, Gliders, Dives, ArgosTags
+from ueaglider.services.argos_service import tag_info
 from ueaglider.services.glider_service import glider_info
 from ueaglider.services.user_service import find_user_by_id
 
@@ -113,6 +114,19 @@ def delete_dive(dive_id):
     return dive
 
 
+def delete_multiple_dives(glider_id):
+    dive = None
+    session = create_session()
+    dives = session.query(Dives) \
+        .filter(Dives.MissionID == 1)\
+        .filter(Dives.GliderID == glider_id) \
+        .all()
+    for dive in dives:
+        session.delete(dive)
+    session.commit()
+    return dive
+
+
 def create_glider(number, name, info, mission_id, ueaglider):
     glider = Gliders()
     glider.Number = number
@@ -135,6 +149,40 @@ def assign_glider(number, mission_id):
     session.commit()
     session.close()
     return glider
+
+
+def create_tag(number, mission_id, glider_id):
+    tag = ArgosTags()
+    tag.TagNumber = number
+    tag.MissionID = mission_id
+    tag.GliderID = glider_id
+    session = create_session()
+    session.add(tag)
+    session.commit()
+    session.close()
+    return tag
+
+
+def assign_tag(number, mission_id, glider_id):
+    tag= tag_info(number)
+    tag.MissionID = mission_id
+    tag.GliderID = glider_id
+    session = create_session()
+    session.add(tag)
+    session.commit()
+    session.close()
+    return tag
+
+
+def delete_tag(tag_num):
+    session = create_session()
+    target = session.query(ArgosTags) \
+        .filter(ArgosTags.TagNumber == tag_num) \
+        .first()
+    session.delete(target)
+    session.commit()
+    session.close()
+    return
 
 
 def audit_entry(user_id: int, message: str):

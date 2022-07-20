@@ -6,10 +6,39 @@
         <link rel="stylesheet" href="/static/css/dive.css"/>
         <title>SG{{glider_num }} Dive {{ dive_num}} Mission {{ mission_num }}</title>
 {% endblock %}
+
+{% block extra_nav %}
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Select Mission
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            {% for m in mission_list %}
+                <a class="dropdown-item" href="/mission{{ m.Number }}" >Mission {{ m.Number }} {{ m.Name }}</a>
+            {% endfor %}
+        </div>
+    </li>
+    {% for glider_dives_list in dives_by_glider_json%}
+        <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                SG{{ glider_dives_list['features'][0]['properties']['gliderNum'] }} Select Dive
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                {% for d in glider_dives_list['features'] %}
+                    <a class="dropdown-item" href={{ d["properties"]["diveLink"] }} >Dive {{ d["properties"]["diveNum"] }}</a>
+                {% endfor %}
+            </div>
+        </li>
+
+    {% endfor %}
+{% endblock %}
+
 {% block main_content %}
     <div class="dive-info">
     {% if  dive %}
-        <h3>Dive <span class="red">{{ dive.DiveNo }}</span> by <span class="red">SG{{glider_num }}</span></h3>
+        <h3>Dive {{ dive.DiveNo }} by SG{{glider_num }} on Mission {{ mission_num }}</h3>
         {% if status_str%}
             {{ status_str|safe }}<br>
         {% endif %}

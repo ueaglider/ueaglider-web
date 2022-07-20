@@ -3,7 +3,7 @@ import flask
 import ueaglider.services.glider_service
 from ueaglider.infrastructure.view_modifiers import response
 from ueaglider.services import mission_service
-from ueaglider.viewmodels.glider.glider_viewmodel import GliderListViewModel, GliderViewModel
+from ueaglider.viewmodels.glider.glider_viewmodel import GliderListViewModel, GliderViewModel, TagListViewModel
 
 blueprint = flask.Blueprint('glider', __name__, template_folder='templates')
 
@@ -36,3 +36,13 @@ def gliders(glider_num: int):
     vm = GliderViewModel(glider_num)
     return vm.to_dict()
 
+
+@blueprint.route('/tags')
+@response(template_file='argos/argos_list.html')
+def argos_list():
+    """
+    :return:
+    list of all argos tags
+    """
+    vm = TagListViewModel()
+    return vm.to_dict()

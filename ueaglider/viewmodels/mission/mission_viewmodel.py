@@ -78,3 +78,38 @@ class MissionViewModel(ViewModelBase):
             self.dives_by_glider_json_dupe = dives_by_glider_json
             self.lines_by_glider_json = lines_by_glider_json
             self.zoom = 'normal'
+
+    def check_tags(self):
+        qualities_lists = (
+            ('G', '3'),
+            ('G', '3', '2', '1'),
+            ('G', '3', '2', '1', '0', 'A', 'B', 'Z'),
+        )
+        quality_levels = ('best', 'defined', 'all')
+        recentlocsdict, locs_by_tag_json, lines_by_tag_json = [], [], []
+        for level in range(3):
+            qual = qualities_lists[level]
+            tag_locs, mission_tags, locs_by_tag, most_recent_locs = mission_service.get_mission_tag_locs(self.mission_id,
+                                                                                                         qualities=qual)
+            if not tag_locs:
+                blank_json_dict = {"type": "FeatureCollection", "features": []}
+                recentlocsdict.append(blank_json_dict)
+                locs_by_tag_json.append(blank_json_dict)
+                lines_by_tag_json.append(blank_json_dict)
+            else:
+                locs_by_tag_json_i = []
+                lines_by_tag_json_i = []
+                for dives_list in locs_by_tag:
+                    dives_json, dive_page_links, line_json = json_conversion.tags_to_json(dives_list, mission_tags)
+                    locs_by_tag_json_i.append(dives_json)
+                    lines_by_tag_json_i.append(line_json)
+
+                recentdivesdict, __, __ = json_conversion.tags_to_json(most_recent_locs, mission_tags)
+                recentlocsdict.append(recentdivesdict)
+                print(recentdivesdict)
+                locs_by_tag_json.append(locs_by_tag_json_i)
+                lines_by_tag_json.append(lines_by_tag_json_i)
+        self.recentlocsdict = recentlocsdict
+        self.locs_by_tag_json = locs_by_tag_json
+        self.lines_by_tag_json = lines_by_tag_json
+
