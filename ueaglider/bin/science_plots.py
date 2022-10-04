@@ -17,3 +17,6 @@ def create_plots(glider_num, mission_num):
     mission_nc = glob(f'/home/sg{glider_num}*_timeseries.nc')[0]
     # Beth plotting stuff here
     return
+
+if __name__ == '__main__':
+    main()
