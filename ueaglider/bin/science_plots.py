@@ -14,6 +14,6 @@ def main():
 def create_plots(glider_num, mission_num):
     plots_dir = f'/mnt/gliderstore/dives/Mission{mission_num}/{glider_num}/Science_python'
     # TODO create plots_dir if it does not exist
-    mission_nc = glob(f'home/sg{glider_num}*_timeseries.nc')[0]
+    mission_nc = glob(f'/home/sg{glider_num}*_timeseries.nc')[0]
     # Beth plotting stuff here
     return
