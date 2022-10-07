@@ -1,6 +1,7 @@
 import sys
 from glob import glob
 from ueaglider.services.glider_service import glider_info
+import os
 
 
 def main():
@@ -13,9 +14,16 @@ def main():
 
 def create_plots(glider_num, mission_num):
     plots_dir = f'/mnt/gliderstore/dives/Mission{mission_num}/{glider_num}/Science_python'
-    # TODO create plots_dir if it does not exist
-    mission_nc = glob(f'/home/sg{glider_num}*_timeseries.nc')[0]
+
+    #Check if plots_dir exists, if not, create it
+    CHECK_DIR = os.path.isdir(plots_dir)
+    # If folder doesn't exist, then create it.
+    if not CHECK_DIR:
+        os.makedirs(plots_dir)
+
+#    mission_nc = glob(f'/home/sg{glider_num}*_timeseries.nc')[0]
     # Beth plotting stuff here
+    mission_nc = glob(f'/home/sg{glider_num}*_up_and_down_profile.nc')[0]
     return
 
 if __name__ == '__main__':
