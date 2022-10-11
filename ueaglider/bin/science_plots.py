@@ -90,7 +90,7 @@ def create_plots(glider_num, mission_num):
 def prepare_for_plotting(dataset, variable):
     """Prepare variable for plotting by:
     1. Removing outliers more than 2 std dev from the mean
-    2. Interpolating over nans
+    2. Interpolating over nans (tbi)
     """
     data = dataset[variable].data
     # Copy some of the cleaning functionality from GliderTools and use it here
