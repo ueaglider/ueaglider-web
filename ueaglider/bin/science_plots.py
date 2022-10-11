@@ -143,9 +143,7 @@ def plotter(dataset, variable, colourmap, title):
     ax.set_title(str(title))
     plt.tight_layout()
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d/%m %H:%M'))  # sets x tick format
-#    fig.savefig(plots_dir + '/' + variable + '.jpeg', format='jpeg')
-#for local testing
-    fig.savefig('/home/beth/Projects/basestation_plotting' + '/' + variable + '.jpeg', format='jpeg')
+    fig.savefig(plots_dir + '/' + variable + '.jpeg', format='jpeg')
     matplotlib.pyplot.close()
     return
 
