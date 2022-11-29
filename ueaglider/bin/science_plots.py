@@ -1,7 +1,9 @@
 import sys
 from glob import glob
-from ueaglider.services.glider_service import glider_info
 import os
+folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, folder)
+from ueaglider.services.glider_service import glider_info
 import xarray as xr
 import numpy as np
 import matplotlib
