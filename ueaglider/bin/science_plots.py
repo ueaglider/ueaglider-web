@@ -83,7 +83,7 @@ def create_plots(glider_num, mission_num):
     to_plot = list(set(measuredvariables).intersection(glider_variables))  # find elements in glider_variables relevant to this dataset
 
     for i in range(len(to_plot)):
-        plotter(ds, to_plot[i], dict[to_plot[i]], to_plot[i])
+        plotter(ds, to_plot[i], dict[to_plot[i]], to_plot[i], plots_dir)
     return
 
 #define a basic quality control function
@@ -120,7 +120,7 @@ def prepare_for_plotting(dataset, variable):
 
 
 # define a basic plotting function for the profiles
-def plotter(dataset, variable, colourmap, title):
+def plotter(dataset, variable, colourmap, title, plots_dir):
     """Create time depth profile coloured by desired variable
 
     Input:
