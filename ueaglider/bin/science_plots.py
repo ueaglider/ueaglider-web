@@ -9,7 +9,22 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+
+import sqlalchemy
+from sqlalchemy.orm import sessionmaker
+import sys
+import json
 #import cmocean as cmo
+# Store credentials in a external file that is never added to git or shared over insecure channels
+with open(folder + '/ueaglider/secrets.txt') as json_file:
+    secrets = json.load(json_file)
+
+conn_str = 'mysql+pymysql://' + secrets['sql_user'] + ':' + secrets['sql_pwd'] + '@' + secrets['remote_string'] \
+           + '/' + secrets['db_name']
+
+# Can switch echo to True for debug, SQL actions print out to terminal
+engine = sqlalchemy.create_engine(conn_str, echo=False)
+Session = sessionmaker(bind=engine)
 
 
 def main():
