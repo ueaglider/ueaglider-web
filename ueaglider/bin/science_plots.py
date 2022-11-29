@@ -10,21 +10,10 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-import sqlalchemy
-from sqlalchemy.orm import sessionmaker
-import sys
-import json
 #import cmocean as cmo
 # Store credentials in a external file that is never added to git or shared over insecure channels
-with open(folder + '/ueaglider/secrets.txt') as json_file:
-    secrets = json.load(json_file)
-
-conn_str = 'mysql+pymysql://' + secrets['sql_user'] + ':' + secrets['sql_pwd'] + '@' + secrets['remote_string'] \
-           + '/' + secrets['db_name']
-
-# Can switch echo to True for debug, SQL actions print out to terminal
-engine = sqlalchemy.create_engine(conn_str, echo=False)
-Session = sessionmaker(bind=engine)
+from ueaglider.data.db_session import global_init
+global_init()
 
 
 def main():
@@ -46,7 +35,7 @@ def create_plots(glider_num, mission_num):
 
 #    mission_nc = glob(f'/home/sg{glider_num}*_timeseries.nc')[0]
     # Beth plotting stuff here
-    mission_nc = glob(f'/home/sg{glider_num}*_up_and_down_profile.nc')[0]
+    mission_nc = glob(f'/home/sg{glider_num}/*_up_and_down_profile.nc')[0]
     ds = xr.open_dataset(mission_nc)
 
     profile_time = ds.ctd_time.mean(axis=1).data  # average time per profile
