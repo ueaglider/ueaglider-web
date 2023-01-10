@@ -101,7 +101,7 @@ def prepare_for_plotting(dataset, variable):
     data = dataset[variable].data
     # Copy some of the cleaning functionality from GliderTools and use it here
     # https://github.com/GliderToolsCommunity/GliderTools/blob/master/glidertools/cleaning.py
-    # e.g. remove data more than 2 standard deviations from the mean
+    # e.g. remove data more than 3 standard deviations from the mean
 
     from numpy import array, nan, nanmean, nanstd
     arr = data
@@ -109,7 +109,7 @@ def prepare_for_plotting(dataset, variable):
     mean = nanmean(arr)
     std = nanstd(arr)
 
-    multiplier = 2
+    multiplier = 3
     ll = mean - std * multiplier
     ul = mean + std * multiplier
 
