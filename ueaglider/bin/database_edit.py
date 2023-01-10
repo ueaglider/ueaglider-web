@@ -27,6 +27,7 @@ Session = sessionmaker(bind=engine)
 def main():
     # get glider num from bash script. Gliders are linux users named sgXXX where XXX is the glider number
     glider_num = sys.argv[1][2:]
+    print(f"{datetime.datetime.now()} start SG{glider_num}")
     try:
         add_dive(glider_num)
     except:
@@ -102,6 +103,7 @@ def add_dive(glider_num):
         .first()
     # stop if dive already exists
     if dive_exists:
+        print("dive exists already")
         return
     dive = Dives()
     dive.MissionID = mission_num
@@ -112,9 +114,11 @@ def add_dive(glider_num):
     dive.Status = status_str
     dive.ReceivedDate = dive_datetime
     dive.Elevation = elevation
+    print("dive ready to add")
     session.add(dive)
     session.commit()
     session.close()
+    print("add dive succesful")
 
 
 #########   GET DIVE DATA ###################
@@ -130,6 +134,7 @@ def get_dive_data(glider_num):
             if sel_line:
                 # Keep only most recent GPS line
                 gps_line = line
+        print(f"gps line {gps_line}")
         if not gps_line:
             return 0, datetime.datetime.now(), 0, 0, ''
         gps_list = gps_line.split(',')
@@ -141,6 +146,7 @@ def get_dive_data(glider_num):
         lon = float(gps_list[4]) / 100
         status = status_str.split(' ')[0]
         dive_num = int(status.split(':')[0])
+        print(f"dive {dive_num} status {status}")
     return dive_num, dive_datetime, lat, lon, status
 
 
