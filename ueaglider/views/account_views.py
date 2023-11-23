@@ -39,8 +39,8 @@ def index():
 @blueprint.route('/account/register', methods=['GET'])
 @response(template_file='account/register.html')
 def register_get():
-    if secrets['accept_new_members'] != "True":
-        return flask.redirect('/account/login')
+#    if secrets['accept_new_members'] != "True":
+#        return flask.redirect('/account/login')
     vm = RegisterViewModel()
     return vm.to_dict()
 
