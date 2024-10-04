@@ -98,11 +98,19 @@
     let map = L.map('map')
 
     // A series of optional map layers. ortho has addTo(map) so is on by default
-    let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
-        layers: 'GEBCO_2019_Grid',
-        attribution: 'GEBCO Compilation Group (2020)'})
+    //let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
+    //    layers: 'GEBCO_2019_Grid',
+    //    attribution: 'GEBCO Compilation Group (2020)'})
+    // replace gebco with emodnet ES
+    let gebco = L.tileLayer.wms('https://ows.emodnet-bathymetry.eu/wms', {
+          layers: 'mean_atlas_land',
+          attribution: '<a href="https://portal.emodnet-bathymetry.eu">EMODnet Bathymetry Consortium (2020)</a>'})
     let watercolor = L.tileLayer.provider('Stamen.Watercolor')
-    let orthofr = L.tileLayer.provider('GeoportailFrance.orthos').addTo(map);
+    // ES 4-10-24 replaced map tiles with openstreetmaps as we lost access
+    //let orthofr = L.tileLayer.provider('GeoportailFrance.orthos').addTo(map);
+    let orthofr  = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
 
     // Graticule for lon and lat lines on map
 

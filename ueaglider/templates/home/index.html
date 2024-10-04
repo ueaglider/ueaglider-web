@@ -46,9 +46,13 @@
 
     // Gebco base layer, we add it to map so it will always be the background
 
-    let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
-        layers: 'GEBCO_2019_Grid',
-        attribution: 'GEBCO Compilation Group (2020)'}).addTo(map);
+    //let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
+    //    layers: 'GEBCO_2019_Grid',
+    //    attribution: 'GEBCO Compilation Group (2020)'}).addTo(map);
+    // replace with emodnet but leave it called gebco so it doesnt break anything
+    let gebco = L.tileLayer.wms('https://ows.emodnet-bathymetry.eu/wms', {
+        layers: 'mean_atlas_land',
+        attribution: '<a href="https://portal.emodnet-bathymetry.eu">EMODnet Bathymetry Consortium (2020)</a>'})
 
 	let targetIcon = L.icon({
 		iconUrl: '/static/img/icons/target.png',
