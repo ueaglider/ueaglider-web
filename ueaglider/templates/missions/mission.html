@@ -101,8 +101,8 @@
     //let gebco =  L.tileLayer.wms('https://www.gebco.net/data_and_products/gebco_web_services/2019/mapserv?', {
     //    layers: 'GEBCO_2019_Grid',
     //    attribution: 'GEBCO Compilation Group (2020)'})
-    // replace gebco with emodnet, leave it called gebco or map breaks ES
-    let gebco = L.tileLayer.wms('https://ows.emodnet-bathymetry.eu/wms', {
+    // replace gebco with emodnet,  ES
+    let emodnet = L.tileLayer.wms('https://ows.emodnet-bathymetry.eu/wms', {
           layers: 'mean_atlas_land',
           attribution: '<a href="https://portal.emodnet-bathymetry.eu">EMODnet Bathymetry Consortium (2020)</a>'})
     let watercolor = L.tileLayer.provider('Stamen.Watercolor')
@@ -164,7 +164,7 @@
     // Add basemap layers to mao
     let basemaps = {
         Ortho: orthofr,
-        GEBCO: gebco,
+        EMODnet: emodnet,
         watercolor: watercolor,
     };
 
