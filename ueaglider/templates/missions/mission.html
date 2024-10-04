@@ -102,7 +102,7 @@
     //    layers: 'GEBCO_2019_Grid',
     //    attribution: 'GEBCO Compilation Group (2020)'})
     // replace gebco with emodnet ES
-    let gebco = L.tileLayer.wms('https://ows.emodnet-bathymetry.eu/wms', {
+    let emodnet = L.tileLayer.wms('https://ows.emodnet-bathymetry.eu/wms', {
           layers: 'mean_atlas_land',
           attribution: '<a href="https://portal.emodnet-bathymetry.eu">EMODnet Bathymetry Consortium (2020)</a>'})
     let watercolor = L.tileLayer.provider('Stamen.Watercolor')
